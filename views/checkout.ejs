@@ -1,0 +1,109 @@
+<!-- views/checkout.ejs (Versión sin estilos) -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - NeuroDiverse</title>
+</head>
+<body>
+    
+    <%- include('partials/navbar') %>
+    <%- include('partials/sidebar') %>
+    <%- include('partials/cart') %>
+    <%- include('partials/login-modal') %>
+    
+    <!-- Contenido principal -->
+    <main>
+        <h2>CONTENIDO PRINCIPAL (checkout)</h2>
+        <hr>
+        
+        <!-- Sección donde se mostrarán los productos del carrito -->
+        <div id="checkout-items">
+            <!-- Los productos serán insertados dinámicamente desde sessionStorage -->
+        </div>
+        <hr>
+        
+        <!-- Formulario de datos del usuario -->
+        <h3>Confirma tus datos:</h3>
+        <div class="checkout-form">
+            <input type="text" id="first-name" placeholder="Nombre" required>
+            <input type="text" id="last-name" placeholder="Apellido" required>
+            <input type="text" id="email" placeholder="Correo Electrónico" required>
+            <input type="text" id="city" placeholder="Comuna" required>
+            <input type="text" id="street" placeholder="Calle" required>
+            <input type="text" id="street-number" placeholder="Número" required>
+            <input type="text" id="mobile-phone" placeholder="Teléfono/Móvil" required>
+            <input type="text" id="additional-info" placeholder="Información adicional">
+        </div>
+        <hr>
+        
+        <!-- Resumen del pedido -->
+        <h3>Resumen del Pedido</h3>
+        <p>Subtotal: <span id="subtotal">$0</span></p>
+        <p>Gasto de envío: <span id="shipping-cost">$3000</span></p>
+        <p>Total: <span id="total">$0</span></p>
+        
+        <button id="go-to-payment">IR AL PAGO</button>
+        <hr>
+        
+        <!-- Vista de pago Webpay incluida -->
+        <%- include('partials/webpay') %>
+    </main>
+    
+    <%- include('partials/footer') %>
+    
+    <script src="/js/main.js"></script>
+    
+    <script>
+        // Función para cargar los productos del carrito en la vista de checkout
+        function loadCheckoutItems() {
+            let cart = JSON.parse(sessionStorage.getItem('cart')) || [];
+            let checkoutContainer = document.getElementById('checkout-items');
+            let subtotalContainer = document.getElementById('subtotal');
+            let totalContainer = document.getElementById('total');
+            const shippingCost = 3000;
+            checkoutContainer.innerHTML = ""; // Limpiar contenido previo
+            let subtotal = 0;
+            
+            cart.forEach(product => {
+                let productElement = document.createElement('div');
+                productElement.innerHTML = `
+                    <img src="${product.image}" alt="${product.name}">
+                    <div>
+                        <p>${product.name}</p>
+                        <p>${product.price}</p>
+                    </div>
+                `;
+                checkoutContainer.appendChild(productElement);
+                subtotal += parseFloat(product.price.replace('$', '')) * (product.quantity || 1);
+            });
+            
+            subtotalContainer.innerText = `$${subtotal.toFixed(2)}`;
+            totalContainer.innerText = `$${(subtotal + shippingCost).toFixed(2)}`;
+        }
+        
+        // Función para poblar los datos del usuario en el formulario desde sessionStorage
+        function loadUserData() {
+            let user = JSON.parse(sessionStorage.getItem('user')) || {};
+            console.log("Usuario recuperado de sessionStorage:", user);
+            
+            document.getElementById('first-name').value = user.firstName || "";
+            document.getElementById('last-name').value = user.lastName || "";
+            document.getElementById('email').value = user.email || "";
+            document.getElementById('city').value = user.city || "";
+            document.getElementById('street').value = user.street || "";
+            document.getElementById('street-number').value = user.streetNumber || "";
+            document.getElementById('mobile-phone').value = user.mobilePhone || "";
+            document.getElementById('additional-info').value = user.additionalInfo || "";
+        }
+        
+        // Ejecutar las funciones al cargar la vista
+        window.onload = function() {
+            loadCheckoutItems();
+            loadUserData();
+        };
+    </script>
+</body>
+</html>
+

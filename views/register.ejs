@@ -1,0 +1,51 @@
+<!-- views/register.ejs (Versión sin estilos) -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - Neuroverse Market</title>
+</head>
+<body>
+    
+    <%- include('partials/navbar') %>
+    <%- include('partials/sidebar') %>
+    <%- include('partials/cart') %>
+    <%- include('partials/login-modal') %>
+    
+    <main>
+        <h2>CONTENIDO PRINCIPAL (register)</h2>
+        <hr>
+        
+        <div>
+            <input type="email" id="email" placeholder="Correo Electrónico">
+            <input type="password" id="password" placeholder="Contraseña">
+            <input type="text" id="first-name" placeholder="Nombre">
+            <input type="text" id="last-name" placeholder="Apellido">
+            <input type="date" id="birth-date" placeholder="Fecha nacimiento">
+            <input type="text" id="city" placeholder="Comuna">
+            <input type="text" id="street" placeholder="Calle">
+            <input type="text" id="street-number" placeholder="Número">
+            <input type="text" id="mobile-phone" placeholder="Teléfono/Móvil">
+            <input type="text" id="additional-info" placeholder="Información adicional">
+            
+            <p>Patologías</p>
+            <div>
+                <label><input type="checkbox" id="condition1"> Patología 1</label>
+                <label><input type="checkbox" id="condition2"> Patología 2</label>
+                <label><input type="checkbox" id="condition3"> Patología 3</label>
+                <label><input type="checkbox" id="condition4"> Patología 4</label>
+                <label><input type="checkbox" id="condition5"> Patología 5</label>
+                <input type="text" id="other-condition" placeholder="Otra:">
+            </div>
+            
+            <button id="register-btn">Registrarse</button>
+        </div>
+        <hr>
+    </main>
+    
+    <%- include('partials/footer') %>
+    
+    <script src="/js/main.js"></script>
+</body>
+</html>

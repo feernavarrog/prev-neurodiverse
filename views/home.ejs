@@ -1,0 +1,65 @@
+<!-- views/home.ejs (Versión sin estilos) -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuroDiverse</title>
+</head>
+<body>
+    
+    <%- include('partials/navbar') %>
+    <%- include('partials/sidebar') %>
+    <%- include('partials/cart') %>
+    <%- include('partials/login-modal') %>
+    
+    <!-- Contenido principal -->
+    <main>
+        <h2>CONTENIDO PRINCIPAL (home)</h2>
+        <hr>
+        <p>Banners generales (pueden tener distintos propósitos)</p>
+        <section>
+            <p>Banner 1, Ejemplo: categorías, ofertas o contenido promocional</p>
+            <a href="/productos-destacados"><img id="banner-1" src="/images/banner-placeholder.png" alt="Banner 1"></a>
+        </section>
+        <hr>
+        
+        <section>
+            <p>Banner 2, Ejemplo: Sección de contenido destacada</p>
+            <a href="/nuevas-ofertas"><img id="banner-2" src="/images/banner-placeholder.png" alt="Banner 2"></a>
+        </section>
+        <hr>
+    </main>
+    
+    <%- include('partials/footer') %>
+    
+    <script src="/js/main.js"></script>
+    
+    <script>
+        // Función de testeo: Guardar los datos completos del usuario en sessionStorage
+        // En el futuro, estos datos serán obtenidos desde la base de datos al registrarse/iniciar sesión
+        function setTestUserSession() {
+            sessionStorage.setItem('user', JSON.stringify({
+                id: '123456', // ID genérica de prueba
+                firstName: 'Juan',
+                lastName: 'Pérez',
+                email: 'juan.perez@example.com',
+                city: 'Santiago',
+                street: 'Av. Siempre Viva',
+                streetNumber: '742',
+                mobilePhone: '+56912345678',
+                additionalInfo: 'Ninguna',
+                type: 'cliente' // Tipo de usuario de prueba
+            }));
+            console.log("Usuario de prueba almacenado en sessionStorage:", JSON.parse(sessionStorage.getItem('user')));
+        }
+        
+        // Ejecutar la función al cargar la vista
+        window.onload = function() {
+            setTestUserSession();
+            updateCart();
+            loadSidebarCategories();
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!-- views/products.ejs -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos - NeuroDiverse</title>
+</head>
+<body>
+    
+    <!-- Navbar -->
+    <%- include('partials/navbar') %>
+    
+    <!-- Sidebar (Menú lateral) -->
+    <%- include('partials/sidebar') %>
+    
+    <!-- Cart Sidebar -->
+    <%- include('partials/cart') %>
+    
+    <!-- Login Modal -->
+    <%- include('partials/login-modal') %>
+    
+    <main>
+        <h2>CONTENIDO PRINCIPAL (Products)</h2>
+        <hr>
+        <p>Lista de productos según el criterio seleccionado</p>
+        
+        <!-- Contenedor donde se insertarán los productos dinámicamente -->
+        <div id="product-list">
+            <!-- Estos productos son solo ejemplos estáticos.
+                 Los productos reales deben ser insertados dinámicamente desde la base de datos,
+                 siguiendo este mismo patrón de estructura HTML.
+                 Cada producto debe contener un enlace que pase el código como parámetro en la URL.
+            -->
+            <div>
+                <a href="/item?code=12345">
+                    <img src="/images/product-placeholder.png" alt="Producto 1">
+                    <p>Nombre producto 1</p>
+                    <p>Precio</p>
+                </a>
+            </div>
+            <div>
+                <a href="/item?code=67890">
+                    <img src="/images/product-placeholder.png" alt="Producto 2">
+                    <p>Nombre producto 2</p>
+                    <p>Precio</p>
+                </a>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <%- include('partials/footer') %>
+    
+    <script src="/js/main.js"></script>
+    <script>
+        // Función para obtener los parámetros de la URL
+        // Ejemplo de uso: http://localhost:3000/products?filter=tecnologia
+        function getQueryParams() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                filter: params.get('filter') || 'default'
+            };
+        }
+        
+        // Función para cargar los productos según el filtro de la URL
+        function loadProducts() {
+            const queryData = getQueryParams();
+            console.log("Filtro seleccionado:", queryData.filter);
+            
+            // Aquí se realizará una llamada AJAX a la ruta '/products'
+            // pasando el filtro como parámetro en la URL.
+            // Esta función consultará la base de datos y generará dinámicamente
+            // los productos en la sección 'product-list'.
+        }
+        
+        // Cargar los productos al iniciar la vista
+        window.onload = loadProducts;
+    </script>
+</body>
+</html>

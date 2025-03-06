@@ -1,0 +1,55 @@
+<!-- views/account.ejs (Versión sin estilos) -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Cuenta - NeuroDiverse</title>
+</head>
+<body>
+    
+    <%- include('partials/navbar') %>
+    <%- include('partials/sidebar') %>
+    <%- include('partials/cart') %>
+    <%- include('partials/login-modal') %>
+    
+    <!-- Contenido principal -->
+    <main>
+        <h2>Mi Cuenta</h2>
+        <hr>
+        
+        <!-- Banner de usuario -->
+        <div id="account-banner">
+            <img src="/images/banner-placeholder.png" alt="Banner de Usuario">
+            <p id="welcome-message">BIENVENIDO/A [NOMBRE USUARIO]</p>
+        </div>
+        <hr>
+        
+        <!-- Opciones de cuenta -->
+        <ul>
+            <li><a href="/orders">🛒 Pedidos</a></li>
+            <li><a href="/account-settings">🔧 Configuración de la cuenta</a></li>
+            <li><a href="#" id="logout">❌ Cerrar sesión</a></li>
+        </ul>
+        <hr>
+    </main>
+    
+    <%- include('partials/footer') %>
+    
+    <script src="/js/main.js"></script>
+    
+    <script>
+        // Función para poblar el nombre del usuario desde sessionStorage
+        function loadUserName() {
+            let user = JSON.parse(sessionStorage.getItem('user')) || {};
+            let userName = user.firstName || "Usuario"; // Nombre de prueba si no existe
+            document.getElementById('welcome-message').innerText = `BIENVENIDO/A ${userName.toUpperCase()}`;
+        }
+        
+        // Ejecutar la función al cargar la vista
+        window.onload = function() {
+            loadUserName();
+        };
+    </script>
+</body>
+</html>

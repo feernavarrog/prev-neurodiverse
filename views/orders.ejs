@@ -1,0 +1,132 @@
+<!-- views/orders.ejs (Versión sin estilos) -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Pedidos - NeuroDiverse</title>
+</head>
+<body>
+    
+    <%- include('partials/navbar') %>
+    <%- include('partials/sidebar') %>
+    <%- include('partials/cart') %>
+    <%- include('partials/login-modal') %>
+    
+    <!-- Contenido principal -->
+    <main>
+        <h2>Mis Compras</h2>
+        <p>Aquí puedes ver tus pedidos realizados.</p>
+        <hr>
+        
+        <!-- Tabla de pedidos de ejemplo para aplicar estilos -->
+        <table id="orders-table" border="1">
+            <thead>
+                <tr>
+                    <th>Nro Pedido</th>
+                    <th>Fecha Pedido</th>
+                    <th>Productos</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Ejemplo estático, los datos deben ser poblados dinámicamente desde la base de datos -->
+                <tr>
+                    <td>78654</td>
+                    <td>2024-03-05</td>
+                    <td>
+                        <ul>
+                            <li>Producto 1 - Cantidad: 2 - Precio: $10.000</li>
+                            <li>Producto 2 - Cantidad: 1 - Precio: $5.000</li>
+                        </ul>
+                    </td>
+                    <td>$25.000</td>
+                    <td>Enviado</td>
+                </tr>
+                <tr>
+                    <td>78655</td>
+                    <td>2024-02-28</td>
+                    <td>
+                        <ul>
+                            <li>Producto 3 - Cantidad: 1 - Precio: $15.000</li>
+                        </ul>
+                    </td>
+                    <td>$15.000</td>
+                    <td>Pendiente</td>
+                </tr>
+            </tbody>
+        </table>
+        <hr>
+        
+        <!-- Tabla dinámica generada con JavaScript -->
+        <table id="dynamic-orders-table" border="1">
+            <thead>
+                <tr>
+                    <th>Nro Pedido</th>
+                    <th>Fecha Pedido</th>
+                    <th>Productos</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Los datos se generarán dinámicamente -->
+            </tbody>
+        </table>
+    </main>
+    
+    <%- include('partials/footer') %>
+    
+    <script src="/js/main.js"></script>
+    
+    <script>
+        // Función para poblar la tabla de pedidos dinámicamente con datos simulados
+        function loadOrders() {
+            let orderRows = [
+                { orderId: 78658, date: "2024-03-01", product: "Producto X", quantity: 1, price: "$12.000", total: "$12.000", status: "Enviado" },
+                { orderId: 78658, date: "2024-03-01", product: "Producto Y", quantity: 2, price: "$8.000", total: "$16.000", status: "Enviado" },
+                { orderId: 78659, date: "2024-02-28", product: "Producto Z", quantity: 1, price: "$15.000", total: "$15.000", status: "Pendiente" }
+            ];
+            
+            let groupedOrders = {};
+            orderRows.forEach(row => {
+                if (!groupedOrders[row.orderId]) {
+                    groupedOrders[row.orderId] = {
+                        date: row.date,
+                        products: [],
+                        total: 0,
+                        status: row.status
+                    };
+                }
+                groupedOrders[row.orderId].products.push(`${row.product} - Cantidad: ${row.quantity} - Precio: ${row.price}`);
+                groupedOrders[row.orderId].total += parseInt(row.total.replace("$", ""));
+            });
+            
+            let tableBody = document.querySelector("#dynamic-orders-table tbody");
+            tableBody.innerHTML = ""; // Limpiar contenido previo
+            
+            Object.keys(groupedOrders).forEach(orderId => {
+                let order = groupedOrders[orderId];
+                let productList = order.products.map(p => `<li>${p}</li>`).join("\n");
+                
+                let row = `
+                    <tr>
+                        <td>${orderId}</td>
+                        <td>${order.date}</td>
+                        <td><ul>${productList}</ul></td>
+                        <td>$${order.total}</td>
+                        <td>${order.status}</td>
+                    </tr>
+                `;
+                tableBody.innerHTML += row;
+            });
+        }
+        
+        // Ejecutar la función al cargar la vista
+        window.onload = function() {
+            //loadOrders();
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!-- views/partials/sidebar.ejs (Versión sin estilos) -->
+<aside id="sidebar">
+    <hr>
+    <h3>Menú de Navegación (sidebar)</h3>
+    <button id="close-sidebar">✖</button> <!-- Botón para cerrar sidebar -->
+    
+    <!-- Sección de lista estática para aplicar estilos -->
+    <ul>
+        <li><a href="/products?filter=tecnologia" class="sidebar-link">Ejemplo: Tecnología</a></li>
+        <li><a href="/products?filter=hogar" class="sidebar-link">Ejemplo: Hogar</a></li>
+        <li><a href="/products?filter=moda" class="sidebar-link">Ejemplo: Moda</a></li>
+    </ul>
+    <hr>
+    
+    <!-- Sección para cargar dinámicamente el contenido del sidebar -->
+    <ul id="dynamic-list">
+        <!-- Los datos serán generados dinámicamente -->
+    </ul>
+    <hr>
+</aside>
+
+<script>
+    // Función para poblar dinámicamente la lista de categorías
+    function loadSidebarCategories() {
+        let categories = [
+            { name: "Deportes" },
+            { name: "Electrodomésticos" },
+            { name: "Juguetes" },
+            { name: "Libros" }
+        ];
+        
+        let listContainer = document.getElementById("dynamic-list");
+        listContainer.innerHTML = ""; // Limpiar contenido previo
+        
+        categories.forEach(category => {
+            let listItem = document.createElement("li");
+            listItem.innerHTML = `<a href="/products?filter=${encodeURIComponent(category.name.toLowerCase())}" class="sidebar-link">${category.name}</a>`;
+            listContainer.appendChild(listItem);
+        });
+    }
+</script>

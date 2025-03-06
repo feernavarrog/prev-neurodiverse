@@ -1,0 +1,102 @@
+<!-- views/item.ejs (Versión sin estilos) -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Item - NeuroDiverse</title>
+</head>
+<body>
+    
+    <!-- Navbar -->
+    <%- include('partials/navbar') %>
+    
+    <!-- Sidebar (Menú lateral) -->
+    <%- include('partials/sidebar') %>
+    
+    <!-- Cart Sidebar -->
+    <%- include('partials/cart') %>
+    
+    <!-- Login Modal -->
+    <%- include('partials/login-modal') %>
+    
+    <main>
+        <h2>CONTENIDO PRINCIPAL (Item)</h2>
+        <hr>
+        
+        <!-- Contenedor de información del item -->
+        <!-- Los datos de este item son solo de ejemplo. Todos los campos serán cargados dinámicamente 
+             al inicio de la página según el parámetro "code" pasado en la URL. -->
+        <div>
+            <h3 id="item-name">Nombre del Item</h3>
+            <img id="item-image" src="/images/product-placeholder.png" alt="Imagen del item">
+            <p id="item-description">Descripción del item...</p>
+            <p>Codigo: <span id="item-code">(ID en BBDD)</span></p>
+            <p>Precio: <span id="item-price">$0</span></p>
+            <button id="add-to-cart">🛒 Agregar</button>
+        </div>
+        <hr>
+    </main>
+    
+    <!-- Footer -->
+    <%- include('partials/footer') %>
+    
+    <script src="/js/main.js"></script>
+    
+    <script>
+        // Función para obtener el código del producto desde la URL
+        // Ejemplo de uso: http://localhost:3000/item?code=00123
+        function getQueryParams() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                code: params.get('code') || '(ID en BBDD)'
+            };
+        }
+        
+        // Función para cargar los datos del producto en la vista
+        function loadProductDetails() {
+            const queryData = getQueryParams();
+            console.log("Código del producto recibido:", queryData.code);
+
+            // Insertar el código del producto en el elemento correspondiente del HTML
+            document.getElementById('item-code').innerText = queryData.code;
+            
+            // Aquí se realizará una llamada AJAX a la ruta '/item/{codigo}'
+            // para obtener los detalles del producto desde la base de datos.
+            // Una vez obtenidos, se actualizarán dinámicamente los elementos en la página.
+        }
+        
+        // Función para agregar el producto al carrito almacenado en sessionStorage
+        function addToCart() {
+            let cart = JSON.parse(sessionStorage.getItem('cart')) || [];
+            
+            // Obtener los datos actuales del producto desde el DOM
+            const productData = {
+                name: document.getElementById('item-name').innerText,
+                image: document.getElementById('item-image').src,
+                description: document.getElementById('item-description').innerText,
+                code: document.getElementById('item-code').innerText,
+                price: document.getElementById('item-price').innerText
+            };
+            
+            // Agregar el producto al carrito
+            cart.push(productData);
+            
+            // Guardar en sessionStorage
+            sessionStorage.setItem('cart', JSON.stringify(cart));
+            
+            console.log("Producto agregado al carrito:", productData);
+            console.log("Carrito actual en sessionStorage:", JSON.parse(sessionStorage.getItem('cart')));
+            
+            // Llamar a la función que actualizará la vista del carrito (se debe implementar después)
+            updateCart();
+        }
+        
+        // Cargar los datos al iniciar la vista
+        window.onload = function() {
+            loadProductDetails();
+            document.getElementById('add-to-cart').addEventListener('click', addToCart);
+        };
+    </script>
+</body>
+</html>

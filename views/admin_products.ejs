@@ -1,0 +1,145 @@
+<!-- views/admin_products.ejs (Versión sin estilos) -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administración de Productos - NeuroDiverse</title>
+</head>
+<body>
+    
+    <%- include('partials/navbar') %>
+    <%- include('partials/sidebar') %>
+    <%- include('partials/cart') %>
+    <%- include('partials/login-modal') %>
+    <%- include('partials/product_modal') %>
+    
+    <!-- Contenido principal -->
+    <main>
+        <h2>Administración de Productos</h2>
+        <p>Aquí puedes gestionar los productos de la tienda.</p>
+        <hr>
+        
+        <!-- Tabla de ejemplo para aplicar estilos -->
+        <table id="admin-products-table" border="1">
+            <thead>
+                <tr>
+                    <th>Imagen</th>
+                    <th>Código</th>
+                    <th>Nombre</th>
+                    <th>Categoría</th>
+                    <th>Precio</th>
+                    <th>Stock</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><img src="/images/sample-product.png" alt="Producto" width="50"></td>
+                    <td>001</td>
+                    <td>Ejemplo Producto</td>
+                    <td>Gadgets</td>
+                    <td>$10.000</td>
+                    <td>50</td>
+                    <td>
+                        <button onclick="editProduct('001', 'Ejemplo Producto', 'Gadgets', '10000', '50', '/images/sample-product.png', 'Descripcion', '5000', 'Marca Ejemplo', 'Activo')">Editar</button>
+                        <button onclick="deactivateProduct('001')">Desactivar</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <hr>
+        
+        <!-- Tabla dinámica generada con JavaScript -->
+        <table id="dynamic-admin-products-table" border="1">
+            <thead>
+                <tr>
+                    <th>Imagen</th>
+                    <th>Código</th>
+                    <th>Nombre</th>
+                    <th>Categoría</th>
+                    <th>Precio</th>
+                    <th>Stock</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Los datos se generarán dinámicamente -->
+            </tbody>
+        </table>
+        <hr>
+        
+        <!-- Botón para agregar un nuevo producto -->
+        <button onclick="openProductModal()">Agregar Producto</button>
+    </main>
+    
+    <%- include('partials/footer') %>
+    
+    <script src="/js/main.js"></script>
+    
+    <script>
+        // Función para poblar la tabla de productos dinámicamente con datos simulados
+        function loadAdminProducts() {
+            let productRows = [
+                { code: "002", name: "Producto A", category: "Accesorios", price: "12000", stock: 30, image: "/images/sample-product.png", description: "Descripcion A", discount: "5000", brand: "Marca A", active: "1" },
+                { code: "003", name: "Producto B", category: "Electrónica", price: "25000", stock: 20, image: "/images/sample-product.png", description: "Descripcion B", discount: "4000", brand: "Marca B", active: "0" },
+                { code: "004", name: "Producto C", category: "Hogar", price: "18000", stock: 10, image: "/images/sample-product.png", description: "Descripcion C", discount: "3000", brand: "Marca C", active: "1" }
+            ];
+            
+            let tableBody = document.querySelector("#dynamic-admin-products-table tbody");
+            tableBody.innerHTML = ""; // Limpiar contenido previo
+            
+            productRows.forEach(product => {
+                let row = `
+                    <tr>
+                        <td><img src="${product.image}" alt="Producto" width="50"></td>
+                        <td>${product.code}</td>
+                        <td>${product.name}</td>
+                        <td>${product.category}</td>
+                        <td>${product.price}</td>
+                        <td>${product.stock}</td>
+                        <td>
+                            <button onclick="editProduct('${product.code}', '${product.name}', '${product.category}', '${product.price}', '${product.stock}', '${product.image}', '${product.description}', '${product.discount}', '${product.brand}', '${product.active}')">Editar</button>
+                            <button onclick="deactivateProduct('${product.code}')">Desactivar</button>
+                        </td>
+                    </tr>
+                `;
+                tableBody.innerHTML += row;
+            });
+        }
+        
+        // Función para poblar los datos en el modal de edición
+        function editProduct(code, name, category, price, stock, image, description, discount, brand, active) {
+            document.getElementById('product-code').value = code;
+            document.getElementById('product-name').value = name;
+            document.getElementById('product-category').value = category;
+            document.getElementById('product-price').value = price;
+            document.getElementById('product-stock').value = stock;
+            document.getElementById('product-image').src = image;
+            document.getElementById('product-description').value = description;
+            document.getElementById('product-discount').value = discount;
+            document.getElementById('product-brand').value = brand;
+            document.getElementById('product-active').value = active;
+            
+            console.log("Editando producto:", { code, name, category, price, stock, image, description, discount, brand, active });
+        }
+        
+        // Función simulada para desactivar un producto
+        function deactivateProduct(productCode) {
+            console.log("Desactivando producto con código:", productCode);
+            // Aquí se haría la llamada a la base de datos para cambiar el estado del producto
+        }
+        
+        // Función simulada para abrir el modal de agregar producto
+        function openProductModal() {
+            console.log("Abriendo modal de agregar producto");
+            // Aquí se mostrará el modal para agregar o editar productos
+        }
+        
+        // Ejecutar la función al cargar la vista
+        window.onload = function() {
+            //loadAdminProducts();
+        };
+    </script>
+</body>
+</html>

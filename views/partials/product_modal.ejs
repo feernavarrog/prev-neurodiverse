@@ -1,0 +1,120 @@
+<!-- views/partials/product_modal.ejs -->
+<div id="product-modal"> <!-- Se oculta por defecto -->
+    <div>
+        <button id="close-product-modal">✖</button>
+        <h2>Información del Producto</h2>
+        <form id="product-form">
+            <label for="product-code">Código del producto:</label>
+            <input type="text" id="product-code" name="product-code" disabled>
+
+            <label for="product-name">Nombre del producto:</label>
+            <input type="text" id="product-name" name="product-name">
+
+            <label for="product-price">Precio:</label>
+            <input type="number" id="product-price" name="product-price">
+
+            <label for="product-description">Descripción:</label>
+            <input type="text" id="product-description" name="product-description">
+
+            <label for="product-brand">Marca:</label>
+            <input type="text" id="product-brand" name="product-brand">
+
+            <label for="product-category">Categoría:</label>
+            <select id="product-category" name="product-category">
+                <option value="Accesorios">Accesorios</option>
+                <option value="Electrónica">Electrónica</option>
+                <option value="Hogar">Hogar</option>
+            </select>
+
+            <label for="product-discount">Descuento:</label>
+            <input type="number" id="product-discount" name="product-discount">
+
+            <label for="product-stock">Stock:</label>
+            <input type="number" id="product-stock" name="product-stock">
+
+            <label for="product-active">Estado:</label>
+            <select id="product-active" name="product-active">
+                <option value="1">Activo</option>
+                <option value="0">Inactivo</option>
+            </select>
+
+            <label>Imagen actual del producto:</label>
+            <img id="current-product-image" src="" alt="Imagen del producto" style="max-width: 100px; display: block;">
+
+            <label for="product-image">Seleccionar nueva imagen:</label>
+            <input type="file" id="product-image" accept="image/*">
+
+            <button type="button" id="save-product">Guardar</button>
+            <button type="button" id="add-image">Agregar foto</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Función para poblar los datos en el modal de edición
+    function editProduct(code, name, category, price, stock, image, description, discount, brand, active) {
+        document.getElementById('product-code').value = code;
+        document.getElementById('product-name').value = name;
+        document.getElementById('product-category').value = category;
+        document.getElementById('product-price').value = price;
+        document.getElementById('product-stock').value = stock;
+        document.getElementById('current-product-image').src = image;
+        document.getElementById('product-description').value = description;
+        document.getElementById('product-discount').value = discount;
+        document.getElementById('product-brand').value = brand;
+        document.getElementById('product-active').value = active;
+
+        console.log("Editando producto:", { code, name, category, price, stock, image, description, discount, brand, active });
+    }
+
+    // Función para guardar el producto (simulación de envío a la base de datos)
+    document.getElementById("save-product").addEventListener("click", function() {
+        let productData = {
+            code: document.getElementById("product-code").value,
+            name: document.getElementById("product-name").value,
+            price: document.getElementById("product-price").value,
+            description: document.getElementById("product-description").value,
+            brand: document.getElementById("product-brand").value,
+            category: document.getElementById("product-category").value,
+            discount: document.getElementById("product-discount").value,
+            stock: document.getElementById("product-stock").value,
+            active: document.getElementById("product-active").value
+        };
+        console.log("Guardando producto:", productData);
+        // Aquí se haría la llamada AJAX para enviar los datos a la base de datos
+    });
+
+    // Función para manejar la carga de imagen
+    document.getElementById("add-image").addEventListener("click", function() {
+    let fileInput = document.getElementById("product-image");
+    if (fileInput.files.length > 0) {
+        let selectedFile = fileInput.files[0];
+
+        let formData = new FormData();
+        formData.append("productImage", selectedFile);
+
+        fetch("/products/upload-image", {
+        method: "POST",
+        body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.imageUrl) {
+                document.getElementById("current-product-image").src = data.imageUrl;
+                console.log("Imagen guardada en:", data.imageUrl);
+            } else {
+                console.log("Error al subir imagen.");
+            }
+        })
+        .catch(error => console.error("Error al subir la imagen:", error));
+    } else {
+        console.log("No se ha seleccionado ninguna imagen.");
+    }
+});
+
+</script>
