@@ -1,0 +1,59 @@
+<!-- views/register.ejs (Versión sin estilos) -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Registro - Neuroverse Market</title>
+    <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/homestyle.css" />
+</head>
+
+<body>
+    <%- include('partials/first-nav') %>
+    <%- include('partials/navbar') %>
+    <%- include('partials/sidebar') %>
+    <%- include('partials/cart') %>
+    <%- include('partials/login-modal') %>
+    
+    <main class="registro-container">
+        <h2 class="registro-titulo">REGISTRARSE</h2>
+        <div class="registro-formulario">
+            <input type="email" id="email" class="registro-input" placeholder="Correo Electrónico">
+            <input type="password" id="password" class="registro-input" placeholder="Contraseña">
+            <input type="text" id="first-name" class="registro-input" placeholder="Nombre">
+            <input type="text" id="last-name" class="registro-input" placeholder="Apellido">
+            <input type="date" id="birth-date" class="registro-input" placeholder="Fecha nacimiento">
+            <input type="text" id="city" class="registro-input" placeholder="Comuna">
+            <input type="text" id="street" class="registro-input" placeholder="Calle">
+            <input type="text" id="street-number" class="registro-input" placeholder="Número">
+            <input type="text" id="mobile-phone" class="registro-input" placeholder="Teléfono/Móvil">
+            <input type="text" id="additional-info" class="registro-input" placeholder="Información adicional">
+            <p class="registro-subtitulo">Patologías</p>
+            <div class="registro-patologias">
+                <label class="registro-label"><input type="checkbox" id="condition1"> Patología 1</label>
+                <label class="registro-label"><input type="checkbox" id="condition2"> Patología 2</label>
+                <label class="registro-label"><input type="checkbox" id="condition3"> Patología 3</label>
+                <label class="registro-label"><input type="checkbox" id="condition4"> Patología 4</label>
+                <label class="registro-label"><input type="checkbox" id="condition5"> Patología 5</label>
+                <input type="text" id="other-condition" class="registro-input" placeholder="Otra:">
+            </div>
+            <button id="register-btn" class="registro-boton">Registrarse</button>
+        </div>
+    </main>
+    
+    <%- include('partials/footer') %>
+    
+    <script src="/js/main.js"></script>
+</body>
+</html>

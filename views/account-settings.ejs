@@ -1,0 +1,103 @@
+<!-- views/account-settings.ejs (Versión sin estilos) -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuración de Cuenta - NeuroDiverse</title>
+</head>
+<body>
+    
+    <%- include('partials/navbar') %>
+    <%- include('partials/sidebar') %>
+    <%- include('partials/cart') %>
+    <%- include('partials/login-modal') %>
+    
+    <!-- Contenido principal -->
+    <main>
+        <h2>CONFIGURACIÓN DE CUENTA</h2>
+        <p>Puedes administrar tu cuenta aquí</p>
+        <hr>
+        
+        <div class="account-settings-form">
+            <input type="password" id="password" placeholder="Contraseña" required>
+            <input type="text" id="first-name" placeholder="Nombre" required>
+            <input type="text" id="last-name" placeholder="Apellido" required>
+            <input type="text" id="email" placeholder="Correo Electrónico" required>
+            <input type="date" id="birth-date" placeholder="Fecha nacimiento" required>
+            <input type="text" id="city" placeholder="Comuna" required>
+            <input type="text" id="street" placeholder="Calle" required>
+            <input type="text" id="street-number" placeholder="Número" required>
+            <input type="text" id="mobile-phone" placeholder="Teléfono/Móvil" required>
+            <input type="text" id="additional-info" placeholder="Información adicional">
+        </div>
+        <hr>
+        
+        <!-- Sección de patologías (Ejemplo estático, debe ser poblado dinámicamente) -->
+        <h3>Patologías</h3>
+        <div id="conditions-list">
+            <label><input type="checkbox" id="condition1"> Patología 1</label>
+            <label><input type="checkbox" id="condition2"> Patología 2</label>
+            <label><input type="checkbox" id="condition3"> Patología 3</label>
+            <label><input type="checkbox" id="condition4"> Patología 4</label>
+            <label><input type="checkbox" id="condition5"> Patología 5</label>
+            <input type="text" id="other-condition" placeholder="Otra: ">
+            <!-- Aquí se debe realizar una solicitud a la base de datos para recuperar las patologías del usuario según su ID -->
+        </div>
+        <hr>
+        
+        <button id="save-changes">Guardar cambios</button>
+        <button id="go-back">Volver</button>
+    </main>
+    
+    <%- include('partials/footer') %>
+    
+    <script src="/js/main.js"></script>
+    
+    <script>
+        // Función para poblar los datos del usuario en el formulario desde sessionStorage
+        function loadAccountData() {
+            let user = JSON.parse(sessionStorage.getItem('user')) || {};
+            console.log("Usuario recuperado de sessionStorage:", user);
+            
+            document.getElementById('password').value = ""; // Se deja vacío por seguridad
+            document.getElementById('first-name').value = user.firstName || "";
+            document.getElementById('last-name').value = user.lastName || "";
+            document.getElementById('email').value = user.email || "";
+            document.getElementById('birth-date').value = user.birthDate || "";
+            document.getElementById('city').value = user.city || "";
+            document.getElementById('street').value = user.street || "";
+            document.getElementById('street-number').value = user.streetNumber || "";
+            document.getElementById('mobile-phone').value = user.mobilePhone || "";
+            document.getElementById('additional-info').value = user.additionalInfo || "";
+        }
+        
+        // Función para preparar los datos y enviarlos a la base de datos
+        function saveAccountChanges() {
+            let updatedUser = {
+                password: document.getElementById('password').value,
+                firstName: document.getElementById('first-name').value,
+                lastName: document.getElementById('last-name').value,
+                email: document.getElementById('email').value,
+                birthDate: document.getElementById('birth-date').value,
+                city: document.getElementById('city').value,
+                street: document.getElementById('street').value,
+                streetNumber: document.getElementById('street-number').value,
+                mobilePhone: document.getElementById('mobile-phone').value,
+                additionalInfo: document.getElementById('additional-info').value,
+            };
+            
+            console.log("Datos listos para ser enviados a la base de datos:", updatedUser);
+            // Aquí se debe realizar una solicitud AJAX para actualizar los datos en la base de datos
+        }
+        
+        // Ejecutar las funciones al cargar la vista
+        window.onload = function() {
+            loadAccountData();
+        };
+        
+        // Evento para guardar cambios
+        document.getElementById('save-changes').addEventListener('click', saveAccountChanges);
+    </script>
+</body>
+</html>

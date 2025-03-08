@@ -1,0 +1,100 @@
+<!-- views/admin_users.ejs (Versión sin estilos) -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administración de Usuarios - NeuroDiverse</title>
+</head>
+<body>
+    
+    <%- include('partials/navbar') %>
+    <%- include('partials/sidebar') %>
+    <%- include('partials/cart') %>
+    <%- include('partials/login-modal') %>
+    
+    <!-- Contenido principal -->
+    <main>
+        <h2>Administración de Usuarios</h2>
+        <p>Aquí puedes gestionar los usuarios registrados en la plataforma.</p>
+        <hr>
+        
+        <!-- Tabla de ejemplo para aplicar estilos -->
+        <table id="admin-users-table" border="1">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Correo Electrónico</th>
+                    <th>RUT</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Juan Rodríguez</td>
+                    <td>juan@example.com</td>
+                    <td>10.456.345-K</td>
+                    <td><button>Desactivar</button></td>
+                </tr>
+            </tbody>
+        </table>
+        <hr>
+        
+        <!-- Tabla dinámica generada con JavaScript -->
+        <table id="dynamic-admin-users-table" border="1">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Correo Electrónico</th>
+                    <th>RUT</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Los datos se generarán dinámicamente -->
+            </tbody>
+        </table>
+    </main>
+    
+    <%- include('partials/footer') %>
+    
+    <script src="/js/main.js"></script>
+    
+    <script>
+        // Función para poblar la tabla de usuarios dinámicamente con datos simulados
+        function loadAdminUsers() {
+            let userRows = [
+                { name: "María López", email: "maria@example.com", rut: "11.222.333-4" },
+                { name: "Carlos Díaz", email: "carlos@example.com", rut: "99.888.777-6" },
+                { name: "Ana Pérez", email: "ana@example.com", rut: "22.333.444-5" }
+            ];
+            
+            let tableBody = document.querySelector("#dynamic-admin-users-table tbody");
+            tableBody.innerHTML = ""; // Limpiar contenido previo
+            
+            userRows.forEach(user => {
+                let row = `
+                    <tr>
+                        <td>${user.name}</td>
+                        <td>${user.email}</td>
+                        <td>${user.rut}</td>
+                        <td><button onclick="deactivateUser('${user.rut}')">Desactivar</button></td>
+                    </tr>
+                `;
+                tableBody.innerHTML += row;
+            });
+        }
+        
+        // Función simulada para desactivar usuario
+        function deactivateUser(userRut) {
+            console.log("Desactivando usuario con RUT:", userRut);
+            // Aquí se haría la llamada a la base de datos para cambiar el estado del usuario
+        }
+        
+        // Ejecutar la función al cargar la vista
+        window.onload = function() {
+            //loadAdminUsers();
+        };
+    </script>
+</body>
+</html>

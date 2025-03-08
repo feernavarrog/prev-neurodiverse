@@ -1,0 +1,151 @@
+<!-- views/admin_orders.ejs (Versión sin estilos) -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administración de Pedidos - NeuroDiverse</title>
+</head>
+<body>
+    
+    <%- include('partials/navbar') %>
+    <%- include('partials/sidebar') %>
+    <%- include('partials/cart') %>
+    <%- include('partials/login-modal') %>
+    
+    <!-- Contenido principal -->
+    <main>
+        <h2>Administración de Pedidos</h2>
+        <p>Aquí puedes gestionar los pedidos de los clientes.</p>
+        <hr>
+        
+        <!-- Dropdown para seleccionar estado del pedido -->
+        <label for="order-status">Filtrar por estado:</label>
+        <select id="order-status">
+            <option value="all">Todos</option>
+            <option value="pendiente">Pendiente</option>
+            <option value="enviado">Enviado</option>
+            <option value="entregado">Entregado</option>
+        </select>
+        <hr>
+        
+        <!-- Tabla de pedidos de ejemplo para aplicar estilos -->
+        <table id="admin-orders-table" border="1">
+            <thead>
+                <tr>
+                    <th>Nro Pedido</th>
+                    <th>Fecha Pedido</th>
+                    <th>Cliente</th>
+                    <th>Dirección</th>
+                    <th>Productos</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Ejemplo estático, los datos deben ser poblados dinámicamente desde la base de datos -->
+                <tr>
+                    <td>78654</td>
+                    <td>2024-03-05</td>
+                    <td>Juan Pérez - 12.345.678-9</td>
+                    <td>Avenida Siempre Viva 123, Santiago</td>
+                    <td>
+                        <ul>
+                            <li>Producto 1 - Cantidad: 2 - Precio: $10.000</li>
+                            <li>Producto 2 - Cantidad: 1 - Precio: $5.000</li>
+                        </ul>
+                    </td>
+                    <td>$25.000</td>
+                    <td>Pendiente</td>
+                    <td><button value="78654" onclick="markAsReviewed(this.value)">Marcar como Revisado</button></td>
+                </tr>
+            </tbody>
+        </table>
+        <hr>
+        
+        <!-- Tabla dinámica generada con JavaScript -->
+        <table id="dynamic-admin-orders-table" border="1">
+            <thead>
+                <tr>
+                    <th>Nro Pedido</th>
+                    <th>Fecha Pedido</th>
+                    <th>Cliente</th>
+                    <th>Dirección</th>
+                    <th>Productos</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Los datos se generarán dinámicamente -->
+            </tbody>
+        </table>
+    </main>
+    
+    <%- include('partials/footer') %>
+    
+    <script src="/js/main.js"></script>
+    
+    <script>
+        // Función para poblar la tabla de pedidos dinámicamente con datos simulados
+        function loadAdminOrders() {
+            let orderRows = [
+                { orderId: 78658, date: "2024-03-01", client: "María López - 11.222.333-4", address: "Calle Falsa 456", product: "Producto X", quantity: 1, price: "$12.000", total: "$12.000", status: "Pendiente" },
+                { orderId: 78658, date: "2024-03-01", client: "María López - 11.222.333-4", address: "Calle Falsa 456", product: "Producto Y", quantity: 2, price: "$8.000", total: "$16.000", status: "Pendiente" },
+                { orderId: 78659, date: "2024-02-28", client: "Carlos Díaz - 99.888.777-6", address: "Av. Central 789", product: "Producto Z", quantity: 1, price: "$15.000", total: "$15.000", status: "Enviado" }
+            ];
+            
+            let groupedOrders = {};
+            orderRows.forEach(row => {
+                if (!groupedOrders[row.orderId]) {
+                    groupedOrders[row.orderId] = {
+                        date: row.date,
+                        client: row.client,
+                        address: row.address,
+                        products: [],
+                        total: 0,
+                        status: row.status
+                    };
+                }
+                groupedOrders[row.orderId].products.push(`${row.product} - Cantidad: ${row.quantity} - Precio: ${row.price}`);
+                groupedOrders[row.orderId].total += parseInt(row.total.replace("$", ""));
+            });
+            
+            let tableBody = document.querySelector("#dynamic-admin-orders-table tbody");
+            tableBody.innerHTML = ""; // Limpiar contenido previo
+            
+            Object.keys(groupedOrders).forEach(orderId => {
+                let order = groupedOrders[orderId];
+                let productList = order.products.map(p => `<li>${p}</li>`).join("\n");
+                
+                let row = `
+                    <tr>
+                        <td>${orderId}</td>
+                        <td>${order.date}</td>
+                        <td>${order.client}</td>
+                        <td>${order.address}</td>
+                        <td><ul>${productList}</ul></td>
+                        <td>$${order.total}</td>
+                        <td>${order.status}</td>
+                        <td><button value="${orderId}" onclick="markAsReviewed(this.value)">Marcar como Revisado</button></td>
+                    </tr>
+                `;
+                tableBody.innerHTML += row;
+            });
+        }
+
+        // Función simulada para cambiar el estado del pedido
+        function markAsReviewed(orderId) {
+            console.log("Cambiando estado del pedido:", orderId);
+            // Aquí se haría la llamada a la base de datos para actualizar el estado del pedido
+        }
+        
+        // Ejecutar la función al cargar la vista
+        window.onload = function() {
+            //loadAdminOrders();
+        };
+    </script>
+</body>
+</html>

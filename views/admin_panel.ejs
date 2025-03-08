@@ -1,0 +1,34 @@
+<!-- views/admin_panel.ejs (Versión sin estilos) -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración - NeuroDiverse</title>
+</head>
+<body>
+    
+    <%- include('partials/navbar') %>
+    <%- include('partials/sidebar') %>
+    <%- include('partials/cart') %>
+    <%- include('partials/login-modal') %>
+    
+    <!-- Contenido principal -->
+    <main>
+        <h2>ADMINISTRACIÓN</h2>
+        <p>Opciones de gestión para el administrador</p>
+        <hr>
+        
+        <!-- Lista de opciones de administración -->
+        <ul>
+            <li><a href="/admin/products">Administrar Productos</a></li>
+            <li><a href="/admin/users">Administrar Usuarios</a></li>
+            <li><a href="/admin/orders">Administrar Pedidos</a></li>
+        </ul>
+    </main>
+    
+    <%- include('partials/footer') %>
+    
+    <script src="/js/main.js"></script>
+</body>
+</html>

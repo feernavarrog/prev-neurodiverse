@@ -1,0 +1,19 @@
+<!-- views/partials/cart.ejs (Vista) -->
+<aside id="cart">
+  <div class="sidebar-header">
+  <h3>Carrito</h3>
+
+    <button id="close-cart" class="btn-close">✖</button> <!-- Botón para cerrar sidebar -->
+</div>
+  
+  <!-- Sección para cargar dinámicamente los productos en el carrito -->
+  <div id="cart-items">
+      <!-- Los productos en el carrito serán cargados dinámicamente desde sessionStorage. -->
+  </div>
+  
+  <p>Total: <span id="cart-total">$0</span></p>
+  <button id="checkout">Continuar Checkout</button>
+  
+</aside>
+
+<script src="/js/main.js"></script>

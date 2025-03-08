@@ -1,0 +1,82 @@
+<!-- views/products.ejs -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>NProductos</title>
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+        />
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+        <link
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+          rel="stylesheet"
+        />
+        <link rel="stylesheet" href="/css/style.css" />
+        <link rel="stylesheet" href="/css/homestyle.css" />
+      </head>
+    
+</head>
+<body>
+    
+    <%- include('partials/first-nav') %>
+    <!-- Navbar -->
+    <%- include('partials/navbar') %>
+    
+    <!-- Sidebar (Menú lateral) -->
+    <%- include('partials/sidebar') %>
+    
+    <!-- Cart Sidebar -->
+    <%- include('partials/cart') %>
+    
+    <!-- Login Modal -->
+    <%- include('partials/login-modal') %>
+    
+    <h2 style="text-align: center;">CONTENIDO PRINCIPAL (Products)</h2>
+    
+    <p style="text-align: center;">Lista de productos según el criterio seleccionado</p>
+    
+    <!-- Contenedor donde se insertarán los productos dinámicamente -->
+    <div id="product-list">
+        <!-- Estos productos son solo ejemplos estáticos.
+             Los productos reales deben ser insertados dinámicamente desde la base de datos,
+             siguiendo este mismo patrón de estructura HTML.
+             Cada producto debe contener un enlace que pase el código como parámetro en la URL.
+        -->
+        <div>
+
+    <main class="main-products">
+
+    <div class="product-list">
+        <div class="product-item">
+            <a href="/item?code=12345">
+                <img class="product-image" src="/img/fidgetoy1.png" alt="Producto 1">
+                <p class="product-name">Nombre producto 1</p>
+                <p class="product-price">$100.00</p>
+            </a>
+        </div>
+        <div class="product-item">
+            <a href="/item?code=67890">
+                <img class="product-image" src="/img/fidgetoy2.png" alt="Producto 2">
+                <p class="product-name">Nombre producto 2</p>
+                <p class="product-price">$150.00</p>
+            </a>
+        </div>
+    </div>
+</main>
+
+
+
+    
+    
+    
+
+    <!-- Footer -->
+    <%- include('partials/footer') %>
+    <script src="/js/main.js"></script>
+    
+</body>
+</html>
