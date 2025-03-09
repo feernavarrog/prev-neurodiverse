@@ -1,7 +1,7 @@
 <!-- views/partials/product_modal.ejs -->
-<div id="product-modal"> <!-- Se oculta por defecto -->
-    <div>
-        <button id="close-product-modal">✖</button>
+<div id="product-modal" style="display: none;"> <!-- Se oculta por defecto -->
+    <div class="modal-content">
+        <button class="close-button" id="close-product-modal">✖</button>
         <h2>Información del Producto</h2>
         <form id="product-form">
             <label for="product-code">Código del producto:</label>
@@ -39,16 +39,17 @@
             </select>
 
             <label>Imagen actual del producto:</label>
-            <img id="current-product-image" src="" alt="I producto" style="max-width: 100px; display: block;">
+            <img id="current-product-image" src="" alt="Producto" style="max-width: 100px; display: block;">
 
             <label for="product-image">Seleccionar nueva imagen:</label>
             <input type="file" id="product-image" accept="image/*">
 
-            <button type="button" id="save-product">Guardar</button>
-            <button type="button" id="add-image">Agregar foto</button>
+            <button class= "button-save" type="button" id="save-product">Guardar</button>
+            <button class = "button-add" type="button" id="add-image">Agregar foto</button>
         </form>
     </div>
 </div>
+
 
 <script>
     // Función para poblar los datos en el modal de edición

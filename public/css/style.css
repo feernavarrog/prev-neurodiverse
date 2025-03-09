@@ -185,7 +185,7 @@ footer {
 
 /* Efecto hover en los enlaces */
 .sidebar-link:hover {
-    color: #8be094;
+    color: #a5d7cd;
 }
 
 
@@ -341,7 +341,7 @@ footer {
 
 /* Estilo para la opción seleccionada */
 .quantity-selector option:checked {
-    background-color: #007bff;  
+    background-color: #a5d7cd;  
     color: white;  
 }
 
@@ -442,7 +442,7 @@ footer {
 
 /* Efecto al poner el foco sobre los inputs */
 #login-form input:focus {
-    border-color: #007bff; 
+    border-color: #a5d7cd; 
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); 
 }
 

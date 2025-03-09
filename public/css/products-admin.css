@@ -1,0 +1,215 @@
+/* Estilo general para el body y contenido principal */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+}
+
+/* Contenedor principal */
+.admin-main {
+    width: 90%;
+    margin: 20px auto;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Título principal */
+.admin-title {
+    font-size: 2rem;
+    color: #333;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+/* Descripción o subtítulo */
+.admin-description {
+    font-size: 1.1rem;
+    color: #666;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Línea horizontal */
+hr {
+    border: 0;
+    height: 1px;
+    background-color: #e1e1e1;
+    margin: 20px 0;
+}
+
+/* Estilo general para las tablas */
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+/* Estilo para las cabeceras de las tablas */
+.table-header {
+    background-color:#bacfe5;
+    color: rgb(0, 0, 0);
+    font-size: 1.1rem;
+    padding: 12px;
+    text-align: left;
+    border-radius: 8px 8px 0 0;
+}
+
+/* Estilo para las celdas de la tabla */
+.admin-table td {
+    background-color: #fff;
+    color: #444;
+    font-size: 1rem;
+    padding: 10px;
+    text-align: left;
+    border-top: 1px solid #e1e1e1;
+    border-bottom: 1px solid #e1e1e1;
+    border-radius: 0 0 8px 8px;
+}
+
+/* Estilo para las filas de la tabla */
+.admin-table tr {
+    transition: background-color 0.3s ease;
+}
+
+/* Estilo para las filas de la tabla al pasar el ratón */
+.admin-table tr:hover {
+    background-color: #f9f9f9;
+    cursor: pointer;
+}
+
+/* Imagen del producto */
+.product-image {
+    border-radius: 5px;
+    max-width: 50px;
+    height: auto;
+}
+
+/* Estilo para los botones dentro de la tabla */
+.btn-edit, .btn-deactivate {
+    padding: 8px 15px;
+    font-size: 14px;
+    background-color: #f5ecbe;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 5px;
+}
+
+.btn-edit:hover {
+    background-color: #a5d7cd;
+}
+
+.btn-deactivate:hover {
+    background-color: #f8b8d0;
+}
+
+/* Botón para agregar producto */
+.btn-add-product {
+    padding: 12px 25px;
+    background-color: #ecc3c9;
+    border: none;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: block;
+    margin: 20px auto;
+}
+
+.btn-add-product:hover {
+    background-color: #a5d7cd;
+}
+
+/* Asegúrate de que el modal cubra toda la pantalla */
+#product-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
+    display: none;
+    justify-content: center; /* Centrado horizontal */
+    align-items: center; /* Centrado vertical */
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px; /* Bordes más redondeados */
+    max-width: 600px;
+    width: 100%;
+    max-height: 80%; /* Limitar el alto del modal para que no ocupe toda la altura de la ventana */
+    overflow-y: auto; /* Hacer que el contenido sea desplazable si excede el alto del modal */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); /* Sombra más suave */
+    position: relative; /* Para que el botón de cierre se posicione correctamente */
+}
+
+.close-button {
+    background-color: transparent;
+    border: none;
+    font-size: 20px; 
+    color: #333;
+    cursor: pointer;
+    position: absolute;
+    top: 5px; 
+    right: 5px; 
+    padding: 0; 
+    border-radius: 50%; 
+    width: 25px; 
+    height: 25px; 
+    display: flex;
+    margin-left: 50px;
+    
+}
+#product-modal .modal-content form {
+    display: flex;
+    flex-direction: column; /* Establecer los formularios en columna */
+    gap: 15px; /* Espaciado entre los campos */
+}
+
+#product-modal .modal-content input,
+#product-modal .modal-content textarea,
+#product-modal .modal-content select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.button-save {
+    padding: 10px 20px;
+    background-color: #a5d7cd;
+    color: rgb(0, 0, 0);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    width: 300px;
+    margin-left: 100px;
+}
+
+.button-save:hover {
+    background-color: #ecc3c9; /* Cambiar color al pasar el ratón por encima */
+}
+
+.button-add{
+    padding: 10px 20px;
+    background-color: #a5d7cd;
+    color: rgb(0, 0, 0);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    width: 300px;
+    margin-left: 100px;   
+}
+
+.button-add:hover {
+    background-color: #ecc3c9; /* Cambiar color al pasar el ratón por encima */
+}

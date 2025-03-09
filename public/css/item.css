@@ -3,43 +3,43 @@
     padding: 0;
     background: white;
     display: flex;
-    justify-content: center;  /* Centra el contenido horizontalmente */
-    flex-direction: column;  /* Alinea los elementos en columna */
-    align-items: center;  /* Alinea el contenido al centro */
-    box-sizing: border-box;  /* Asegura que el padding no afecte el ancho */
+    justify-content: center; 
+    flex-direction: column;  
+    align-items: center; 
+    box-sizing: border-box; 
 }
 
 /* Estilos del contenedor del item */
 .item-container {
     max-width: 1000px;
     display: flex;
-    justify-content: space-between;  /* Alinea los elementos a los extremos */
-    gap: 30px;  /* Separación entre la imagen y los detalles */
+    justify-content: space-between; 
+    gap: 30px;  
     width: 100%;
-    flex-wrap: wrap;  /* Permite que los elementos se ajusten en pantallas pequeñas */
-    align-items: flex-start;  /* Alinea los elementos al inicio en el eje vertical */
+    flex-wrap: wrap;  
+    align-items: flex-start;  
 }
 /* Estilo para la imagen del item */
 .item-image {
-    width: 50%;  /* La imagen ocupa el 50% del contenedor */
+    width: 50%;  
     height: auto;
     border-radius: 8px;
-    object-fit: cover;  /* Asegura que la imagen se ajuste adecuadamente */
-    flex-wrap: wrap;  /* Permite que los elementos se ajusten en pantallas pequeñas */
+    object-fit: cover; 
+    flex-wrap: wrap;  
     align-items: flex-start; 
     
 }
 
 /* Contenedor de los detalles del producto */
 .details-container {
-    width: 45%;  /* Los detalles ocupan el 45% del contenedor */
+    width: 45%; 
     display: flex;
-    flex-direction: column;  /* Alineamos los detalles de arriba a abajo */
-    justify-content: flex-start;  /* Alineación vertical desde la parte superior */
-    gap: 15px;  /* Espaciado entre los elementos (Precio, nombre y botón) */
-    align-items: flex-start;  /* Alineación de los detalles hacia la izquierda */
-    margin-left: 20px;  /* Desplaza el contenedor hacia la derecha */
-    flex-wrap: wrap;  /* Permite que los elementos se ajusten en pantallas pequeñas */
+    flex-direction: column;  
+    justify-content: flex-start;  
+    gap: 15px;  
+    align-items: flex-start;  
+    margin-left: 20px;  
+    flex-wrap: wrap;  
     
 }
 
@@ -48,8 +48,8 @@
     font-size: 1.5rem;
     color: #333;
     text-align: left;
-    margin-top: 100px;  /* Eliminamos el margen superior */
-    flex-wrap: wrap;  /* Permite que los elementos se ajusten en pantallas pequeñas */
+    margin-top: 100px; 
+    flex-wrap: wrap; 
     align-items: flex-start; 
 }
 
@@ -57,13 +57,13 @@
 .item-info {
     font-size: 1rem;
     color: #666;
-    text-align: left;  /* Alinea el texto a la izquierda */
-    margin-top: 10px;  /* Separación entre la imagen y la descripción */
-    width: 80%;  /* Ajusta el ancho de la descripción para que sea más proporcionada */
-    max-width: 800px;  /* Limita el ancho máximo para evitar que se estire demasiado */
-    margin-left: 450px;  /* Asegura que no haya margen extra a la izquierda */
-    margin-right: auto;  /* Mantiene el margen derecho automático para alinear a la izquierda */
-    flex-wrap: wrap;  /* Permite que los elementos se ajusten en pantallas pequeñas */
+    text-align: left;  
+    margin-top: 10px;  
+    width: 80%;  
+    max-width: 800px;  
+    margin-left: 450px;  
+    margin-right: auto;  
+    flex-wrap: wrap;  
     align-items: flex-start; 
 }
 
@@ -77,8 +77,8 @@
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    margin-top: 10px;  /* Un pequeño margen superior para separar el botón */
-    flex-wrap: wrap;  /* Permite que los elementos se ajusten en pantallas pequeñas */
+    margin-top: 10px;  
+    flex-wrap: wrap;  
     align-items: flex-start; 
 }
 
