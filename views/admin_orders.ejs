@@ -5,6 +5,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Administración de Pedidos - NeuroDiverse</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/homestyle.css" />
+    <link rel="stylesheet" href="/css/admin_orders.css" />
+
 </head>
 <body>
     
@@ -15,13 +29,15 @@
     
     <!-- Contenido principal -->
     <main>
-        <h2>Administración de Pedidos</h2>
-        <p>Aquí puedes gestionar los pedidos de los clientes.</p>
-        <hr>
+        <div class="admin-header">
+            <h2>Administración de Pedidos</h2>
+            <p>Aquí puedes gestionar los pedidos de los clientes.</p>
+            <hr>
+        </div>
         
         <!-- Dropdown para seleccionar estado del pedido -->
-        <label for="order-status">Filtrar por estado:</label>
-        <select id="order-status">
+        <label for="order-status" class="form-label">Filtrar por estado:</label>
+        <select id="order-status" class="form-select">
             <option value="all">Todos</option>
             <option value="pendiente">Pendiente</option>
             <option value="enviado">Enviado</option>
@@ -58,12 +74,13 @@
                     </td>
                     <td>$25.000</td>
                     <td>Pendiente</td>
-                    <td><button value="78654" onclick="markAsReviewed(this.value)">Marcar como Revisado</button></td>
+                    <td><button class="registro-boton" value="78654" onclick="markAsReviewed(this.value)">Marcar como Revisado</button></td>
                 </tr>
             </tbody>
         </table>
         <hr>
-        
+
+
         <!-- Tabla dinámica generada con JavaScript -->
         <table id="dynamic-admin-orders-table" border="1">
             <thead>
