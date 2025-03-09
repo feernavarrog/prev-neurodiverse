@@ -17,6 +17,8 @@
         />
         <link rel="stylesheet" href="/css/style.css" />
         <link rel="stylesheet" href="/css/homestyle.css" />
+        <link rel="stylesheet" href="/css/item.css" />
+        <link rel="stylesheet" href="/css/products.css" />
       </head>
     
 </head>
@@ -35,9 +37,9 @@
     <!-- Login Modal -->
     <%- include('partials/login-modal') %>
     
-    <h2 style="text-align: center;">CONTENIDO PRINCIPAL (Products)</h2>
     
-    <p style="text-align: center;">Lista de productos según el criterio seleccionado</p>
+    
+    
     
     <!-- Contenedor donde se insertarán los productos dinámicamente -->
     <div id="product-list">
@@ -47,10 +49,21 @@
              Cada producto debe contener un enlace que pase el código como parámetro en la URL.
         -->
         <div>
-
+            
     <main class="main-products">
-
+        
+        <h2 style="text-align: center;">Fidget & Estímulos</h2> 
     <div class="product-list">
+        <div class="product-descript">
+            <h>
+                Los fidget toys son juguetes diseñados para reducir el estrés, la ansiedad y mejorar la 
+                concentración. Son pequeños, portátiles y fáciles de usar, ideales para todas las edades. 
+                Estos juguetes proporcionan estimulación sensorial mediante movimientos, texturas o sonidos, 
+                ayudando a mantener las manos ocupadas y la mente enfocada. Con opciones como spinners, cubos, 
+                bolas antiestrés y ruedas de dedo, los fidget toys son perfectos para promover la calma y concentración 
+                en cualquier entorno.
+            </h>
+        </div>
         <div class="product-item">
             <a href="/item?code=12345">
                 <img class="product-image" src="/img/fidgetoy1.png" alt="Producto 1">

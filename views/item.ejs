@@ -16,6 +16,8 @@
   />
   <link rel="stylesheet" href="/css/style.css" />
   <link rel="stylesheet" href="/css/homestyle.css" />
+  <link rel="stylesheet" href="/css/item.css" />
+  <link rel="stylesheet" href="/css/products.css" />
 </head>
 <body>
     
@@ -33,20 +35,30 @@
     <%- include('partials/login-modal') %>
     
     
-        <h2 class="main-title">PRODUCTO</h2>
-        <main class="main-item">
-        <!-- Contenedor de información del item -->
-        <!-- Los datos de este item son solo de ejemplo. Todxs los campos serán cargados dinámicamente 
-             al inicio de la página según el parámetro "code" pasado en la URL. -->
-        <div class="item-container">
-            <h3 id="item-name" class="item-name">Nombre del Item</h3>
-            <img id="item-image" src="/img/fidgetoy1.png" alt="del item" class="item-image">
-            <p id="item-description" class="item-description">Descripción del item...</p>
-            <p class="item-info">Codigo: <span id="item-code">(ID en BBDD)</span></p>
-            <p class="item-info">Precio: <span id="item-price">$0</span></p>
-            <button id="add-to-cart" class="add-to-cart-btn">🛒 Agregar</button>
-        </div>
-    </main>
+        
+    <div class="main-item">
+      <div class="item-container">
+          <!-- Imagen del producto -->
+          <img id="item-image" src="/img/fidgetoy1.png" alt="del item" class="item-image">
+    
+          <!-- Contenedor de los detalles del producto -->
+          <div class="details-container">
+              <!-- Nombre del producto -->
+              <h3 id="item-name" class="item-name">Nombre del Item</h3>
+    
+              <!-- Precio (colocado arriba del botón de agregar al carrito) -->
+              <p class="item-price">Precio: <span id="item-price">$0</span></p>
+    
+              <!-- Botón de agregar al carrito -->
+              <button id="add-to-cart" class="add-to-cart-btn">🛒 Agregar</button>
+          </div>
+      </div>
+    
+      <!-- Descripción del producto (debajo de la imagen) -->
+      <p id="item-description" class="item-description">Descripción del item...</p>
+      <p class="item-info">Código: <span id="item-code">(ID en BBDD)</span></p>
+    </div>
+    
 
 
     <script src="/js/main.js" async></script>

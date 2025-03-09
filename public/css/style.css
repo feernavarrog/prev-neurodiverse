@@ -1,3 +1,34 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    box-sizing: border-box; /* Asegura que el padding y el border no afecten el tamaño total */
+    height: 100%; /* Asegura que el body ocupe todo el alto de la pantalla */
+    width: 100%; /* Asegura que el body ocupe todo el ancho de la pantalla */
+    overflow-x: hidden; /* Elimina el desbordamiento horizontal */
+}
+
+/* Contenedores principales de la página */
+* {
+    box-sizing: border-box; /* Para que el padding y border no afecten el ancho de los elementos */
+}
+
+/* Asegura que el contenido no se desborde */
+body, .main-products, .product-list, .product-item, .item-container, .details-container {
+    width: 100%;
+    max-width: 100%;
+}
+
+
+
+/* Asegura que los elementos no tengan desbordamiento */
+html, body, .main-products {
+    overflow-x: hidden;
+}
+
+
+
+/* Estilo para el contenedor principal de la página */
 
 /*----------------------------NAV--------------------*/
 /* Barra de navegación */
@@ -101,7 +132,7 @@ footer {
     padding: 15px;
     background: #bacfe5;
     color: white;
-    margin-top: 30px;
+    margin-top: 200px;
 }
 
 /* Estilo general para el sidebar */
@@ -541,179 +572,4 @@ footer {
     background-color: #ffe97a;
 }
 
-/*----------------------PRODUCTS------------------------------\*/
-.main-products{
-    width: 100%;  
-    padding: 350px;
-    background: white; 
-    margin-top: 200px
-    
-     
-}
-.product-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
-    padding: 0;
-    list-style: none;
-    margin-top: -400px
-}
 
-/* Estilo para cada producto */
-.product-item {
-    width: 250px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    background-color: #fff;
-}
-
-/* Estilo de la imagen del producto */
-.product-item .product-image {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    transition: opacity 0.3s ease;
-}
-
-/* Estilos cuando pasas el cursor sobre el producto */
-.product-item:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 8px 16px #ecc3c9;
-}
-
-.product-item:hover .product-image {
-    opacity: 0.5;
-}
-
-/* Estilos de los textos del producto */
-.product-item .product-name {
-    font-size: 1.1em;
-    font-weight: bold;
-    color: #333;
-    margin: 15px;
-}
-
-.product-item .product-price {
-    font-size: 1.2em;
-    color: #000000;
-    margin-bottom: 15px;
-    margin-left: 15px;
-}
-
-/* Asegurarse de que los productos ocupen el 100% de la columna en pantallas más pequeñas */
-@media (max-width: 768px) {
-    .product-item {
-        width: 100%;
-    }
-}
-
-.fidget-toy-desc {
-    color: #000000; 
-    font-size: 18px; 
-    line-height: 1.3; /* Espaciado entre líneas */
-    text-align: center; 
-    margin: 0 auto; 
-    width: 80%; 
-  }
-  
- 
-/*----------------------------ITEMS-----------------------*/
-
-.main-item{
-    width: 100%;  
-    padding: 0;
-    background: white; 
-    align-items: center;
-    
-    
-}
-
-.main-title {
-    text-align: center;
-    margin-top: 50px;
-    font-size: 2rem;
-    color: #333;
-}
-
-/* Estilos del contenedor del item */
-.item-container {
-    max-width: 1000px; 
-    width: 100%; 
-    overflow: hidden;
-    margin: 20px 0;
-    justify-content:center;
-    margin-top: -100px;
-    margin-right: 200px;
-    
-    
-}
-
-/* Estilo para el nombre del item */
-.item-name {
-    font-size: 1.5rem;
-    color: #333;
-    margin-bottom: 10px;
-    text-align: right;
-    margin-top: 150px;
-    
-   
-}
-
-/* Estilo para la imagen del item */
-.item-image {
-    padding: 0;
-    width: 75%; 
-    height: auto;
-    border-radius: 8px; 
-    margin-top: -260px;
-    float: left;
-    
-    
-    
-}
-.item-description {
-    font-size: 1rem;
-    color: #666;
-    text-align: right; 
-    margin-bottom: 20px; 
-    margin-right: 520px;
-    margin-top: -20px;
-    
-}
-
-/* Estilo para los párrafos de información del item */
-.item-info {
-    font-size: 1rem;
-    color: #444;
-    margin-bottom: 10px;
-    text-align: right;
-    
-}
-
-/* Estilo para el botón de agregar al carrito */
-.add-to-cart-btn {
-    background-color: #ecc3c9;
-    color: rgb(0, 0, 0);
-    font-size: 1.1rem;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    float: right;
-    margin-top: -120px;
-}
-
-/* Cambiar el color del botón cuando se pasa el ratón por encima */
-.add-to-cart-btn:hover {
-    background-color: #bacfe5;
-}
-
-.add-to-cart-btn:active {
-    background-color: #1e7e34;
-
-}

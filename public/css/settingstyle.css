@@ -1,0 +1,125 @@
+/* Estilos globales */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f7f7f7;
+    margin: 0;
+    padding: 0;
+}
+
+main {
+    width: 30%;
+    margin: 20px auto;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    margin-top: 50px;
+}
+
+/* Título principal */
+h2 {
+    font-size: 2rem;
+    color: #333;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+/* Subtítulo o texto introductorio */
+p {
+    font-size: 1.1rem;
+    color: #666;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Línea horizontal */
+hr {
+    border: 0;
+    height: 1px;
+    background-color: #e1e1e1;
+    margin: 20px 0;
+}
+
+/* Estilo para el formulario */
+.account-settings-form input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    background-color: #f9f9f9;
+}
+
+.account-settings-form input:focus {
+    border-color: #006f9c;
+    background-color: #fff;
+    outline: none;
+}
+
+.account-settings-form input[type="date"] {
+    padding: 10px;
+}
+
+/* Estilo para los checkbox */
+#conditions-list label {
+    font-size: 1rem;
+    color: #666;
+    margin-right: 20px;
+    display: inline-block;
+    margin-bottom: 10px;
+}
+
+/* Estilo del botón "Guardar cambios" */
+#save-changes {
+    background-color: #006f9c;
+    color: white;
+    padding: 12px 30px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-right: 20px;
+}
+
+#save-changes:hover {
+    background-color: #005b87;
+}
+
+/* Estilo del botón "Volver" */
+#go-back {
+    background-color: #f44336;
+    color: white;
+    padding: 12px 30px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#go-back:hover {
+    background-color: #d32f2f;
+}
+
+/* Sección de patologías */
+h3 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+#conditions-list {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Estilo de la sección de botones */
+button {
+    display: inline-block;
+    margin-top: 20px;
+    text-align: center;
+    font-weight: bold;
+}
