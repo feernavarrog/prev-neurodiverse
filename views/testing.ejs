@@ -1,0 +1,89 @@
+// views/testing.ejs
+// Vista de prueba para probar las funciones de usuario
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testing Usuarios</title>
+    
+    
+</head>
+<body>
+    <h1>Testing Usuarios</h1>
+    <button onclick="testGetAllUsers()">Obtener Todos los Usuarios</button>
+    <br>
+    <input type="text" id="emailInput" placeholder="Ingrese Email">
+    <button onclick="testGetUserByEmail()">Buscar Usuario por Email</button>
+    <br>
+    <button onclick="testCreateUser()">Crear Usuario</button>
+    <br>
+    <button onclick="testUpdateUser()">Actualizar Usuario</button>
+    <br>
+    <input type="text" id="userIdInput" placeholder="ID Usuario a Eliminar">
+    <button onclick="testDeleteUser()">Eliminar Usuario</button>
+<script src="/js/crudManager.js"></script>
+<script>
+    async function testGetAllUsers() {
+        const users = await fetchUsers();
+        console.log("Usuarios obtenidos:", users);
+    }
+
+    async function testGetUserByEmail() {
+        const email = document.getElementById('emailInput').value;
+        const user = await fetchUsers({ column: 'email', value: email });
+        console.log("Usuario obtenido:", user);
+    }
+
+    async function testCreateUser() {
+        const newUser = {
+            rut: '12345678-0',
+            email: 'test@neuroverse.com',
+            password: 'Test1234',
+            first_name: 'Test',
+            last_name: 'User',
+            birth_date: new Date('1990-05-20').toISOString().split('T')[0],
+            city: 'Santiago',
+            district: 'Centro',
+            street: 'Av. Test',
+            street_number: '100',
+            mobile_phone: '987654321',
+            additional_address_info: '',
+            active: 1,
+            user_role: 'customer'
+        };
+        const result = await createUser(newUser);
+        console.log("Usuario creado:", result);
+    }
+
+    async function testUpdateUser() {
+    const updatedUser = {
+        user_id: Number(8), // Debe ser número
+        rut: '12345678-0',
+        email: 'updated@neuroverse.com',
+        password: 'Updated1234',
+        first_name: 'Updated',
+        last_name: 'User',
+        birth_date: new Date('1990-05-20').toISOString().split('T')[0], // Formato YYYY-MM-DD
+        city: 'Valparaíso',
+        district: 'Viña',
+        street: 'Calle Nueva',
+        street_number: '200',
+        mobile_phone: '923456789',
+        additional_address_info: '',
+        active: Number(1), // Debe ser número
+        user_role: 'customer'
+    };
+    const result = await updateUser(updatedUser);
+    console.log("Usuario actualizado:", result);
+}
+
+    async function testDeleteUser() {
+        const userId = document.getElementById('userIdInput').value;
+        const result = await deleteUser(userId);
+        console.log("Usuario eliminado:", result);
+    }
+</script>
+</body>
+</html>

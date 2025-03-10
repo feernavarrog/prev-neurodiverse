@@ -3,7 +3,7 @@ const cors = require('cors');
 const path = require('path');
 const database = require('./src/services/database');
 
-//const userRoutes = require('./src/routes/userRoutes');
+const userRoutes = require('./src/routes/userRoutes');
 //const productRoutes = require('./src/routes/productRoutes');
 
 const app = express();
@@ -24,7 +24,7 @@ app.use(express.static('public'));
 app.use('/node_modules', express.static(path.join(__dirname, 'node_modules')));
 
 
-//app.use('/users', userRoutes); // Rutas de usuarios
+app.use('/users', userRoutes); // Rutas de usuarios
 //app.use('/products', productRoutes); // Rutas de productos
 
 // RUTAS NEURODIVERSE
@@ -40,6 +40,7 @@ app.get('/admin-panel', (req, res) => {res.render('admin_panel');});
 app.get('/admin/orders', (req, res) => {res.render('admin_orders');});
 app.get('/admin/users', (req, res) => {res.render('admin_users');});
 app.get('/admin/products', (req, res) => {res.render('admin_products');});
+app.get('/testing', (req, res) => {res.render('testing');});
 app.use((req, res, next) => {res.status(404).render('notFound');});
 
 // Inicializar la base de datos

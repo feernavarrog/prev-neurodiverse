@@ -10,7 +10,7 @@ async function initialize() {
             password: "NeuroDiverse2025",
             connectString: "vgt81ksr6e73o7fk_high",
             walletLocation: path.resolve(__dirname, '../../Wallet_NEURODIVERSE'),  // Ruta absoluta
-            walletPassword: "HotelRR2024!"
+            walletPassword: "Xp4nd3rL0gic2025"
         });
         console.log("Base de datos conectada correctamente.");
     } catch (err) {
