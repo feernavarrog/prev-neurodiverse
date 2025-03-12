@@ -4,7 +4,10 @@ const path = require('path');
 const database = require('./src/services/database');
 
 const userRoutes = require('./src/routes/userRoutes');
-//const productRoutes = require('./src/routes/productRoutes');
+const categoryRoutes = require('./src/routes/categoryRoutes');
+const conditionRoutes = require('./src/routes/conditionRoutes');
+const brandRoutes = require('./src/routes/brandRoutes');
+const productRoutes = require('./src/routes/productRoutes');
 
 const app = express();
 
@@ -25,7 +28,10 @@ app.use('/node_modules', express.static(path.join(__dirname, 'node_modules')));
 
 
 app.use('/users', userRoutes); // Rutas de usuarios
-//app.use('/products', productRoutes); // Rutas de productos
+app.use('/categories', categoryRoutes); // Rutas de categorías
+app.use('/conditions', conditionRoutes); // Rutas de condiciones
+app.use('/brands', brandRoutes); // Rutas de marcas
+app.use('/products', productRoutes); // Rutas de productos
 
 // RUTAS NEURODIVERSE
 app.get('/', (req, res) => {res.render('home');});  // Ruta inicial 

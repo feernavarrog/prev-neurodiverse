@@ -58,3 +58,30 @@ exports.deleteUser = async (userId) => {
     const sql = 'DELETE FROM app_user WHERE user_id = :id';
     return database.executeQuery(sql, [userId]);
 };
+
+// src/models/userModel.js
+// ==============================
+// Funciones para manejo de USER_CONDITION
+// ==============================
+
+exports.getUserConditions = async (userId) => {
+    const sql = `
+        SELECT * FROM user_condition WHERE user_id = :userId
+    `;
+    return database.executeQuery(sql, [userId]);
+};
+
+// Asignar una sola condición a un usuario
+exports.assignUserCondition = async (userId, conditionId) => {
+    const sql = `
+        INSERT INTO user_condition (user_id, condition_id)
+        VALUES (:userId, :conditionId)
+    `;
+    return database.executeQuery(sql, [userId, conditionId]);
+};
+
+// Eliminar una sola condición de un usuario
+exports.removeUserCondition = async (userId, conditionId) => {
+    const sql = `DELETE FROM user_condition WHERE user_id = :userId AND condition_id = :conditionId`;
+    return database.executeQuery(sql, [userId, conditionId]);
+};

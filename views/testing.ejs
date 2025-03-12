@@ -39,6 +39,9 @@
         <button onclick="testGetAllUsers()">Obtener Todos los Usuarios</button>
     </fieldset>
 
+    <!-- Patologias de usuario -->
+    <%- include('partials/test_user_condition') %>
+    
     <!-- Búsqueda de Usuario -->
     <fieldset>
         <legend>Buscar Usuario</legend>
@@ -83,6 +86,18 @@
         <input type="text" id="userIdInput" placeholder="ID Usuario a Eliminar">
         <button onclick="testDeleteUser()">Eliminar Usuario</button>
     </fieldset>
+
+    <!-- Categorías de Productos -->    
+    <%- include('partials/test_category') %>
+
+    <!-- Patologias de los usuarios -->    
+    <%- include('partials/test_condition') %>
+
+    <!-- Marcas de los productos -->
+    <%- include('partials/test_brand') %>
+
+    <!-- Productos -->
+    <%- include('partials/test_product') %>
 
 <script src="/js/crudManager.js"></script>
 <script src="/js/utils.js"></script>
@@ -280,7 +295,6 @@
         document.getElementById("activeInput").value = userData[13];
         document.getElementById("userRoleInput").value = userData[14];
     }
-
 </script>
 </body>
 </html>

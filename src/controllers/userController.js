@@ -37,3 +37,41 @@ exports.deleteUser = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
+// src/controllers/userController.js
+// ==============================
+// Controlador para manejo de USER_CONDITION
+// ==============================
+
+// Obtener todas las condiciones asociadas a un usuario
+exports.getUserConditions = async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const conditions = await userModel.getUserConditions(userId);
+        res.json(conditions);
+    } catch (error) {
+        res.json({ error: error.message });
+    }
+};
+
+// Asignar una condición a un usuario
+exports.assignUserCondition = async (req, res) => {
+    try {
+        const { userId, conditionId } = req.body;
+        await userModel.assignUserCondition(userId, conditionId);
+        res.json({ message: 'Condición asignada correctamente.' });
+    } catch (error) {
+        res.json({ error: error.message });
+    }
+};
+
+// Eliminar una condición de un usuario
+exports.removeUserCondition = async (req, res) => {
+    try {
+        const { userId, conditionId } = req.body;
+        await userModel.removeUserCondition(userId, conditionId);
+        res.json({ message: 'Condición eliminada correctamente.' });
+    } catch (error) {
+        res.json({ error: error.message });
+    }
+};
