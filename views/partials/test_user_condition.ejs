@@ -8,14 +8,7 @@
             </tr>
         </thead>
         <tbody id="conditionsTableBody">
-            <tr>
-                <td>Trastorno del Espectro Autista</td>
-                <td><input type="checkbox" class="conditionCheckbox" data-condition-id="1"></td>
-            </tr>
-            <tr>
-                <td>TDAH</td>
-                <td><input type="checkbox" class="conditionCheckbox" data-condition-id="2"></td>
-            </tr>
+            <!-- Las patologías se insertarán aquí dinámicamente -->
         </tbody>
     </table>
     <button onclick="loadUserConditions()">Cargar Patologías</button>
@@ -24,6 +17,23 @@
 
 <script>
     let initialUserConditions = new Set();
+
+    async function loadConditionsFromDB() {
+        const response = await fetchConditions();
+        console.log("Patologías obtenidas:", response);
+        const conditions = response.rows || [];
+        const tableBody = document.getElementById('conditionsTableBody');
+        tableBody.innerHTML = '';
+        
+        conditions.forEach(condition => {
+            const conditionId = condition[0];
+            const conditionName = condition[1];
+            tableBody.innerHTML += `<tr>
+                <td>${conditionName}</td>
+                <td><input type="checkbox" class="conditionCheckbox" data-condition-id="${conditionId}"></td>
+            </tr>`;
+        });
+    }
 
     async function loadUserConditions() {
         const userId = document.getElementById('userIdInputCreate').value;
@@ -83,4 +93,6 @@
         alert("Patologías actualizadas correctamente.");
         initialUserConditions = newUserConditions; // Actualizar estado inicial
     }
+
+    document.addEventListener("DOMContentLoaded", loadConditionsFromDB);
 </script>

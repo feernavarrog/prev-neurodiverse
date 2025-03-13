@@ -8,6 +8,7 @@ const categoryRoutes = require('./src/routes/categoryRoutes');
 const conditionRoutes = require('./src/routes/conditionRoutes');
 const brandRoutes = require('./src/routes/brandRoutes');
 const productRoutes = require('./src/routes/productRoutes');
+const orderRoutes = require('./src/routes/orderRoutes');
 
 const app = express();
 
@@ -32,6 +33,7 @@ app.use('/categories', categoryRoutes); // Rutas de categorías
 app.use('/conditions', conditionRoutes); // Rutas de condiciones
 app.use('/brands', brandRoutes); // Rutas de marcas
 app.use('/products', productRoutes); // Rutas de productos
+app.use('/orders', orderRoutes); // Rutas de órdenes
 
 // RUTAS NEURODIVERSE
 app.get('/', (req, res) => {res.render('home');});  // Ruta inicial 

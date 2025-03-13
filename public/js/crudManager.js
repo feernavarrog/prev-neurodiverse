@@ -220,3 +220,78 @@ async function deleteProduct(productId, filename) {
     });
     return response.json();
 }
+
+// ==============================
+// Funciones para manejo de APP_ORDER (Órdenes)
+// ==============================
+
+// Obtener todas las órdenes con filtro opcional
+async function fetchOrders(filter = {}) {
+    const response = await fetch('/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(filter)
+    });
+    return response.json();
+}
+
+// Crear una nueva orden
+async function createOrder(order) {
+    const response = await fetch('/orders/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(order)
+    });
+    return response.json();
+}
+
+// Actualizar una orden existente
+async function updateOrder(order) {
+    const response = await fetch('/orders/update', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(order)
+    });
+    return response.json();
+}
+
+// Eliminar una orden
+async function deleteOrder(orderId) {
+    const response = await fetch(`/orders/delete/${orderId}`, {
+        method: 'DELETE'
+    });
+    return response.json();
+}
+
+// ==============================
+// Funciones para manejo de ORDER_PRODUCT
+// ==============================
+
+// Obtener productos de una orden
+async function fetchOrderProducts(orderId) {
+    const response = await fetch(`/orders/${orderId}/products`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+    });
+    return response.json();
+}
+
+// Agregar un producto a una orden con cantidad
+async function addProductToOrder(orderId, productId, quantity) {
+    const response = await fetch('/orders/add-product', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderId, productId, quantity })
+    });
+    return response.json();
+}
+
+// Eliminar un producto de una orden
+async function removeProductFromOrder(orderId, productId) {
+    const response = await fetch('/orders/remove-product', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderId, productId })
+    });
+    return response.json();
+}
