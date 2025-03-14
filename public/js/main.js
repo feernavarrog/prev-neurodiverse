@@ -32,7 +32,7 @@ function loadProductDetails() {
     // Una vez obtenidos, se actualizarán dinámicamente los elementos en la página.
 }
 
-// Función para agregar el producto al carrito almacenado en sessionStorage
+/*// Función para agregar el producto al carrito almacenado en sessionStorage
 function addToCart() {
     let cart = JSON.parse(sessionStorage.getItem('cart')) || [];
 
@@ -96,36 +96,9 @@ function updateCart() {
             updateQuantity(this.getAttribute('data-code'), this.value);
         });
     });
-}
+}*/
 
-// Función para actualizar la cantidad de un producto en el carrito
-function updateQuantity(productCode, newQuantity) {
-    let cart = JSON.parse(sessionStorage.getItem('cart')) || [];
-    cart = cart.map(product => {
-        if (product.code === productCode) {
-            product.quantity = parseInt(newQuantity, 10);
-        }
-        return product;
-    });
-    sessionStorage.setItem('cart', JSON.stringify(cart));
-    updateCart();
-}
 
-// Función para eliminar un producto del carrito
-function removeFromCart(productCode) {
-    let cart = JSON.parse(sessionStorage.getItem('cart')) || [];
-    cart = cart.filter(product => product.code !== productCode);
-    sessionStorage.setItem('cart', JSON.stringify(cart));
-    updateCart();
-}
-
-// Funciones para abrir y cerrar el carrito
-function openCart() {
-    document.getElementById("cart").classList.add("show-cart");
-}
-function closeCart() {
-    document.getElementById("cart").classList.remove("show-cart");
-}
 
 // Funciones para abrir y cerrar el sidebar
 function openSidebar() {
@@ -194,19 +167,3 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
-
-// Cargar los productos al iniciar la vista
-window.onload = function() {
-    const queryData = getQueryParams();
-    if (queryData.code === '(ID en BBDD)') {
-        loadProducts(); // Si es la página de productos, cargamos los productos.
-    } else {
-        loadProductDetails(); // Si es la página de detalles de producto, cargamos los detalles.
-    }
-
-    // Asignamos la función de agregar al carrito
-    const addToCartButton = document.getElementById('add-to-cart');
-    if (addToCartButton) {
-        addToCartButton.addEventListener('click', addToCart);
-    }
-};

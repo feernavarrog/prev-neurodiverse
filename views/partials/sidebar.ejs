@@ -3,18 +3,59 @@
   <div class="sidebar-header">
     <h3>Categorías</h3>
     <button id="close-sidebar" class="btn-close">✖</button> <!-- Botón para cerrar sidebar -->
-</div>
-  
+  </div>
 
-  <ul>
-      <li><a href="/products?filter=tecnologia" class="sidebar-link">Fidget & Estímulos</a></li>
-      <li><a href="/products?filter=hogar" class="sidebar-link">Aislamiento Auditivo</a></li>
-      <li><a href="/products?filter=moda" class="sidebar-link">Ambiente Suave</a></li>
-  </ul>
-  
-
+  <!-- Lista de categorías generadas dinámicamente -->
   <ul id="dynamic-list">
       <!-- Los datos serán generados dinámicamente -->
   </ul>
-  
+
 </aside>
+
+<script>
+    // Función específica del front para poblar el sidebar con categorías
+    async function populateSidebarCategories() {
+        try {
+            // Obtener categorías desde la API (usando el método de crudManager.js)
+            const response = await fetchCategories();
+
+            const categoryList = document.getElementById("dynamic-list");
+            categoryList.innerHTML = ""; // Limpiar la lista antes de agregar nuevos elementos
+
+            if (response.rows && response.rows.length > 0) {
+                response.rows.forEach(category => {
+                    const categoryId = category[0];  // ID de la categoría
+                    const categoryName = category[1]; // Nombre de la categoría
+
+                    // 🔹 Excluir "Sin categoría" y "Producto Futuro"
+                    if (categoryName === "Sin categoría" || categoryName === "Producto Futuro") {
+                        return; // Se salta esta iteración y no la agrega a la lista
+                    }
+                    
+                    // Crear el elemento de la lista
+                    const listItem = document.createElement("li");
+                    listItem.innerHTML = `<a href="/products?category=${categoryId}" class="sidebar-link">${categoryName}</a>`;
+                    
+                    // Agregar al sidebar
+                    categoryList.appendChild(listItem);
+                });
+            }
+
+            // 🔹 Agregar manualmente el enlace "PROXIMAMENTE" con clase especial
+            const upcomingItem = document.createElement("li");
+            upcomingItem.innerHTML = `<a href="/products?category=5" class="sidebar-link upcoming-category">PROXIMAMENTE</a>`;
+            categoryList.appendChild(upcomingItem);
+
+            // 🔹 Agregar manualmente el enlace "IR A DESCUENTOS" con clase especial
+            const discountsItem = document.createElement("li");
+            discountsItem.innerHTML = `<a href="/products?category=discount" class="sidebar-link discount-category">IR A DESCUENTOS</a>`;
+            categoryList.appendChild(discountsItem);
+
+        } catch (error) {
+            console.error("Error al cargar las categorías:", error);
+        }
+    }
+
+    // Llamar a la función cuando se cargue la vista
+    document.addEventListener("DOMContentLoaded", populateSidebarCategories);
+</script>

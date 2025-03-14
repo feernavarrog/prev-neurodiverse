@@ -10,10 +10,19 @@ const database = require('../services/database');
 exports.getProducts = async (filter) => {
     let sql = 'SELECT * FROM product';
     const binds = [];
-    if (filter && filter.column && filter.value) {
-        sql += ` WHERE ${filter.column} = :value`;
-        binds.push(filter.value);
+
+    if (filter && filter.column && filter.value !== undefined) {
+        const operator = filter.operator || '=';
+
+        // 🔹 Si el operador es ">", "<", ">=", "<=", lo agregamos directamente en el SQL
+        if (['>', '<', '>=', '<='].includes(operator)) {
+            sql += ` WHERE ${filter.column} ${operator} ${filter.value}`;
+        } else {
+            sql += ` WHERE ${filter.column} ${operator} :value`;
+            binds.push(filter.value);
+        }
     }
+
     return database.executeQuery(sql, binds);
 };
 

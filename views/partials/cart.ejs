@@ -1,19 +1,114 @@
-<!-- views/partials/cart.ejs (Vista) -->
 <aside id="cart">
   <div class="sidebar-header">
-  <h3>Carrito</h3>
-
+    <h3>Carrito</h3>
     <button id="close-cart" class="btn-close">✖</button> <!-- Botón para cerrar sidebar -->
-</div>
-  
+  </div>
+
   <!-- Sección para cargar dinámicamente los productos en el carrito -->
   <div id="cart-items">
       <!-- Los productos en el carrito serán cargados dinámicamente desde sessionStorage. -->
   </div>
-  
+
   <p>Total: <span id="cart-total">$0</span></p>
-  <button id="checkout">Continuar Checkout</button>
-  
+  <button id="checkout" onclick="window.location.href='/checkout'">Continuar Checkout</button>  
 </aside>
 
-<script src="/js/main.js"></script>
+<script>
+    // Función para actualizar el carrito en la vista
+    function updateCart() {
+        let cart = JSON.parse(sessionStorage.getItem('cart')) || [];
+        let cartContainer = document.getElementById('cart-items');
+        let totalContainer = document.getElementById('cart-total');
+        cartContainer.innerHTML = "";
+        let total = 0;
+
+        cart.forEach(product => {
+            let productElement = document.createElement('div');
+            productElement.innerHTML = `
+                <img src="${product.image}" alt="${product.name}">
+                <div>
+                    <p>${product.name}</p>
+                    <select class="quantity-selector" data-code="${product.code}">
+                        ${[1,2,3,4,5,6].map(num => `<option value="${num}" ${product.quantity == num ? 'selected' : ''}>${num}</option>`).join('')}
+                    </select>
+                    <p>${product.price}</p>
+                </div>
+                <button class="remove-item" data-code="${product.code}"><i class="fas fa-trash"></i></button>
+            `;
+            cartContainer.appendChild(productElement);
+            total += parseFloat(product.price.replace('$', '').trim()) * product.quantity;
+        });
+
+        totalContainer.innerText = `$${total.toFixed(2)}`;
+
+        // Asignar eventos a los botones de eliminar
+        document.querySelectorAll('.remove-item').forEach(button => {
+            button.addEventListener('click', function() {
+                removeFromCart(this.getAttribute('data-code'));
+            });
+        });
+
+        // Asignar eventos a los selectores de cantidad
+        document.querySelectorAll('.quantity-selector').forEach(select => {
+            select.addEventListener('change', function() {
+                updateQuantity(this.getAttribute('data-code'), this.value);
+            });
+        });
+    }
+
+    function addToCart() {
+      let cart = JSON.parse(sessionStorage.getItem('cart')) || [];
+
+      // Obtener los datos actuales del producto desde el DOM
+      const productData = {
+          name: document.getElementById('item-name').innerText,
+          image: document.getElementById('item-image').src,
+          description: document.getElementById('item-description').innerText,
+          code: document.getElementById('item-code').innerText,
+          price: document.getElementById('item-price').innerText,
+          quantity: 1 // Se agrega con cantidad inicial de 1
+      };
+
+      // Verificar si el producto ya está en el carrito
+      let existingProduct = cart.find(product => product.code === productData.code);
+      if (existingProduct) {
+          alert("Este producto ya está en el carrito. Puedes modificar su cantidad desde allí.");
+      } else {
+          cart.push(productData);
+          sessionStorage.setItem('cart', JSON.stringify(cart));
+          console.log("Producto agregado al carrito:", productData);
+          updateCart();
+      }
+  }
+    // Función para actualizar la cantidad de un producto en el carrito
+    function updateQuantity(productCode, newQuantity) {
+        let cart = JSON.parse(sessionStorage.getItem('cart')) || [];
+        cart = cart.map(product => {
+            if (product.code === productCode) {
+                product.quantity = parseInt(newQuantity, 10);
+            }
+            return product;
+        });
+        sessionStorage.setItem('cart', JSON.stringify(cart));
+        updateCart();
+    }
+
+    // Función para eliminar un producto del carrito
+    function removeFromCart(productCode) {
+        let cart = JSON.parse(sessionStorage.getItem('cart')) || [];
+        cart = cart.filter(product => product.code !== productCode);
+        sessionStorage.setItem('cart', JSON.stringify(cart));
+        updateCart();
+    }
+
+    // Funciones para abrir y cerrar el carrito
+    function openCart() {
+        document.getElementById("cart").classList.add("show-cart");
+    }
+    function closeCart() {
+        document.getElementById("cart").classList.remove("show-cart");
+    }
+
+    // Cargar el carrito al cargar la vista
+    document.addEventListener("DOMContentLoaded", updateCart);
+</script>

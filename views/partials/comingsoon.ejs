@@ -1,8 +1,44 @@
 <div class="coming-soon-container">
     <h1 class="coming-soon-title">PROXIMAMENTE</h1>
-    <div class="images-container">
-        <img class="coming-soon-image" src="/img/comingsoon.jpeg" alt="Próximamente">
-        <img class="coming-soon-image" src="/img/comingsoon2.jpeg" alt="Próximamente">
-        <img class="coming-soon-image" src="/img/comingsoon3.jpeg" alt="Próximamente">
+    <div class="images-container" id="coming-soon-list">
+        <!-- Las imágenes de los productos se generarán dinámicamente -->
     </div>
 </div>
+
+<script>
+    // Función específica para poblar la sección "Próximamente"
+    async function populateComingSoon() {
+        try {
+            // Obtener productos de la categoría 4 (Próximamente)
+            const response = await fetchProducts({ column: "category_id", value: 5 });
+
+            const comingSoonList = document.getElementById("coming-soon-list");
+            comingSoonList.innerHTML = ""; // Limpiar la sección antes de agregar nuevos productos
+
+            if (response.rows && response.rows.length > 0) {
+                response.rows.forEach(product => {
+                    const productImage = product[7]; // Índice del campo "reference_photo" en la base de datos
+
+                    // Crear el elemento de imagen solo si el producto tiene una foto
+                    if (productImage) {
+                        const imgElement = document.createElement("img");
+                        imgElement.src = `/product-images/${productImage}`; // Ruta de imagen basada en la BD
+                        imgElement.alt = "Próximamente";
+                        imgElement.classList.add("coming-soon-image"); // Mantener la clase CSS
+                        
+                        // Agregar la imagen al contenedor
+                        comingSoonList.appendChild(imgElement);
+                    }
+                });
+            } else {
+                // Si no hay productos, dejar una imagen por defecto
+                comingSoonList.innerHTML = `<p>No hay productos próximos aún.</p>`;
+            }
+        } catch (error) {
+            console.error("Error al cargar productos próximos:", error);
+        }
+    }
+
+    // Llamar a la función cuando se cargue la vista
+    document.addEventListener("DOMContentLoaded", populateComingSoon);
+</script>

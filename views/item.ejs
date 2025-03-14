@@ -34,8 +34,6 @@
     <!-- Login Modal -->
     <%- include('partials/login-modal') %>
     
-    
-        
     <div class="main-item">
       <div class="item-container">
           <!-- Imagen del producto -->
@@ -44,7 +42,7 @@
           <!-- Contenedor de los detalles del producto -->
           <div class="details-container">
               <!-- Nombre del producto -->
-              <h3 id="item-name" class="item-name">Nombre del Item</h3>
+              <h3 id="item-name" class="item-name">Cargando...</h3>
     
               <!-- Precio (colocado arriba del botón de agregar al carrito) -->
               <p class="item-price">Precio: <span id="item-price">$0</span></p>
@@ -55,24 +53,72 @@
       </div>
     
       <!-- Descripción del producto (debajo de la imagen) -->
-      <p id="item-description" class="item-description">Descripción del item...</p>
-      <p class="item-info">Código: <span id="item-code">(ID en BBDD)</span></p>
-    </div>
-    
-
-
-    <script src="/js/main.js" async></script>
+      <p id="item-description" class="item-description">Cargando descripción...</p>
+      <p class="item-info">Código: <span id="item-code">Cargando...</span></p>
+  </div>
+  
+  <script>
+      // Función para obtener el parámetro "code" de la URL
+      function getProductCodeFromUrl() {
+          const params = new URLSearchParams(window.location.search);
+          return params.get("code"); // Devuelve el código del producto
+      }
+  
+      // Función para cargar los datos del producto dinámicamente
+      async function loadProductDetails() {
+          try {
+              const productCode = getProductCodeFromUrl();
+              if (!productCode) {
+                  document.getElementById("item-name").innerText = "Producto no encontrado";
+                  return;
+              }
+  
+              // 1️⃣ Obtener el producto por código
+              const productResponse = await fetchProducts({ column: "code", value: productCode });
+              const products = productResponse.rows || [];
+  
+              if (products.length === 0) {
+                  document.getElementById("item-name").innerText = "Producto no encontrado";
+                  document.getElementById("item-description").innerText = "";
+                  return;
+              }
+  
+              // Extraer información del producto
+              const product = products[0];
+              const productName = product[2]; // Índice del nombre
+              const productDescription = product[3]; // Índice de la descripción
+              const productPrice = product[4]; // Índice del precio
+              const productImage = product[7]; // Índice de la imagen
+              const productCodeInDB = product[1]; // Código real del producto en la BBDD
+  
+              // 2️⃣ Insertar la información en la vista
+              document.getElementById("item-image").src = `/product-images/${productImage}`;
+              document.getElementById("item-name").innerText = productName;
+              document.getElementById("item-price").innerText = `$${productPrice.toLocaleString()}`;
+              document.getElementById("item-description").innerText = productDescription;
+              document.getElementById("item-code").innerText = productCodeInDB;
+  
+              // 3️⃣ Manejo del botón "Agregar al carrito"
+              document.getElementById("add-to-cart").addEventListener("click", () => {
+                  addToCart(product);
+                  openCart();
+              });
+  
+          } catch (error) {
+              console.error("Error al cargar el producto:", error);
+          }
+      }
+  
+      // Llamar a la función cuando la página se cargue
+      document.addEventListener("DOMContentLoaded", loadProductDetails);
+  </script>
+  
+    <script src="\js\main.js"></script>
+    <script src="\js\crudManager.js"></script>
+    <script src="\js\utils.js"></script>
         
-        
-        
-
-        
-    
     <!-- Footer -->
     <%- include('partials/footer') %>
-    
-
-    
 
 </body>
 </html>

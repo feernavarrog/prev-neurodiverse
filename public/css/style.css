@@ -572,4 +572,17 @@ footer {
     background-color: #ffe97a;
 }
 
+/* Estilo especial para "PROXIMAMENTE" */
+.upcoming-category {
+    font-weight: bold;
+    color: #ff6600; /* Naranja fuerte */
+    text-transform: uppercase;
+}
+
+/* Estilo especial para "IR A DESCUENTOS" */
+.discount-category {
+    font-weight: bold;
+    color: #008000; /* Verde */
+    text-transform: uppercase;
+}
 
