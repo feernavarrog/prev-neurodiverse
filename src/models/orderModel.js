@@ -1,3 +1,9 @@
+// src/models/orderModel.js
+
+// ==============================
+// Manejo de APP_ORDER
+// ==============================
+
 const database = require("../services/database");
 
 // Obtener todas las órdenes con filtro opcional

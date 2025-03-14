@@ -1,6 +1,10 @@
 // src/controllers/userController.js
 const userModel = require('../models/userModel');
 
+// ==============================
+// Controlador para manejo de APP_USER
+// ==============================
+
 exports.getUsers = async (req, res) => {
     try {
         const users = await userModel.getUsers(req.body);
@@ -38,7 +42,6 @@ exports.deleteUser = async (req, res) => {
     }
 };
 
-// src/controllers/userController.js
 // ==============================
 // Controlador para manejo de USER_CONDITION
 // ==============================

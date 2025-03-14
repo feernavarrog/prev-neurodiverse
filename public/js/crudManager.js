@@ -1,6 +1,10 @@
 // public/js/crudManager.js
 // Este archivo contiene las funciones para realizar fetch a las rutas de usuarios y otras entidades de la aplicacion
 
+// ==============================
+// Funciones para manejo de APP_USER
+// ==============================
+
 async function fetchUsers(filter = {}) {
     const response = await fetch('/users', {
         method: 'POST',

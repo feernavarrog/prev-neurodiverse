@@ -4,6 +4,10 @@ const express = require("express");
 const router = express.Router();
 const orderController = require("../controllers/orderController");
 
+// ==============================
+// Manejo de APP_ORDER
+// ==============================
+
 // Obtener todas las órdenes con filtro opcional
 router.post("/", orderController.getOrders);
 

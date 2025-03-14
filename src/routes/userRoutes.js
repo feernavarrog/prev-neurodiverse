@@ -3,6 +3,10 @@ const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
 
+// ==============================
+// Rutas para manejo de APP_USER
+// ==============================
+
 router.post('/', userController.getUsers);
 router.post('/create', userController.createUser);
 router.put('/update', userController.updateUser);

@@ -1,4 +1,10 @@
+// src/controllers/orderController.js
+
 const orderModel = require("../models/orderModel");
+
+// ==============================
+// Manejo de APP_ORDER
+// ==============================
 
 // Obtener todas las órdenes con filtro opcional
 exports.getOrders = async (req, res) => {

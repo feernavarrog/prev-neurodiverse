@@ -1,6 +1,9 @@
 // src/models/userModel.js
 const database = require('../services/database');
 
+// ==============================
+// Funciones para manejo de APP_USER
+// ==============================
 
 exports.getUsers = async (filter) => {
     let sql = 'SELECT * FROM app_user';
@@ -59,7 +62,6 @@ exports.deleteUser = async (userId) => {
     return database.executeQuery(sql, [userId]);
 };
 
-// src/models/userModel.js
 // ==============================
 // Funciones para manejo de USER_CONDITION
 // ==============================
