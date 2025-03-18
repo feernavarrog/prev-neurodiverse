@@ -1,4 +1,4 @@
-<!-- views/orders.ejs (Versión sin estilos) -->
+<!-- views/orders.ejs (Versión actualizada con imágenes corregidas) -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -31,50 +31,8 @@
         <p>Aquí puedes ver tus pedidos realizados.</p>
         <hr>
         
-        <!-- Tabla de pedidos de ejemplo para aplicar estilos -->
+        <!-- Tabla de pedidos -->
         <table id="orders-table" border="1">
-            <thead>
-                <tr>
-                    <th>Nro Pedido</th>
-                    <th>Fecha Pedido</th>
-                    <th>Productos</th>
-                    <th>Total</th>
-                    <th>Estado</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Ejemplo estático, los datos deben ser poblados dinámicamente desde la base de datos -->
-                <tr>
-                    <td>78654</td>
-                    <td>2024-03-05</td>
-                    <td>
-                        <ul>
-                            <li>Producto 1 - Cantidad: 2 - Precio: $10.000</li>
-                            <li>Producto 2 - Cantidad: 1 - Precio: $5.000</li>
-                        </ul>
-                    </td>
-                    <td>$25.000</td>
-                    <td>Enviado</td>
-                </tr>
-                <tr>
-                    <td>78655</td>
-                    <td>2024-02-28</td>
-                    <td>
-                        <ul>
-                            <li>Producto 3 - Cantidad: 1 - Precio: $15.000</li>
-                        </ul>
-                    </td>
-                    <td>$15.000</td>
-                    <td>Pendiente</td>
-                </tr>
-            </tbody>
-        </table>
-        <hr>
-        
-
-        
-        <!-- Tabla dinámica generada con JavaScript -->
-        <table id="dynamic-orders-table" border="1">
             <thead>
                 <tr>
                     <th>Nro Pedido</th>
@@ -92,55 +50,71 @@
     
     <%- include('partials/footer') %>
     
+    <script src="/js/crudManager.js"></script>
     <script src="/js/main.js"></script>
-    
+    <script src="/js/global.js"></script>
+    <script src="/js/utils.js"></script>
     <script>
-        // Función para poblar la tabla de pedidos dinámicamente con datos simulados
-        function loadOrders() {
-            let orderRows = [
-                { orderId: 78658, date: "2024-03-01", product: "Producto X", quantity: 1, price: "$12.000", total: "$12.000", status: "Enviado" },
-                { orderId: 78658, date: "2024-03-01", product: "Producto Y", quantity: 2, price: "$8.000", total: "$16.000", status: "Enviado" },
-                { orderId: 78659, date: "2024-02-28", product: "Producto Z", quantity: 1, price: "$15.000", total: "$15.000", status: "Pendiente" }
-            ];
-            
-            let groupedOrders = {};
-            orderRows.forEach(row => {
-                if (!groupedOrders[row.orderId]) {
-                    groupedOrders[row.orderId] = {
-                        date: row.date,
-                        products: [],
-                        total: 0,
-                        status: row.status
-                    };
+        // Función para cargar pedidos desde la base de datos usando crudManager
+        async function loadOrders() {
+            let user = JSON.parse(sessionStorage.getItem('user')) || {};
+            let userId = user.userId;
+    
+            if (!userId) {
+                alert("⚠️ No se pudo identificar al usuario.");
+                return;
+            }
+    
+            try {
+                // Obtener las órdenes del usuario
+                const ordersResponse = await fetchOrders({ column: "o.user_id", value: userId });
+                console.log("Pedidos:", ordersResponse);
+                if (!ordersResponse.rows || ordersResponse.rows.length === 0) {
+                    document.querySelector("#orders-table tbody").innerHTML = "<tr><td colspan='5'>No tienes pedidos.</td></tr>";
+                    return;
                 }
-                groupedOrders[row.orderId].products.push(`${row.product} - Cantidad: ${row.quantity} - Precio: ${row.price}`);
-                groupedOrders[row.orderId].total += parseInt(row.total.replace("$", ""));
-            });
-            
-            let tableBody = document.querySelector("#dynamic-orders-table tbody");
-            tableBody.innerHTML = ""; // Limpiar contenido previo
-            
-            Object.keys(groupedOrders).forEach(orderId => {
-                let order = groupedOrders[orderId];
-                let productList = order.products.map(p => `<li>${p}</li>`).join("\n");
-                
-                let row = `
-                    <tr>
-                        <td>${orderId}</td>
-                        <td>${order.date}</td>
-                        <td><ul>${productList}</ul></td>
-                        <td>$${order.total}</td>
-                        <td>${order.status}</td>
-                    </tr>
-                `;
-                tableBody.innerHTML += row;
-            });
+    
+                let tableBody = document.querySelector("#orders-table tbody");
+                tableBody.innerHTML = "";
+    
+                for (const order of ordersResponse.rows) {
+                    let orderId = order[0];
+                    let orderDate = order[7];
+                    let total = order[3];
+                    let status = order[4];
+    
+                    // Obtener los productos asociados a cada orden
+                    const productsResponse = await fetchOrderProducts(orderId);
+                    let productList = "<ul>";
+                    productsResponse.rows.forEach(product => {
+                        productList += `
+                            <li>
+                                <img src="/product-images/${product[7]}" alt="${product[2]}" style="width: 50px; height: 50px; margin-right: 10px;"> 
+                                ${product[1]} - ${product[2]} - ${formatCLP(product[4])} - ${product[12]}
+                            </li>`;
+                    });
+                    productList += "</ul>";
+    
+                    let row = `
+                        <tr>
+                            <td>${orderId}</td>
+                            <td>${formatDate(orderDate)}</td>
+                            <td>${productList}</td>
+                            <td>${formatCLP(total)}</td>
+                            <td>${status}</td>
+                        </tr>
+                    `;
+                    tableBody.innerHTML += row;
+                }
+    
+            } catch (error) {
+                console.error("⚠️ Error al cargar pedidos:", error);
+                alert("⚠️ Hubo un error al obtener los pedidos. Inténtalo nuevamente.");
+            }
         }
-        
+    
         // Ejecutar la función al cargar la vista
-        window.onload = function() {
-            //loadOrders();
-        };
+        document.addEventListener("DOMContentLoaded", loadOrders);
     </script>
 </body>
 </html>

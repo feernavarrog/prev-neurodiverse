@@ -25,4 +25,7 @@ router.post('/conditions', userController.assignUserCondition);
 // Eliminar una condición de un usuario
 router.delete('/conditions', userController.removeUserCondition);
 
+// Ruta para manejar el login con Google
+router.post("/auth/callback", userController.googleAuth);
+
 module.exports = router;

@@ -6,14 +6,32 @@
 
 const database = require("../services/database");
 
-// Obtener todas las órdenes con filtro opcional
+// Obtener todas las órdenes con el RUT del usuario en lugar de user_id
 exports.getOrders = async (filter) => {
-    let sql = 'SELECT * FROM app_order';
+    let sql = `
+        SELECT 
+            o.order_id, 
+            o.subtotal, 
+            o.shipping_address, 
+            o.total, 
+            o.status, 
+            o.card_last_four, 
+            o.user_id, 
+            o.order_date, 
+            o.active, 
+            u.rut AS rut_user
+        FROM app_order o
+        JOIN app_user u ON o.user_id = u.user_id
+    `;
+    
     const binds = [];
     if (filter && filter.column && filter.value) {
         sql += ` WHERE ${filter.column} = :value`;
         binds.push(filter.value);
     }
+
+    sql += ` ORDER BY o.order_id DESC`; // Agregamos orden descendente para obtener la última orden primero
+
     return database.executeQuery(sql, binds);
 };
 

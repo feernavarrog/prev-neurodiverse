@@ -141,3 +141,19 @@ select#order-status option {
     color: #333; 
 }
 
+/* Colores suaves para la columna Estado */
+.estado-pendiente {
+    background-color: #d0ebff !important; /* Celeste suave */
+}
+
+.estado-enviado {
+    background-color: #d3f9d8 !important; /* Verde suave */
+}
+
+.estado-entregado {
+    background-color: #fff3bf !important; /* Amarillo suave */
+}
+
+.estado-cancelado {
+    background-color: #ffe3e3 !important; /* Rojo suave */
+}

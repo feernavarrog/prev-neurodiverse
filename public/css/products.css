@@ -68,6 +68,14 @@
     text-align: center;
 }
 
+.product-before-discount {
+    font-size: 0.9em;  
+    color: #d41616;
+    margin-bottom: 5px;
+    margin-left: 5px;
+    text-align: center;
+}
+
 /* Responsive: Ajusta los productos en pantallas pequeñas */
 @media (max-width: 768px) {
     .product-item {

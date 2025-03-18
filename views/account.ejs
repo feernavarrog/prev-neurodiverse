@@ -29,9 +29,6 @@
     
     <!-- Contenido principal -->
     <main>
-  
-        
-        
         <!-- Banner de usuario -->
         <div id="account-banner">
             <img src="/img/banneruser.png" alt="Banner de Usuario">
@@ -44,15 +41,16 @@
             <li><a href="/orders">🛒 Pedidos</a></li>
             <li><a href="/account-settings">🔧 Configuración de la cuenta</a></li>
             <li><a href="#" id="logout">❌ Cerrar sesión</a></li>
+            <li><a href="#" id="delete-account">⚠️ Eliminar cuenta</a></li>
         </ul>
-        
-        
         
     </main>
     
     <%- include('partials/footer') %>
     
     <script src="/js/main.js"></script>
+    <script src="/js/crudManager.js"></script>
+    <script src="/js/global.js"></script>
     
     <script>
         // Función para poblar el nombre del usuario desde sessionStorage
@@ -61,11 +59,52 @@
             let userName = user.firstName || "Usuario"; // Nombre de prueba si no existe
             document.getElementById('welcome-message').innerText = `BIENVENIDO/A ${userName.toUpperCase()}`;
         }
+
+        // Función para cerrar sesión
+        function logout() {
+            sessionStorage.removeItem('user');
+            window.location.href = "/";
+        }
+
+        // Función para eliminar cuenta de usuario
+        async function deleteAccount() {
+            let user = JSON.parse(sessionStorage.getItem('user')) || {};
+            let userId = user.userId;
+
+            if (!userId) {
+                alert("⚠️ No se pudo identificar al usuario.");
+                return;
+            }
+
+            const confirmDelete = confirm("¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.");
+            if (!confirmDelete) return;
+
+            try {
+                const response = await fetch(`/users/delete/${userId}`, {
+                    method: 'DELETE'
+                });
+                const result = await response.json();
+
+                if (response.ok) {
+                    alert("✅ Cuenta eliminada correctamente.");
+                    sessionStorage.removeItem('user');
+                    window.location.href = "/";
+                } else {
+                    throw new Error(result.error || "Error al eliminar la cuenta.");
+                }
+            } catch (error) {
+                console.error("⚠️ Error al eliminar cuenta:", error);
+                alert("⚠️ Hubo un error al eliminar la cuenta. Inténtalo nuevamente.");
+            }
+        }
         
         // Ejecutar la función al cargar la vista
-        window.onload = function() {
+        document.addEventListener("DOMContentLoaded", function() {
             loadUserName();
-        };
+            document.getElementById("logout").addEventListener("click", logout);
+            document.getElementById("delete-account").addEventListener("click", deleteAccount);
+        });
     </script>
 </body>
 </html>
+

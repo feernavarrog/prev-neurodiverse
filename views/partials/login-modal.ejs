@@ -1,18 +1,134 @@
 <!-- views/partials/login-modal.ejs (Versión sin estilos) -->
 <div id="login-modal">
-    
     <div>
         <button id="close-login">✖</button>
         <h3 style="text-align: center; width: 100%;">Iniciar Sesión</h3>
 
-    
         <div id="login-form">
-            <input type="email" placeholder="Correo electrónico">
-            <input type="password" placeholder="Contraseña">
-            <button>Iniciar Sesión</button>
+            <input type="email" id="login-email" placeholder="Correo electrónico" required>
+            <input type="password" id="login-password" placeholder="Contraseña" required>
+            <button id="login-btn">Iniciar Sesión</button>
+            <p id="login-error" style="color: red; display: none;"></p>
         </div>
-    </div>
-    <h>¿No tienes cuenta?</h>
-    <a href="/register" class="link-register">Regístrate</a>
 
+        <h>¿No tienes cuenta?</h>
+        <a href="/register" class="link-register">Regístrate</a>
+
+        <hr>
+        <div id="google-signin-button"></div>
+    </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // 🔹 Inicio de sesión normal
+        document.getElementById("login-btn").addEventListener("click", async function () {
+            const email = document.getElementById("login-email").value;
+            const password = document.getElementById("login-password").value;
+            const errorContainer = document.getElementById("login-error");
+
+            // Buscar usuario por email
+            const response = await fetch('/users', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ column: "email", value: email })
+            });
+
+            if (!response.ok) {
+                errorContainer.textContent = "Error al buscar usuario.";
+                errorContainer.style.display = "block";
+                return;
+            }
+
+            const userResult = await response.json();
+            if (!userResult.rows || userResult.rows.length === 0) {
+                errorContainer.textContent = "El usuario no existe.";
+                errorContainer.style.display = "block";
+                return;
+            }
+
+            // Obtener los datos del usuario
+            const userData = userResult.rows[0];
+            const userId = userData[0]; // ID del usuario
+            const storedPassword = userData[3]; // Contraseña almacenada en la base de datos
+
+            // Verificar contraseña
+            if (password !== storedPassword || storedPassword === null) {
+                errorContainer.textContent = "Contraseña incorrecta.";
+                errorContainer.style.display = "block";
+                return;
+            }
+
+            // Guardar datos en sessionStorage
+            sessionStorage.setItem('user', JSON.stringify({
+                userId: userId,
+                rut: userData[1],
+                email: userData[2],
+                firstName: userData[4],
+                lastName: userData[5],
+                birthDate: userData[6],
+                city: userData[7],
+                district: userData[8],
+                street: userData[9],
+                streetNumber: userData[10],
+                mobilePhone: userData[11],
+                additionalInfo: userData[12],
+                active: userData[13],
+                role: userData[14]
+            }));
+
+            // Redirigir al home
+            window.location.href = "/";
+        });
+
+        // 🔹 Inicio de sesión con Google
+        google.accounts.id.initialize({
+            client_id: "540135471748-pk1f84d1kprok5hd9u163anqlqf949c5.apps.googleusercontent.com",
+            callback: handleCredentialResponse
+        });
+
+        google.accounts.id.renderButton(
+            document.getElementById("google-signin-button"),
+            { theme: "outline", size: "large" }
+        );
+
+    async function handleCredentialResponse(response) {
+        const credential = response.credential;
+
+        try {
+            const googleResponse = await fetch('/users/auth/callback', { 
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ credential })
+            });
+
+            const googleResult = await googleResponse.json();
+
+            // Si hay un error o usuario no encontrado, redirigimos a registro
+            if (!googleResponse.ok || googleResult.error) {
+
+                const emailNotFound = googleResult.error;
+
+                // Redirigir a la página de registro con el email prellenado
+                window.location.href = `/register?email=${emailNotFound}`;
+                return;
+            }
+
+            // Guardar datos del usuario en sessionStorage
+            sessionStorage.setItem('user', JSON.stringify(googleResult));
+
+            // Redirigir al home
+            window.location.href = "/";
+
+        } catch (error) {
+            console.error("Error al autenticar con Google:", error);
+            document.getElementById("login-error").textContent = "Error inesperado en la autenticación con Google.";
+            document.getElementById("login-error").style.display = "block";
+        }
+    }
+        // 🔹 Cerrar modal
+        document.getElementById("close-login").addEventListener("click", function () {
+            document.getElementById("login-modal").style.display = "none";
+        });
+    });
+</script>

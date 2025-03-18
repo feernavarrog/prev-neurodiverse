@@ -1,5 +1,7 @@
 // src/controllers/userController.js
 const userModel = require('../models/userModel');
+const database = require('./../services/database');
+const jwt = require("jsonwebtoken"); // Para decodificar el token de Google
 
 // ==============================
 // Controlador para manejo de APP_USER
@@ -39,6 +41,55 @@ exports.deleteUser = async (req, res) => {
         res.json(result);
     } catch (error) {
         res.status(500).json({ error: error.message });
+    }
+};
+
+exports.googleAuth = async (req, res) => {
+    try {
+        const { credential } = req.body;
+        if (!credential) {
+            return res.status(400).json({ error: "Credencial no proporcionada." });
+        }
+
+        // Decodificar la credencial de Google
+        const decoded = jwt.decode(credential);
+        if (!decoded || !decoded.email) {
+            return res.status(400).json({ error: "Error al decodificar la credencial." });
+        }
+
+        const email = decoded.email;
+
+        // Buscar usuario en la base de datos
+        const sql = `SELECT * FROM app_user WHERE email = :email`;
+        const userResult = await database.executeQuery(sql, [email]);
+
+        if (userResult.rows.length === 0) {
+            return res.status(404).json({ error: email });
+        }
+
+        // Usuario encontrado, devolver los datos
+        const userData = userResult.rows[0];
+        return res.json({
+            userId: userData[0],
+            rut: userData[1],
+            email: userData[2],
+            firstName: userData[4],
+            lastName: userData[5],
+            birthDate: userData[6],
+            city: userData[7],
+            district: userData[8],
+            street: userData[9],
+            streetNumber: userData[10],
+            mobilePhone: userData[11],
+            additionalInfo: userData[12],
+            active: userData[13],
+            role: userData[14],
+            googleAuth: true
+        });
+
+    } catch (error) {
+        console.error("Error en la autenticación con Google:", error);
+        return res.status(500).json({ error: "Error interno en la autenticación." });
     }
 };
 

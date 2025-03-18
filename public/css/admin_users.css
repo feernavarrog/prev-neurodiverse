@@ -107,3 +107,12 @@ td:last-child {
     color: #FF9800; /* Naranja */
 }
 
+
+/* Colores suaves para usuarios desactivados */
+.active-1 {
+    background-color: #ffffff;
+}
+
+.active-0 {
+    background-color: #75848f !important;
+}

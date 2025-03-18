@@ -7,20 +7,16 @@
     <title>Configuración de Cuenta - NeuroDiverse</title>
     <link
     href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-    rel="stylesheet"
-  />
+    rel="stylesheet"/>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
   <link
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-    rel="stylesheet"
-  />
+    rel="stylesheet"/>
   <link rel="stylesheet" href="/css/homestyle.css" />
   <link rel="stylesheet" href="/css/style.css" />
-   
   <link rel="stylesheet" href="/css/settingstyle.css" />
-
-  
 </head>
+
 <body>
     <%- include('partials/first-nav') %> 
     <%- include('partials/navbar') %>
@@ -28,92 +24,302 @@
     <%- include('partials/cart') %>
     <%- include('partials/login-modal') %>
     
-    
     <!-- Contenido principal -->
-    <main>
-        <h2>CONFIGURACIÓN DE CUENTA</h2>
+    <main class="registro-container">
+        <h2 class="registro-titulo">Configuracion de Cuenta</h2>
         <p>Puedes administrar tu cuenta aquí</p>
-        <hr>
         
-        <div class="account-settings-form">
-            <input type="password" id="password" placeholder="Contraseña" required>
-            <input type="text" id="first-name" placeholder="Nombre" required>
-            <input type="text" id="last-name" placeholder="Apellido" required>
-            <input type="text" id="email" placeholder="Correo Electrónico" required>
-            <input type="date" id="birth-date" placeholder="Fecha nacimiento" required>
-            <input type="text" id="city" placeholder="Comuna" required>
-            <input type="text" id="street" placeholder="Calle" required>
-            <input type="text" id="street-number" placeholder="Número" required>
-            <input type="text" id="mobile-phone" placeholder="Teléfono/Móvil" required>
-            <input type="text" id="additional-info" placeholder="Información adicional">
+        <div class="registro-formulario">
+            <!-- 🔹 Sección: Datos Personales -->
+            <h3 class="registro-subtitulo">Datos Personales</h3>
+            <input type="email" id="email" class="registro-input" placeholder="Correo Electrónico" required>
+            <input type="password" id="password" class="registro-input" placeholder="Contraseña" required>
+            <input type="text" id="first-name" class="registro-input" placeholder="Nombre" required>
+            <input type="text" id="last-name" class="registro-input" placeholder="Apellido" required>
+            <label for="birth-date">Fecha de Nacimiento:</label>
+            <input type="date" id="birth-date" class="registro-input" required>
+            <input type="text" id="mobile-phone" class="registro-input" placeholder="Teléfono/Móvil" required>
+
+            <hr>
+
+            <!-- 🔹 Sección: Datos para el Envío -->
+            <h3 class="registro-subtitulo">Datos para el Envío</h3>
+            <input type="text" id="rut" class="registro-input" placeholder="RUT (Ej: 12.345.678-9)" required>
+            <p class="registro-info">📌 Por el momento, solo realizamos envíos dentro de la Región Metropolitana.</p>
+
+            <label for="region">Región:</label>
+            <select id="region" class="registro-input" disabled>
+                <option value="Santiago" selected>Región Metropolitana</option>
+            </select>
+
+            <label for="comuna">Comuna:</label>
+            <select id="comuna" class="registro-input" required>
+                <option value="" selected disabled>Selecciona tu comuna</option>
+                <option value="Cerrillos">Cerrillos</option>
+                <option value="Cerro Navia">Cerro Navia</option>
+                <option value="Conchalí">Conchalí</option>
+                <option value="El Bosque">El Bosque</option>
+                <option value="Estación Central">Estación Central</option>
+                <option value="Huechuraba">Huechuraba</option>
+                <option value="La Florida">La Florida</option>
+                <option value="Las Condes">Las Condes</option>
+                <option value="Maipú">Maipú</option>
+                <option value="Ñuñoa">Ñuñoa</option>
+                <option value="Providencia">Providencia</option>
+                <option value="Pudahuel">Pudahuel</option>
+                <option value="San Bernardo">San Bernardo</option>
+                <option value="Santiago Centro">Santiago Centro</option>
+            </select>
+
+            <input type="text" id="street" class="registro-input" placeholder="Calle" required>
+            <input type="text" id="street-number" class="registro-input" placeholder="Número" required>
+            <input type="text" id="additional-info" class="registro-input" placeholder="Información adicional">
+
+            <hr>
+
+            <!-- 🔹 Sección: Patologías -->
+            <h3 class="registro-subtitulo">Patologías</h3>
+            <div id="conditions-container">
+                <table border="1">
+                    <thead>
+                        <tr>
+                            <th>Nombre de la Patología</th>
+                            <th>Seleccionar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="conditionsTableBody">
+                        <!-- Las patologías se insertarán aquí dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+
+            <button id="save-changes" class="registro-boton">Guardar cambios</button>
+            <button id="go-back">Volver</button>
         </div>
-        <hr>
-        
-        <!-- Sección de patologías (Ejemplo estático, debe ser poblado dinámicamente) -->
-        <h3>Patologías</h3>
-        <div id="conditions-list">
-            <label><input type="checkbox" id="condition1"> Patología 1</label>
-            <label><input type="checkbox" id="condition2"> Patología 2</label>
-            <label><input type="checkbox" id="condition3"> Patología 3</label>
-            <label><input type="checkbox" id="condition4"> Patología 4</label>
-            <label><input type="checkbox" id="condition5"> Patología 5</label>
-            <input type="text" id="other-condition" placeholder="Otra: ">
-            <!-- Aquí se debe realizar una solicitud a la base de datos para recuperar las patologías del usuario según su ID -->
-        </div>
-        <hr>
-        
-        <button id="save-changes">Guardar cambios</button>
-        <button id="go-back">Volver</button>
     </main>
     
     <%- include('partials/footer') %>
-    
+    <script src="/js/crudManager.js"></script>
     <script src="/js/main.js"></script>
-    
+    <script src="/js/utils.js"></script>
+    <script src="/js/global.js"></script>
     <script>
-        // Función para poblar los datos del usuario en el formulario desde sessionStorage
-        function loadAccountData() {
+        let initialUserConditions = new Set();
+    
+        // 🔹 Poblar los datos del usuario desde la base de datos utilizando crudManager
+        async function loadUserData() {
             let user = JSON.parse(sessionStorage.getItem('user')) || {};
-            console.log("Usuario recuperado de sessionStorage:", user);
-            
-            document.getElementById('password').value = ""; // Se deja vacío por seguridad
-            document.getElementById('first-name').value = user.firstName || "";
-            document.getElementById('last-name').value = user.lastName || "";
-            document.getElementById('email').value = user.email || "";
-            document.getElementById('birth-date').value = user.birthDate || "";
-            document.getElementById('city').value = user.city || "";
-            document.getElementById('street').value = user.street || "";
-            document.getElementById('street-number').value = user.streetNumber || "";
-            document.getElementById('mobile-phone').value = user.mobilePhone || "";
-            document.getElementById('additional-info').value = user.additionalInfo || "";
+            let userId = user.userId;
+
+            if (!userId) {
+                alert("⚠️ No se pudo identificar al usuario. Intenta iniciar sesión nuevamente.");
+                window.location.href = "/";
+                return;
+            }
+
+            try {
+                // 📌 Obtener los datos del usuario desde la base de datos usando `fetchUsers()`
+                const userData = await fetchUsers({ column: "user_id", value: userId });
+
+                if (!userData.rows || userData.rows.length === 0) {
+                    throw new Error("No se encontró información del usuario.");
+                }
+
+                const userDetails = userData.rows[0];
+
+                // 📌 Poblar los campos del formulario con los datos obtenidos
+                document.getElementById('email').value = userDetails[2] || ""; // Email
+                document.getElementById('password').value = userDetails[3]; // Contraseña
+                document.getElementById('first-name').value = userDetails[4] || "";
+                document.getElementById('last-name').value = userDetails[5] || "";
+                document.getElementById('birth-date').value = formatDateInput(userDetails[6]);
+                document.getElementById('mobile-phone').value = userDetails[11] || "";
+                document.getElementById('rut').value = userDetails[1] || "";
+                document.getElementById('region').value = userDetails[7] || "";
+                document.getElementById('comuna').value = userDetails[8] || "";
+                document.getElementById('street').value = userDetails[9] || "";
+                document.getElementById('street-number').value = userDetails[10] || "";
+                document.getElementById('additional-info').value = userDetails[12] || "";
+
+                // 📌 Comprobar si el usuario se registró con Google (verificando si la contraseña es NULL)
+                if (!userDetails[3]) { // Si la contraseña es NULL, el usuario se registró con Google
+                    document.getElementById('email').disabled = true;
+
+                    // 📌 Ocultar completamente el campo de contraseña
+                    document.getElementById("password").style.display = "none";
+                }
+
+
+            } catch (error) {
+                console.error("⚠️ Error al cargar los datos del usuario:", error);
+                alert("⚠️ Hubo un error al obtener los datos del usuario. Inténtalo nuevamente.");
+            }
         }
-        
-        // Función para preparar los datos y enviarlos a la base de datos
-        function saveAccountChanges() {
-            let updatedUser = {
-                password: document.getElementById('password').value,
-                firstName: document.getElementById('first-name').value,
-                lastName: document.getElementById('last-name').value,
-                email: document.getElementById('email').value,
-                birthDate: document.getElementById('birth-date').value,
-                city: document.getElementById('city').value,
-                street: document.getElementById('street').value,
-                streetNumber: document.getElementById('street-number').value,
-                mobilePhone: document.getElementById('mobile-phone').value,
-                additionalInfo: document.getElementById('additional-info').value,
+    
+        // 🔹 Cargar todas las patologías desde la base de datos
+        async function loadConditionsFromDB() {
+            const response = await fetchConditions();
+            console.log("📌 Patologías obtenidas:", response);
+    
+            const conditions = response.rows || [];
+            const tableBody = document.getElementById('conditionsTableBody');
+            tableBody.innerHTML = '';
+    
+            conditions.forEach(condition => {
+                const conditionId = condition[0];
+                const conditionName = condition[1];
+    
+                tableBody.innerHTML += `<tr>
+                    <td>${conditionName}</td>
+                    <td><input type="checkbox" class="conditionCheckbox" data-condition-id="${conditionId}"></td>
+                </tr>`;
+            });
+    
+            // ✅ Ahora que los checkboxes están en el DOM, cargar las patologías del usuario
+            await loadUserConditions();
+        }
+    
+        // 🔹 Cargar las patologías del usuario y marcar los checkboxes
+        async function loadUserConditions() {
+            let user = JSON.parse(sessionStorage.getItem('user')) || {};
+            const userId = user.userId;
+    
+            if (!userId) {
+                alert("⚠️ Por favor, inicia sesión.");
+                return;
+            }
+    
+            const response = await fetchUserConditions(userId);
+            console.log("📌 Respuesta de fetchUserConditions:", response);
+    
+            const conditions = response.rows || [];
+            initialUserConditions.clear();
+    
+            document.querySelectorAll('.conditionCheckbox').forEach(checkbox => {
+                checkbox.checked = false; // Desmarcar todo antes de marcar lo correcto
+            });
+    
+            conditions.forEach(condition => {
+                const conditionId = condition[1]; // ID de la patología
+                const checkbox = document.querySelector(`.conditionCheckbox[data-condition-id='${conditionId}']`);
+    
+                if (checkbox) {
+                    checkbox.checked = true;
+                    initialUserConditions.add(conditionId.toString());
+                }
+            });
+        }
+    
+        // 🔹 Guardar los cambios de patologías del usuario
+        async function saveUserConditions() {
+            let user = JSON.parse(sessionStorage.getItem('user')) || {};
+            const userId = user.userId;
+    
+            if (!userId) {
+                alert("⚠️ No se pudo identificar al usuario.");
+                return;
+            }
+    
+            const checkboxes = document.querySelectorAll('.conditionCheckbox');
+            let newUserConditions = new Set();
+    
+            checkboxes.forEach(checkbox => {
+                if (checkbox.checked) {
+                    newUserConditions.add(checkbox.getAttribute('data-condition-id'));
+                }
+            });
+    
+            // Comparar cambios y solo actualizar si es necesario
+            for (const conditionId of newUserConditions) {
+                if (!initialUserConditions.has(conditionId)) {
+                    await assignUserCondition(userId, conditionId);
+                }
+            }
+    
+            for (const conditionId of initialUserConditions) {
+                if (!newUserConditions.has(conditionId)) {
+                    await removeUserCondition(userId, conditionId);
+                }
+            }
+    
+            initialUserConditions = newUserConditions; // Actualizar estado inicial
+            alert("✅ ¡Tus patologías han sido actualizadas!");
+        }
+    
+        // 🔹 Guardar cambios del usuario en la base de datos
+        async function saveUserChanges() {
+            let user = JSON.parse(sessionStorage.getItem('user')) || {};
+            let userId = user.userId;
+            let active = user.active;
+            let userRole = user.role;
+
+            if (!userId) {
+                alert("⚠️ No se pudo identificar al usuario. Intenta iniciar sesión nuevamente.");
+                return;
+            }
+
+            console.log("📌 UserID antes de la actualización:", userId);
+
+            const updatedUserData = {
+                user_id: userId, // ✅ Se corrige el nombre del campo
+                rut: document.getElementById("rut").value,
+                email: document.getElementById("email").value,
+                password: user.googleAuth ? null : document.getElementById("password").value,
+                first_name: document.getElementById("first-name").value,
+                last_name: document.getElementById("last-name").value,
+                birth_date: document.getElementById("birth-date").value,
+                mobile_phone: document.getElementById("mobile-phone").value,
+                city: "Santiago",
+                district: document.getElementById("comuna").value,
+                street: document.getElementById("street").value,
+                street_number: document.getElementById("street-number").value,
+                additional_address_info: document.getElementById("additional-info").value,
+                active: active,
+                user_role: 'customer'
             };
-            
-            console.log("Datos listos para ser enviados a la base de datos:", updatedUser);
-            // Aquí se debe realizar una solicitud AJAX para actualizar los datos en la base de datos
+
+            try {
+                console.log("📌 Datos enviados en la actualización:", updatedUserData);
+
+                // ✅ Se usa crudManager.updateUser en vez de fetch manual
+                const updateResponse = await updateUser(updatedUserData);
+
+                console.log("📌 Respuesta del servidor al actualizar usuario:", updateResponse);
+
+                // 📌 Convertir los nombres de las claves a camelCase antes de guardarlos en sessionStorage
+                const userSessionData = {
+                    userId: updatedUserData.user_id,
+                    rut: updatedUserData.rut,
+                    email: updatedUserData.email,
+                    firstName: updatedUserData.first_name,
+                    lastName: updatedUserData.last_name,
+                    birthDate: updatedUserData.birth_date,
+                    mobilePhone: updatedUserData.mobile_phone,
+                    city: updatedUserData.city,
+                    district: updatedUserData.district,
+                    street: updatedUserData.street,
+                    streetNumber: updatedUserData.street_number,
+                    additionalInfo: updatedUserData.additional_address_info,
+                    active: updatedUserData.active,
+                    role: updatedUserData.user_role
+                };
+
+                sessionStorage.setItem("user", JSON.stringify({ ...user, ...userSessionData }));
+
+                await saveUserConditions();
+                alert("✅ ¡Tu información ha sido actualizada con éxito!");
+            } catch (error) {
+                console.error("⚠️ Error al actualizar usuario:", error);
+                alert("⚠️ Hubo un error al actualizar los datos. Inténtalo nuevamente.");
+            }
         }
-        
-        // Ejecutar las funciones al cargar la vista
-        window.onload = function() {
-            loadAccountData();
-        };
-        
-        // Evento para guardar cambios
-        document.getElementById('save-changes').addEventListener('click', saveAccountChanges);
+
+        // 🔹 Cargar la vista al iniciar
+        document.addEventListener("DOMContentLoaded", async function () {
+            loadUserData();
+            await loadConditionsFromDB();
+            document.getElementById("save-changes").addEventListener("click", saveUserChanges);
+        });
     </script>
 </body>
 </html>

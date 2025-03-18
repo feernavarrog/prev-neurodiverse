@@ -9,6 +9,7 @@
       rel="stylesheet"
     />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <link
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
       rel="stylesheet"
@@ -22,85 +23,46 @@
   <body>
     <%- include('partials/first-nav') %> 
     <%- include('partials/navbar') %> 
-    <%-
-    include('partials/sidebar') %> <%- include('partials/cart') %> <%-
-    include('partials/login-modal') %>
+    <%- include('partials/sidebar') %> 
+    <%- include('partials/cart') %> 
+    <%- include('partials/login-modal') %>
 
-
-<div class="image-center">
-    <img
-        src="\img\Neurodiverse.png"
-        alt="Descripciónn"
-        style="width: 13%; max-width: 500px"
-    />
-</div>
-
-
-
-<div class="banner-container">
-   
-    <a href="/productos-destacados" class="banner-link">
+    <div class="image-center">
         <img
-            id="banner-1"
-            src="\img\Neurodiverse (1237 x 608 px).png"
-            alt="Banner 1"
-            class="banner-image"
+            src="\img\Neurodiverse.png"
+            alt="Descripción"
+            style="width: 13%; max-width: 500px"
         />
-    </a>
+    </div>
 
-   
-    <div class="banner-section">
-        <a href="/nuevas-ofertas" class="banner-link">
+    <div class="banner-container">
+        <a href="/productos-destacados" class="banner-link">
             <img
-                id="banner-2"
-                src="\img\banner2.png"
-                alt="Banner 2"
+                id="banner-1"
+                src="\img\Neurodiverse (1237 x 608 px).png"
+                alt="Banner 1"
                 class="banner-image"
             />
         </a>
+        <div class="banner-section">
+            <a href="/nuevas-ofertas" class="banner-link">
+                <img
+                    id="banner-2"
+                    src="\img\banner2.png"
+                    alt="Banner 2"
+                    class="banner-image"
+                />
+            </a>
+        </div>
     </div>
-</div>
 
     <%- include('partials/comingsoon') %>
+    <%- include('partials/footer') %>
 
-    < <%- include('partials/footer') %>
-
+    <script src="/js/global.js"></script>
+    <script src="/js/crudManager.js"></script>
     <script src="/js/main.js"></script>
-
-    <script>
-     
-      function setTestUserSession() {
-        sessionStorage.setItem(
-          "user",
-          JSON.stringify({
-            id: "123456", // ID genérica de prueba
-            firstName: "Juan",
-            lastName: "Pérez",
-            email: "juan.perez@example.com",
-            city: "Santiago",
-            street: "Av. Siempre Viva",
-            streetNumber: "742",
-            mobilePhone: "+56912345678",
-            additionalInfo: "Ninguna",
-            type: "cliente", // Tipo de usuario de prueba
-          })
-        );
-        console.log(
-          "Usuario de prueba almacenado en sessionStorage:",
-          JSON.parse(sessionStorage.getItem("user"))
-        );
-      }
-
-      // Ejecutar la función al cargar la vista
-      window.onload = function () {
-        setTestUserSession();
-        updateCart();
-        loadSidebarCategories();
-      };
-    </script>
-    <script src="\js\main.js"></script>
-    <script src="\js\crudManager.js"></script>
-    <script src="\js\utils.js"></script>
+    <script src="/js/utils.js"></script>
     
   </body>
 </html>

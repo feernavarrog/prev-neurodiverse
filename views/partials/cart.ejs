@@ -12,7 +12,7 @@
   <p>Total: <span id="cart-total">$0</span></p>
   <button id="checkout" onclick="window.location.href='/checkout'">Continuar Checkout</button>  
 </aside>
-
+<script src="/js/global.js"></script>
 <script>
     // Función para actualizar el carrito en la vista
     function updateCart() {
@@ -36,10 +36,10 @@
                 <button class="remove-item" data-code="${product.code}"><i class="fas fa-trash"></i></button>
             `;
             cartContainer.appendChild(productElement);
-            total += parseFloat(product.price.replace('$', '').trim()) * product.quantity;
+            total += cleanAndConvertCLP(product.price) * product.quantity;
         });
 
-        totalContainer.innerText = `$${total.toFixed(2)}`;
+        totalContainer.innerText = `${formatCLP(total)}`;
 
         // Asignar eventos a los botones de eliminar
         document.querySelectorAll('.remove-item').forEach(button => {
@@ -59,8 +59,12 @@
     function addToCart() {
       let cart = JSON.parse(sessionStorage.getItem('cart')) || [];
 
+      // Obtener la ID del producto desde el botón
+      let productId = event.target.getAttribute("data-id");
+
       // Obtener los datos actuales del producto desde el DOM
       const productData = {
+          id: productId, // Agregar la ID del producto
           name: document.getElementById('item-name').innerText,
           image: document.getElementById('item-image').src,
           description: document.getElementById('item-description').innerText,

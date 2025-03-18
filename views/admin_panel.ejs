@@ -37,11 +37,24 @@
             <li><a href="/admin/products"><i class="fa-solid fa-cart-plus" style="color: #ecc3c9;"></i> Administrar Productos</a></li>
             <li><a href="/admin/users"><i class="fa-solid fa-users-gear" style="color: #ecc3c9;"></i> Administrar Usuarios</a></li>            
             <li><a href="/admin/orders"><i class="fa-brands fa-cc-amazon-pay" style="color: #ecc3c9;"></i> Administrar Pedidos</a></li>
+            <li><a href="#" id="logout">❌ Cerrar sesión</a></li>
         </ul>
     </main>
     
     <%- include('partials/footer') %>
     
     <script src="/js/main.js"></script>
+    <script src="/js/global.js"></script>
+    <script>
+        // Función para cerrar sesión
+        function logout() {
+            sessionStorage.removeItem('user');
+            window.location.href = "/";
+        }
+    // Ejecutar la función al cargar la vista
+    document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById("logout").addEventListener("click", logout);
+    });
+    </script>
 </body>
 </html>

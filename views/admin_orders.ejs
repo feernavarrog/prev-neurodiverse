@@ -1,4 +1,4 @@
-<!-- views/admin_orders.ejs (Versión sin estilos) -->
+<!-- views/admin_orders.ejs -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -10,7 +10,8 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js">
+</script>
     <link
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
       rel="stylesheet"
@@ -18,7 +19,6 @@
     <link rel="stylesheet" href="/css/style.css" />
     <link rel="stylesheet" href="/css/homestyle.css" />
     <link rel="stylesheet" href="/css/admin_orders.css" />
-
 </head>
 <body>
     
@@ -37,132 +37,145 @@
         
         <!-- Dropdown para seleccionar estado del pedido -->
         <label for="order-status" class="form-label">Filtrar por estado:</label>
-        <select id="order-status" class="form-select">
+        <select id="order-status" class="form-select" onchange="loadOrders(this.value)">
             <option value="all">Todos</option>
-            <option value="pendiente">Pendiente</option>
-            <option value="enviado">Enviado</option>
-            <option value="entregado">Entregado</option>
+            <option value="pendiente">pendiente</option>
+            <option value="enviado">enviado</option>
+            <option value="entregado">entregado</option>
+            <option value="cancelado">cancelado</option>
         </select>
         <hr>
         
-        <!-- Tabla de pedidos de ejemplo para aplicar estilos -->
-        <table id="admin-orders-table" border="1">
+        <!-- Tabla de Órdenes -->
+        <legend>Gestión de Órdenes</legend>
+        <table id="admin-orders-table" class="table table-striped">
             <thead>
                 <tr>
-                    <th>Nro Pedido</th>
-                    <th>Fecha Pedido</th>
-                    <th>Cliente</th>
-                    <th>Dirección</th>
-                    <th>Productos</th>
+                    <th>Fecha de Orden</th>
+                    <th>RUT Usuario</th>
+                    <th>Últimos 4 Dígitos Tarjeta</th>
+                    <th>Subtotal</th>
                     <th>Total</th>
+                    <th>Dirección de Envío</th>
+                    <th>Productos</th>
                     <th>Estado</th>
-                    <th>Acción</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
-            <tbody>
-                <!-- Ejemplo estático, los datos deben ser poblados dinámicamente desde la base de datos -->
-                <tr>
-                    <td>78654</td>
-                    <td>2024-03-05</td>
-                    <td>Juan Pérez - 12.345.678-9</td>
-                    <td>Avenida Siempre Viva 123, Santiago</td>
-                    <td>
-                        <ul>
-                            <li>Producto 1 - Cantidad: 2 - Precio: $10.000</li>
-                            <li>Producto 2 - Cantidad: 1 - Precio: $5.000</li>
-                        </ul>
-                    </td>
-                    <td>$25.000</td>
-                    <td>Pendiente</td>
-                    <td><button class="registro-boton" value="78654" onclick="markAsReviewed(this.value)">Marcar como Revisado</button></td>
-                </tr>
+            <tbody id="orderTableBody">
+                <!-- Las órdenes se insertarán aquí dinámicamente -->
             </tbody>
         </table>
-        <hr>
-
-
-        <!-- Tabla dinámica generada con JavaScript -->
-        <table id="dynamic-admin-orders-table" border="1">
-            <thead>
-                <tr>
-                    <th>Nro Pedido</th>
-                    <th>Fecha Pedido</th>
-                    <th>Cliente</th>
-                    <th>Dirección</th>
-                    <th>Productos</th>
-                    <th>Total</th>
-                    <th>Estado</th>
-                    <th>Acción</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Los datos se generarán dinámicamente -->
-            </tbody>
-        </table>
+        
     </main>
     
     <%- include('partials/footer') %>
-    
+    <script src="/js/crudManager.js"></script>
+    <script src="/js/utils.js"></script>
     <script src="/js/main.js"></script>
-    
+    <script src="/js/global.js"></script>
     <script>
-        // Función para poblar la tabla de pedidos dinámicamente con datos simulados
-        function loadAdminOrders() {
-            let orderRows = [
-                { orderId: 78658, date: "2024-03-01", client: "María López - 11.222.333-4", address: "Calle Falsa 456", product: "Producto X", quantity: 1, price: "$12.000", total: "$12.000", status: "Pendiente" },
-                { orderId: 78658, date: "2024-03-01", client: "María López - 11.222.333-4", address: "Calle Falsa 456", product: "Producto Y", quantity: 2, price: "$8.000", total: "$16.000", status: "Pendiente" },
-                { orderId: 78659, date: "2024-02-28", client: "Carlos Díaz - 99.888.777-6", address: "Av. Central 789", product: "Producto Z", quantity: 1, price: "$15.000", total: "$15.000", status: "Enviado" }
-            ];
+        async function loadOrders(filterStatus = 'all') {
+            const response = await fetchOrders(filterStatus !== 'all' ? { column: 'status', value: filterStatus } : {});
+            console.log("Respuesta de fetchOrders:", response);
             
-            let groupedOrders = {};
-            orderRows.forEach(row => {
-                if (!groupedOrders[row.orderId]) {
-                    groupedOrders[row.orderId] = {
-                        date: row.date,
-                        client: row.client,
-                        address: row.address,
-                        products: [],
-                        total: 0,
-                        status: row.status
-                    };
-                }
-                groupedOrders[row.orderId].products.push(`${row.product} - Cantidad: ${row.quantity} - Precio: ${row.price}`);
-                groupedOrders[row.orderId].total += parseInt(row.total.replace("$", ""));
-            });
+            const orders = response.rows || [];
+            const tableBody = document.getElementById('orderTableBody');
+            tableBody.innerHTML = '';
             
-            let tableBody = document.querySelector("#dynamic-admin-orders-table tbody");
-            tableBody.innerHTML = ""; // Limpiar contenido previo
-            
-            Object.keys(groupedOrders).forEach(orderId => {
-                let order = groupedOrders[orderId];
-                let productList = order.products.map(p => `<li>${p}</li>`).join("\n");
+            for (const order of orders) {
+                const formattedDate = formatDate(order[7]);
+                const products = await fetchOrderProducts(order[0]);
+                let productList = "";
                 
-                let row = `
-                    <tr>
-                        <td>${orderId}</td>
-                        <td>${order.date}</td>
-                        <td>${order.client}</td>
-                        <td>${order.address}</td>
-                        <td><ul>${productList}</ul></td>
-                        <td>$${order.total}</td>
-                        <td>${order.status}</td>
-                        <td><button value="${orderId}" onclick="markAsReviewed(this.value)">Marcar como Revisado</button></td>
-                    </tr>
-                `;
+                if (products.rows.length > 0) {
+                    products.rows.forEach(product => {
+                        productList += `<div>
+                            <img src="/product-images/${product[7]}" style="max-width: 50px; max-height: 50px;" alt="Producto">
+                            Código: ${product[1]} - Nombre: ${product[2]} - Cantidad: ${product[12]}
+                        </div>`;
+                    });
+                } else {
+                    productList = "Sin productos";
+                }
+    
+                const actionButtons = [];
+                
+                if (order[4] === 'pendiente') {
+                    actionButtons.push(`<button class='btn btn-warning btn-sm' onclick="updateOrderState(${order[0]}, ${order[1]}, '${order[2]}', ${order[3]}, '${order[4]}', '${order[5]}', ${order[6]}, '${formatDateInput(order[7])}', ${order[8]})">Enviar Orden 🚚</button>`);
+                } else if (order[4] === 'enviado') {
+                    actionButtons.push(`<button class='btn btn-success btn-sm' onclick="updateOrderState(${order[0]}, ${order[1]}, '${order[2]}', ${order[3]}, '${order[4]}', '${order[5]}', ${order[6]}, '${formatDateInput(order[7])}', ${order[8]})">Pedido Entregado ✅</button>`);
+                }
+                
+                if (order[4] !== 'cancelado' && order[4] !== 'entregado') {
+                    actionButtons.push(`<button class='btn btn-danger btn-sm' onclick="cancelOrder(${order[0]}, ${order[1]}, '${order[2]}', ${order[3]}, '${order[4]}', '${order[5]}', ${order[6]}, '${formatDateInput(order[7])}', ${order[8]})">Cancelar Orden ❌</button>`);
+                }
+                
+                const row = `<tr>
+                    <td>${formattedDate}</td>
+                    <td>${order[9]}</td>
+                    <td>${order[5]}</td>
+                    <td>${formatCLP(order[1])}</td>
+                    <td>${formatCLP(order[3])}</td>
+                    <td>${order[2]}</td>
+                    <td>${productList}</td>
+                    <td class='estado-${order[4]}'>${order[4]}</td>
+                    <td>${actionButtons.join(' ')}</td>
+                </tr>`;
                 tableBody.innerHTML += row;
-            });
+            }
+        }
+      function getNextOrderState(currentState) {
+            switch (currentState) {
+                case 'pendiente': return 'enviado';
+                case 'enviado': return 'entregado';
+                default: return currentState;
+            }
         }
 
-        // Función simulada para cambiar el estado del pedido
-        function markAsReviewed(orderId) {
-            console.log("Cambiando estado del pedido:", orderId);
-            // Aquí se haría la llamada a la base de datos para actualizar el estado del pedido
+        async function updateOrderState(orderId, subtotal, shippingAddress, total, status, cardLastFour, userId, orderDate, active) {
+            const newState = getNextOrderState(status);
+            console.log(`Actualizando orden ${orderId}: ${status} → ${newState}`);
+            
+            const order = {
+                order_id: orderId,
+                subtotal,
+                shipping_address: shippingAddress,
+                total,
+                status: newState,
+                card_last_four: cardLastFour,
+                user_id: userId,
+                order_date: orderDate,
+                active
+            };
+            
+            await updateOrder(order);
+            loadOrders();
         }
-        
-        // Ejecutar la función al cargar la vista
-        window.onload = function() {
-            //loadAdminOrders();
-        };
+
+        async function cancelOrder(orderId, subtotal, shippingAddress, total, status, cardLastFour, userId, orderDate, active) {
+            if (!confirm("¿Estás seguro de que deseas cancelar esta orden?")) return;
+            console.log(`Cancelando orden ${orderId}`);
+            
+            const order = {
+                order_id: orderId,
+                subtotal,
+                shipping_address: shippingAddress,
+                total,
+                status: 'cancelado',
+                card_last_four: cardLastFour,
+                user_id: userId,
+                order_date: orderDate,
+                active
+            };
+            
+            await updateOrder(order);
+            loadOrders();
+        }
+      
+      document.addEventListener('DOMContentLoaded', function() {
+      loadOrders();
+    });
     </script>
 </body>
 </html>

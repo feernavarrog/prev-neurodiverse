@@ -37,7 +37,7 @@
     <div class="main-item">
       <div class="item-container">
           <!-- Imagen del producto -->
-          <img id="item-image" src="/img/fidgetoy1.png" alt="del item" class="item-image">
+          <img id="item-image" src="" alt="del item" class="item-image">
     
           <!-- Contenedor de los detalles del producto -->
           <div class="details-container">
@@ -48,7 +48,7 @@
               <p class="item-price">Precio: <span id="item-price">$0</span></p>
     
               <!-- Botón de agregar al carrito -->
-              <button id="add-to-cart" class="add-to-cart-btn">🛒 Agregar</button>
+              <button id="add-to-cart" class="add-to-cart-btn" data-id="PRODUCT_ID">🛒 Agregar</button>
           </div>
       </div>
     
@@ -56,7 +56,13 @@
       <p id="item-description" class="item-description">Cargando descripción...</p>
       <p class="item-info">Código: <span id="item-code">Cargando...</span></p>
   </div>
+  <!-- Footer -->
+  <%- include('partials/footer') %>
   
+  <script src="\js\main.js"></script>
+  <script src="\js\crudManager.js"></script>
+  <script src="\js\utils.js"></script>
+  <script src="\js\global.js"></script>
   <script>
       // Función para obtener el parámetro "code" de la URL
       function getProductCodeFromUrl() {
@@ -92,9 +98,10 @@
               const productCodeInDB = product[1]; // Código real del producto en la BBDD
   
               // 2️⃣ Insertar la información en la vista
+              document.getElementById("add-to-cart").setAttribute("data-id", products[0][0]);
               document.getElementById("item-image").src = `/product-images/${productImage}`;
               document.getElementById("item-name").innerText = productName;
-              document.getElementById("item-price").innerText = `$${productPrice.toLocaleString()}`;
+              document.getElementById("item-price").innerText = `${formatCLP(productPrice)}`;
               document.getElementById("item-description").innerText = productDescription;
               document.getElementById("item-code").innerText = productCodeInDB;
   
@@ -111,14 +118,6 @@
   
       // Llamar a la función cuando la página se cargue
       document.addEventListener("DOMContentLoaded", loadProductDetails);
-  </script>
-  
-    <script src="\js\main.js"></script>
-    <script src="\js\crudManager.js"></script>
-    <script src="\js\utils.js"></script>
-        
-    <!-- Footer -->
-    <%- include('partials/footer') %>
-
+  </script>      
 </body>
 </html>

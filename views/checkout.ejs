@@ -30,7 +30,7 @@
         <div id="order-summary">
             <h3>Resumen del Pedido</h3>
             <p>Subtotal: <span id="subtotal">$0</span></p>
-            <p>Gasto de envío: <span id="shipping-cost">$3000</span></p>
+            <p>Gasto de envío: <span id="shipping-cost">$3.000</span></p>
             <p>Total: <span id="total">$0</span></p>
         </div>
         <hr>
@@ -52,13 +52,35 @@
 
         <hr>
 
-        <!-- Vista de pago Webpay incluida -->
-        <%- include('partials/webpay') %>
+        <!-- Vista de pago Webpay -->
+        <div id="webpay-container" class="webpay-popup">
+            <div class="webpay-popup-content">
+                <!-- Botón de cierre -->
+                <button class="close-button" id="close-webpay">✖</button>
+                
+                <!-- Título -->
+                <h3>Pago con Tarjeta (Webpay)</h3>
+                
+                <!-- Formulario de pago -->
+                <div>
+                    <input type="text" id="card-number" placeholder="Número de Tarjeta" required>
+                    <input type="text" id="card-code" placeholder="Código de Seguridad" required>
+                    <input type="text" id="card-expiry" placeholder="Fecha de Expiración (MM/AA)" required>
+                </div>
+                
+                <!-- Botón de pago -->
+                <button id="process-payment" class="btn-pay" onclick="processOrder()">Realizar Pago</button>
+
+            </div>
+        </div>
+
     </main>
 
     <%- include('partials/footer') %>
 
     <script src="/js/main.js"></script>
+    <script src="/js/global.js"></script>
+    <script src="/js/crudManager.js"></script>
 
     <script>
         // Función para cargar los productos del carrito en la vista de checkout
@@ -85,11 +107,11 @@
                         </div>
                     `;
                     checkoutContainer.appendChild(productElement);
-                    subtotal += parseFloat(product.price.replace('$', '')) * (product.quantity || 1);
+                    subtotal += cleanAndConvertCLP(product.price) * (product.quantity || 1);
                 });
 
-                subtotalContainer.innerText = `$${subtotal.toFixed(2)}`;
-                totalContainer.innerText = `$${(subtotal + shippingCost).toFixed(2)}`;
+                subtotalContainer.innerText = `${formatCLP(subtotal)}`;
+                totalContainer.innerText = `${formatCLP((subtotal + shippingCost))}`;
             }
         }
 
@@ -118,8 +140,54 @@
             document.getElementById('webpay-container').style.display = 'none';
         }
 
+        async function processOrder() {
+            let user = JSON.parse(sessionStorage.getItem('user')) || {};
+            let cart = JSON.parse(sessionStorage.getItem('cart')) || [];
+            let subtotal = cleanAndConvertCLP(document.getElementById('subtotal').innerText);
+            let total = cleanAndConvertCLP(document.getElementById('total').innerText);
+            let shippingAddress = `${user.city}, ${user.street} ${user.streetNumber}`;
+            let cardNumber = document.getElementById('card-number').value;
+            let cardLastFour = cardNumber.slice(-4);
+
+            let orderData = {
+                subtotal: subtotal,
+                shipping_address: shippingAddress,
+                total: total,
+                status: "pendiente",
+                card_last_four: cardLastFour,
+                user_id: user.userId, // Corrección en la clave correcta
+                order_date: null,
+                active: 1
+            };
+
+            console.log("Datos de la orden a enviar:", orderData);
+
+            let createdOrder = await createOrder(orderData);
+            let orders = await fetchOrders({ column: "rut", value: user.rut });
+            let lastOrderId = orders.rows[0][0];
+            
+            let orderProducts = cart
+                .filter(product => product.id) // Filtramos productos sin ID
+                .map(product => ({
+                    order_id: lastOrderId,
+                    product_id: product.id,
+                    quantity: product.quantity || 1
+                }));
+            
+            console.log("Productos a asociar con la orden:", orderProducts);
+
+            for (const orderProduct of orderProducts) {
+                await addProductToOrder(orderProduct.order_id, orderProduct.product_id, orderProduct.quantity);
+            }
+
+            sessionStorage.removeItem('cart');
+            alert("Orden procesada correctamente.");
+            window.location.href = '/';
+        }
+
         // Ejecutar las funciones al cargar la vista
         document.addEventListener("DOMContentLoaded", function() {
+            
             loadCheckoutItems();
             loadUserData();
 
@@ -133,6 +201,7 @@
             if (closeWebpayBtn) {
                 closeWebpayBtn.addEventListener('click', closeWebpayPopup);
             }
+            //document.getElementById('confirm-payment').addEventListener('click', processOrder);
         });
     </script>
 </body>

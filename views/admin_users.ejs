@@ -1,4 +1,4 @@
-<!-- views/admin_users.ejs (Versión sin estilos) -->
+<!-- views/admin_users.ejs (Versión actualizada) -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -18,6 +18,7 @@
   <link rel="stylesheet" href="/css/style.css" />
   <link rel="stylesheet" href="/css/homestyle.css" />
   <link rel="stylesheet" href="/css/orderstyle.css" /> 
+  <link rel="stylesheet" href="/css/admin_users.css" />
 </head>
 <body>
     
@@ -26,9 +27,6 @@
     <%- include('partials/cart') %>
     <%- include('partials/login-modal') %>
     
-<!-- Se creó un .css usando el mismo estilo y estructura de "Mis Compras" -->
-
-        <!-- Contenido principal -->
     <main>
         <div class="admin-header">
             <h2>Administración de Usuarios</h2>
@@ -36,29 +34,6 @@
             <hr>
         </div>
         
-        <!-- Tabla de ejemplo para aplicar estilos -->
-        <table id="admin-users-table" border="1">
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Correo Electrónico</th>
-                    <th>RUT</th>
-                    <th>Acción</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Juan Rodríguez</td>
-                    <td>juan@example.com</td>
-                    <td>10.456.345-K</td>
-                    <td><button class="registro-boton">Desactivar</button></td> <!-- Boton estandar, la clase es de style.css -->
-                </tr>
-            </tbody>
-        </table>
-        <hr>
-    
-
-        <!-- Tabla dinámica generada con JavaScript -->
         <table id="dynamic-admin-users-table" border="1">
             <thead>
                 <tr>
@@ -76,43 +51,91 @@
     
     <%- include('partials/footer') %>
     
+    <script src="/js/crudManager.js"></script>
     <script src="/js/main.js"></script>
+    <script src="/js/global.js"></script>
+    <script src="/js/utils.js"></script>
     
     <script>
-        // Función para poblar la tabla de usuarios dinámicamente con datos simulados
-        function loadAdminUsers() {
-            let userRows = [
-                { name: "María López", email: "maria@example.com", rut: "11.222.333-4" },
-                { name: "Carlos Díaz", email: "carlos@example.com", rut: "99.888.777-6" },
-                { name: "Ana Pérez", email: "ana@example.com", rut: "22.333.444-5" }
-            ];
-            
-            let tableBody = document.querySelector("#dynamic-admin-users-table tbody");
-            tableBody.innerHTML = ""; // Limpiar contenido previo
-            
-            userRows.forEach(user => {
-                let row = `
-                    <tr>
-                        <td>${user.name}</td>
-                        <td>${user.email}</td>
-                        <td>${user.rut}</td>
-                        <td><button onclick="deactivateUser('${user.rut}')">Desactivar</button></td>
-                    </tr>
-                `;
-                tableBody.innerHTML += row;
-            });
+        async function loadAdminUsers() {
+            try {
+                const usersResponse = await fetchUsers();
+                const users = usersResponse.rows || [];
+                let tableBody = document.querySelector("#dynamic-admin-users-table tbody");
+                tableBody.innerHTML = "";
+    
+                users.forEach(user => {
+                    let row = `
+                        <tr>
+                            <td class="active-${user[13]}">${user[4]} ${user[5]}</td>
+                            <td class="active-${user[13]}">${user[2]}</td>
+                            <td class="active-${user[13]}">${user[1]}</td>
+                            <td class="active-${user[13]}">
+                                <button onclick="deactivateUser(${user[0]})">Desactivar</button>
+                                <button onclick="deleteUser(${user[0]})">Eliminar</button>
+                            </td>
+                        </tr>
+                    `;
+                    tableBody.innerHTML += row;
+                });
+            } catch (error) {
+                console.error("⚠️ Error al cargar usuarios:", error);
+            }
         }
-        
-        // Función simulada para desactivar usuario
-        function deactivateUser(userRut) {
-            console.log("Desactivando usuario con RUT:", userRut);
-            // Aquí se haría la llamada a la base de datos para cambiar el estado del usuario
+    
+        async function deactivateUser(userId) {
+          try {
+              const userResponse = await fetchUsers({ column: "user_id", value: userId });
+              if (!userResponse.rows || userResponse.rows.length === 0) {
+                  throw new Error("Usuario no encontrado");
+              }
+              
+              let userData = userResponse.rows[0];
+      
+              // 📌 Asegurar que el formato de actualización coincida con la estructura esperada
+            const updatedUser = {
+                user_id: userData[0],
+                rut: userData[1], 
+                email: userData[2],
+                password: userData[3],
+                first_name: userData[4],
+                last_name: userData[5],
+                birth_date: formatDateInput(userData[6]),
+                city: userData[7],
+                district: userData[8],
+                street: userData[9],
+                street_number: userData[10],
+                mobile_phone: userData[11],
+                additional_address_info: userData[12],
+                active: 0, // ✅ Cambiamos solo el campo active a 0 para desactivar
+                user_role: userData[14]
+            };
+
+            // 📌 Llamar a la actualización con los datos completos
+            const response = await updateUser(updatedUser);
+      
+              alert("✅ Usuario desactivado correctamente");
+              loadAdminUsers();
+          } catch (error) {
+              console.error("⚠️ Error al desactivar usuario:", error);
+          }
+      }
+    
+        async function deleteUser(userId) {
+            try {
+                await fetch(`/users/delete/${userId}`, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+    
+                alert("✅ Usuario eliminado correctamente");
+                loadAdminUsers();
+            } catch (error) {
+                console.error("⚠️ Error al eliminar usuario:", error);
+            }
         }
-        
-        // Ejecutar la función al cargar la vista
-        window.onload = function() {
-            //loadAdminUsers();
-        };
+    
+        document.addEventListener("DOMContentLoaded", loadAdminUsers);
     </script>
 </body>
 </html>
