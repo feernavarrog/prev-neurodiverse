@@ -44,6 +44,69 @@ exports.deleteUser = async (req, res) => {
     }
 };
 
+exports.normalLogin = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        // Validar que se envíen ambos datos
+        if (!email || !password) {
+            return res.status(400).json({ error: "Email y contraseña son requeridos." });
+        }
+
+        // Buscar usuario por email usando el método getUsers(filter)
+        const userResult = await userModel.getUsers({ column: "email", value: email });
+
+        if (!userResult.rows || userResult.rows.length === 0) {
+            return res.status(404).json({ error: "Usuario no encontrado." });
+        }
+
+        // Extraer datos del usuario
+        const userData = userResult.rows[0];
+        const storedPassword = userData[3]; // Contraseña almacenada en la BD
+        const isActive = userData[13]; // Estado de cuenta (activo o inactivo)
+
+        // Si el usuario está inactivo, impedir acceso
+        if (isActive === 0) {
+            return res.status(403).json({ error: "Cuenta inactiva. Contacta al soporte." });
+        }
+
+        // Comparar contraseñas directamente (sin hash)
+        if (password !== storedPassword) {
+            return res.status(401).json({ error: "Contraseña incorrecta." });
+        }
+
+        // Guardar sesión del usuario en el backend
+        req.session.user = {
+            userId: userData[0],
+            email: userData[2],
+            role: userData[14] // 'customer' o 'admin'
+        };
+
+        // Enviar los datos del usuario al frontend (sin la contraseña)
+        return res.json({
+            userId: userData[0],
+            rut: userData[1],
+            email: userData[2],
+            firstName: userData[4],
+            lastName: userData[5],
+            birthDate: userData[6],
+            city: userData[7],
+            district: userData[8],
+            street: userData[9],
+            streetNumber: userData[10],
+            mobilePhone: userData[11],
+            additionalInfo: userData[12],
+            active: isActive,
+            role: userData[14],
+        });
+
+    } catch (error) {
+        console.error("Error en la autenticación normal:", error);
+        return res.status(500).json({ error: "Error interno en la autenticación." });
+    }
+};
+
+
 exports.googleAuth = async (req, res) => {
     try {
         const { credential } = req.body;
@@ -59,16 +122,36 @@ exports.googleAuth = async (req, res) => {
 
         const email = decoded.email;
 
-        // Buscar usuario en la base de datos
-        const sql = `SELECT * FROM app_user WHERE email = :email`;
-        const userResult = await database.executeQuery(sql, [email]);
+        // 🔹 Buscar usuario en la base de datos usando el método de userModel
+        const userResult = await userModel.getUsers({ column: "email", value: email });
 
         if (userResult.rows.length === 0) {
             return res.status(404).json({ error: email });
         }
 
-        // Usuario encontrado, devolver los datos
+        // 🔹 Extraer datos del usuario
         const userData = userResult.rows[0];
+        const storedPassword = userData[3]; // Contraseña en la BD
+        const isActive = userData[13]; // Estado de cuenta (activo o inactivo)
+
+        // Si el usuario está inactivo, impedir acceso
+        if (isActive === 0) {
+            return res.status(403).json({ error: "Cuenta inactiva. Contacta al soporte." });
+        }
+
+        // 🔹 Validar si la contraseña NO es NULL (registro normal)
+        if (storedPassword !== null) {
+            return res.status(403).json({ error: "Debes iniciar sesión con usuario y contraseña." });
+        }
+
+        // Guardar sesión del usuario en el backend
+        req.session.user = {
+            userId: userData[0],
+            email: userData[2],
+            role: userData[14] // 'customer' o 'admin'
+        };
+
+        // 🔹 Usuario autenticado correctamente con Google, devolver los datos
         return res.json({
             userId: userData[0],
             rut: userData[1],

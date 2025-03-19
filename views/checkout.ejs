@@ -149,6 +149,25 @@
             let cardNumber = document.getElementById('card-number').value;
             let cardLastFour = cardNumber.slice(-4);
 
+            // Verificar stock de cada producto antes de procesar la orden
+            for (const product of cart) {
+                if (!product.id) continue; // Saltar productos sin ID
+                
+                let productData = await fetchProducts({ column: "product_id", value: product.id });
+
+                if (!productData.rows || productData.rows.length === 0) {
+                    alert(`El producto con ID ${product.id} no existe en la base de datos.`);
+                    return; // Detiene la orden si el producto no existe
+                }
+
+                let productStock = parseInt(productData.rows[0][6] || "0", 10); // Índice 6 es stock
+
+                if (productStock <= 0) {
+                    alert(`⚠️ El producto "${product.name}" no tiene stock disponible. Por favor, quitar de la lista.`);
+                    return; // Detiene la orden si no hay stock
+                }
+            }
+
             let orderData = {
                 subtotal: subtotal,
                 shipping_address: shippingAddress,

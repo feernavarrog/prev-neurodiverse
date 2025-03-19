@@ -115,18 +115,33 @@
                             discountTag = `<p class="product-discount">-${productDiscount}%</p>`;
                         }
     
-                        // Crear estructura del producto respetando las clases CSS
-                        const productElement = document.createElement("div");
+                        // Obtener el stock del producto (columna 7 → índice [6])
+                        const productStock = parseInt(product[6] || "0", 10); 
+
+                        // Aplicar clase CSS para productos sin stock
+                        let unavailableClass = productStock === 0 ? "product-unavailable" : "";
+
+                        // Agregar mensaje de "No disponible por el momento"
+                        let unavailableTag = productStock === 0 
+                            ? `<p class="product-not-available">No disponible por el momento</p>` 
+                            : "";
+
+                        // Modificar el enlace para que no sea clickeable si el producto no tiene stock
+                        let productElement = document.createElement("div");
                         productElement.classList.add("product-item");
+                        if (unavailableClass) {
+                            productElement.classList.add(unavailableClass);
+                        }
                         productElement.innerHTML = `
-                            <a href="/item?code=${productCode}">
+                            <a href="${productStock === 0 ? "#" : "/item?code=" + productCode}" class="${productStock === 0 ? "disabled-link" : ""}">
                                 <img class="product-image" src="/product-images/${productImage}" alt="${productName}">
                                 <p class="product-name">${productName}</p>
                                 <p class="product-price">${formatCLP(finalPrice)}</p>
                                 ${discountTag} <!-- Muestra el descuento si existe -->
+                                ${unavailableTag} <!-- Muestra el mensaje si el producto no tiene stock -->
                             </a>
                         `;
-    
+
                         // Agregar al contenedor de productos
                         productList.appendChild(productElement);
                     });

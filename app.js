@@ -1,7 +1,9 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const session = require('express-session');
 const database = require('./src/services/database');
+const { requireAuth, requireAdmin } = require('./src/middlewares/authMiddleware');
 
 const userRoutes = require('./src/routes/userRoutes');
 const categoryRoutes = require('./src/routes/categoryRoutes');
@@ -20,6 +22,14 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(session({
+  secret: 'mi_secreto_seguro', // Usa una clave segura
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false } // Cambiar a `true` si se usa HTTPS
+}));
+app.use(['/account', '/account-settings', '/orders'], requireAuth); // Proteger rutas para usuarios logueados
+app.use(['/admin-panel', '/admin/orders', '/admin/users', '/admin/products'], requireAuth, requireAdmin); // Proteger rutas para administrador
 
 // Servir archivos estáticos desde el directorio 'public'
 app.use(express.static('public'));

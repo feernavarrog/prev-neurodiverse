@@ -93,3 +93,21 @@
     width: 80%;
     margin-bottom: 30px;  
 }
+
+.product-unavailable {
+    opacity: 0.5;
+    pointer-events: none;
+    filter: grayscale(80%);
+}
+
+.product-not-available {
+    color: red;
+    font-weight: bold;
+    text-align: center;
+}
+
+.disabled-link {
+    pointer-events: none;
+    cursor: default;
+    text-decoration: none;
+}
