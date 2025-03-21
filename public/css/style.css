@@ -586,3 +586,21 @@ footer {
     text-transform: uppercase;
 }
 
+.error-message {
+    color: red;
+    font-size: 0.9em;
+    margin-top: 2px;
+}
+
+input.error {
+    border: 2px solid red;
+}
+
+.form-tip {
+    color: black;
+    font-size: 0.9em;
+}
+
+.error-message:empty {
+    display: none;
+}

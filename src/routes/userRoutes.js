@@ -35,4 +35,11 @@ router.post("/auth/callback", userController.googleAuth);
 // Ruta para manejar el login con email y contraseña
 router.post('/auth/login', userController.normalLogin);
 
+// Ruta para manejar el logout
+router.post('/auth/logout', userController.logoutUser);
+
+// Ruta para manejar el registro de usuario
+router.post("/auth/auto-login", userController.autoLogin); // 🔹 Nueva ruta para iniciar sesión automáticamente
+
+
 module.exports = router;

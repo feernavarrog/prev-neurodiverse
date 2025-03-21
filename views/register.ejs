@@ -25,18 +25,32 @@
             <!-- 🔹 Sección: Datos Personales -->
             <h3 class="registro-subtitulo">Datos Personales</h3>
             <input type="email" id="email" class="registro-input" placeholder="Correo Electrónico" required>
+            <p id="email-error" class="error-message"></p>
+
             <input type="password" id="password" class="registro-input" placeholder="Contraseña" required>
+            <p id="password-tip" class="form-tip">Debe tener al menos 12 caracteres, una mayúscula, una minúscula, un número y un símbolo.</p>
+            <p id="password-error" class="error-message"></p>
+
             <input type="text" id="first-name" class="registro-input" placeholder="Nombre" required>
+            <p id="first-name-error" class="error-message"></p>
+
             <input type="text" id="last-name" class="registro-input" placeholder="Apellido" required>
+            <p id="last-name-error" class="error-message"></p>
+
             <label for="birth-date">Fecha de Nacimiento:</label>
             <input type="date" id="birth-date" class="registro-input" required>
+            <p id="birth-date-error" class="error-message"></p>
+
             <input type="text" id="mobile-phone" class="registro-input" placeholder="Teléfono/Móvil" required>
+            <p id="mobile-phone-error" class="error-message"></p>
 
             <hr>
 
             <!-- 🔹 Sección: Datos para el Envío -->
             <h3 class="registro-subtitulo">Datos para el Envío</h3>
-            <input type="text" id="rut" class="registro-input" placeholder="RUT (Ej: 12.345.678-9)" required>
+            <input type="text" id="rut" class="registro-input" placeholder="RUT (Ej: 12345678-9)" required>
+            <p id="rut-error" class="error-message"></p>
+
             <p class="registro-info">📌 Por el momento, solo realizamos envíos dentro de la Región Metropolitana.</p>
 
             <label for="region">Región:</label>
@@ -62,9 +76,14 @@
                 <option value="San Bernardo">San Bernardo</option>
                 <option value="Santiago Centro">Santiago Centro</option>
             </select>
+            <p id="comuna-error" class="error-message"></p>
 
             <input type="text" id="street" class="registro-input" placeholder="Calle" required>
+            <p id="street-error" class="error-message"></p>
+
             <input type="text" id="street-number" class="registro-input" placeholder="Número" required>
+            <p id="street-number-error" class="error-message"></p>
+
             <input type="text" id="additional-info" class="registro-input" placeholder="Información adicional">
 
             <hr>
@@ -83,7 +102,10 @@
     <script src="/js/crudManager.js"></script>
     <script src="/js/main.js"></script>
     <script src="/js/global.js"></script>
+    <script src="/js/authManager.js"></script>
     <script>
+    let originalPasswordHash = null;
+    
     // 🔹 Obtener el email desde la URL si existe
     function getEmailFromURL() {
         const params = new URLSearchParams(window.location.search);
@@ -122,59 +144,105 @@
         }
     }
 
+    // 🔹 Mostrar mensajes de error en el formulario
+        function displayErrors(errors) {
+        // Limpiar mensajes de error previos
+        document.querySelectorAll(".error-message").forEach(msg => msg.textContent = "");
+        document.querySelectorAll(".registro-input").forEach(input => input.classList.remove("error"));
+
+        // 📌 Asegurar que el tip de la contraseña se muestra por defecto
+        document.getElementById("password-tip").style.display = "block";
+
+        for (const field in errors) {
+            const inputField = document.getElementById(field);
+            const errorMessage = document.getElementById(`${field}-error`);
+
+            if (inputField) {
+                inputField.classList.add("error");
+            }
+
+            if (errorMessage) {
+                errorMessage.textContent = errors[field];
+                errorMessage.style.color = "red";
+            }
+
+            // Si el error es en la contraseña, ocultar el tip
+            if (field === "password") {
+                document.getElementById("password-tip").style.display = "none";
+            }
+        }
+    }
+
     // 🔹 Evento para registrar usuario y sus patologías
     async function registerUser() {
         const selectedConditions = [...document.querySelectorAll('.condition-checkbox:checked')].map(cb => cb.value);
         const emailFromURL = new URLSearchParams(window.location.search).get("email");
         
         const userData = {
-            rut: document.getElementById("rut").value,
-            email: document.getElementById("email").value,
-            password: emailFromURL ? null : document.getElementById("password").value,
-            first_name: document.getElementById("first-name").value,
-            last_name: document.getElementById("last-name").value,
-            birth_date: document.getElementById("birth-date").value,
-            city: "Santiago", // Fijo para RM
-            district: document.getElementById("comuna").value,
-            street: document.getElementById("street").value,
-            street_number: document.getElementById("street-number").value,
-            mobile_phone: document.getElementById("mobile-phone").value,
-            additional_address_info: document.getElementById("additional-info").value,
-            active: 1,
-            user_role: "customer"
-        };
+        rut: document.getElementById("rut").value.trim(),
+        email: document.getElementById("email").value.trim(),
+        password: emailFromURL ? null : document.getElementById("password").value.trim(),
+        first_name: document.getElementById("first-name").value.trim(),
+        last_name: document.getElementById("last-name").value.trim(),
+        birth_date: document.getElementById("birth-date").value,
+        city: "Santiago",
+        district: document.getElementById("comuna").value,
+        street: document.getElementById("street").value.trim(),
+        street_number: document.getElementById("street-number").value.trim(),
+        mobile_phone: document.getElementById("mobile-phone").value.trim(),
+        additional_address_info: document.getElementById("additional-info").value.trim(),
+        active: 1,
+        user_role: "customer"
+    };
 
-        const response = await createUser(userData);
+    // 🔹 Validar los datos antes de enviarlos
+    const errors = validateUserForm(userData);
 
-        const userResult = await fetchUsers({ column: "email", value: userData.email });
-        if (!userResult.rows || userResult.rows.length === 0) {
-            alert("No se encontró el usuario registrado.");
-            return;
-        }
+    // 📌 Si hay errores, mostrarlos y detener el registro
+    if (Object.keys(errors).length > 0) {
+        displayErrors(errors);
+        return;
+    }
 
-        const userId = userResult.rows[0][0];
+    const response = await createUser(userData);
 
-        for (const conditionId of selectedConditions) {
-            await assignUserCondition(userId, conditionId);
-        }
+    const userResult = await fetchUsers({ column: "email", value: userData.email });
+    if (!userResult.rows || userResult.rows.length === 0) {
+        alert("No se encontró el usuario registrado.");
+        return;
+    }
 
-        // 📌 Guardar usuario en sessionStorage con nomenclatura correcta
-        sessionStorage.setItem("user", JSON.stringify({
-            userId: userId,
-            email: userData.email,
-            firstName: userData.first_name,
-            lastName: userData.last_name,
-            birthDate: userData.birth_date,
-            city: userData.city,
-            district: userData.district,
-            street: userData.street,
-            streetNumber: userData.street_number,
-            mobilePhone: userData.mobile_phone,
-            additionalInfo: userData.additional_address_info,
-            active: userData.active,
-            userRole: userData.user_role,
-            googleAuth: emailFromURL ? true : undefined // 📌 Agregar googleAuth solo si el email proviene de la URL
-        }));
+    const userId = userResult.rows[0][0];
+
+    for (const conditionId of selectedConditions) {
+        await assignUserCondition(userId, conditionId);
+    }
+
+    // Auto-login después de registrar
+    try {
+        const autoLoginData = await autoLogin(userData.email);
+    } catch (error) {
+        alert(error.message);
+        return;
+    }
+
+    // 📌 Guardar usuario en sessionStorage con nomenclatura correcta
+    sessionStorage.setItem("user", JSON.stringify({
+        userId: userId,
+        email: userData.email,
+        firstName: userData.first_name,
+        lastName: userData.last_name,
+        birthDate: userData.birth_date,
+        city: userData.city,
+        district: userData.district,
+        street: userData.street,
+        streetNumber: userData.street_number,
+        mobilePhone: userData.mobile_phone,
+        additionalInfo: userData.additional_address_info,
+        active: userData.active,
+        userRole: userData.user_role,
+        googleAuth: emailFromURL ? true : undefined // 📌 Agregar googleAuth solo si el email proviene de la URL
+    }));
 
         alert("Registro exitoso. Serás redirigido a la página principal.");
         window.location.href = "/";
@@ -186,5 +254,6 @@
         document.getElementById("register-btn").addEventListener("click", registerUser);
     });
     </script>
+    <script src="/js/validation.js"></script>
 </body>
 </html>

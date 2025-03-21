@@ -11,6 +11,8 @@ const conditionRoutes = require('./src/routes/conditionRoutes');
 const brandRoutes = require('./src/routes/brandRoutes');
 const productRoutes = require('./src/routes/productRoutes');
 const orderRoutes = require('./src/routes/orderRoutes');
+const reportRoutes = require('./src/routes/reportRoutes');
+
 
 const app = express();
 
@@ -28,8 +30,23 @@ app.use(session({
   saveUninitialized: true,
   cookie: { secure: false } // Cambiar a `true` si se usa HTTPS
 }));
-app.use(['/account', '/account-settings', '/orders'], requireAuth); // Proteger rutas para usuarios logueados
-app.use(['/admin-panel', '/admin/orders', '/admin/users', '/admin/products'], requireAuth, requireAdmin); // Proteger rutas para administrador
+
+// Proteger rutas para usuarios no logueados o no registados
+app.use([
+  '/account',
+  '/account-settings', 
+  '/orders'], 
+  requireAuth); 
+
+// Proteger rutas para usuarios que no son administrador
+app.use([
+  '/admin-panel', 
+  '/admin/orders', 
+  '/admin/users', 
+  '/admin/products',
+  '/report/conditions',
+  '/report/conditions/view'
+], requireAuth, requireAdmin);
 
 // Servir archivos estáticos desde el directorio 'public'
 app.use(express.static('public'));
@@ -44,6 +61,7 @@ app.use('/conditions', conditionRoutes); // Rutas de condiciones
 app.use('/brands', brandRoutes); // Rutas de marcas
 app.use('/products', productRoutes); // Rutas de productos
 app.use('/orders', orderRoutes); // Rutas de órdenes
+app.use('/report', reportRoutes); // Rutas de informes
 
 // RUTAS NEURODIVERSE
 app.get('/', (req, res) => {res.render('home');});  // Ruta inicial 
@@ -59,6 +77,7 @@ app.get('/admin/orders', (req, res) => {res.render('admin_orders');});
 app.get('/admin/users', (req, res) => {res.render('admin_users');});
 app.get('/admin/products', (req, res) => {res.render('admin_products');});
 app.get('/testing', (req, res) => {res.render('testing');});
+
 app.use((req, res, next) => {res.status(404).render('notFound');});
 
 // Inicializar la base de datos

@@ -50,6 +50,7 @@
     
     <script src="/js/main.js"></script>
     <script src="/js/crudManager.js"></script>
+    <script src="/js/authManager.js"></script>
     <script src="/js/global.js"></script>
     
     <script>
@@ -58,12 +59,6 @@
             let user = JSON.parse(sessionStorage.getItem('user')) || {};
             let userName = user.firstName || "Usuario"; // Nombre de prueba si no existe
             document.getElementById('welcome-message').innerText = `BIENVENIDO/A ${userName.toUpperCase()}`;
-        }
-
-        // Función para cerrar sesión
-        function logout() {
-            sessionStorage.removeItem('user');
-            window.location.href = "/";
         }
 
         // Función para eliminar cuenta de usuario
@@ -101,7 +96,7 @@
         // Ejecutar la función al cargar la vista
         document.addEventListener("DOMContentLoaded", function() {
             loadUserName();
-            document.getElementById("logout").addEventListener("click", logout);
+            document.getElementById("logout").addEventListener("click", logoutUser);
             document.getElementById("delete-account").addEventListener("click", deleteAccount);
         });
     </script>

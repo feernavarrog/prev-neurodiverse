@@ -63,10 +63,37 @@ async function loginWithGoogle(credential) {
     }
 }
 
+// 🔹 Función para iniciar sesión automáticamente después del registro
+async function autoLogin(email) {
+    try {
+        const response = await fetch('/users/auth/auto-login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.error || "Error al iniciar sesión automáticamente.");
+        }
+
+        return result; // Devuelve los datos del usuario si todo salió bien
+    } catch (error) {
+        console.error("Error en el auto-login:", error);
+        throw error;
+    }
+}
+
 // 🔹 Función para cerrar sesión
-function logoutUser() {
-    sessionStorage.removeItem('user');
-    window.location.href = "/"; // Redirige a la página principal
+async function logoutUser() {
+    try {
+        await fetch('/users/auth/logout', { method: 'POST' }); // 🔹 Llamar al backend para cerrar sesión
+        sessionStorage.removeItem('user'); // 🔹 Eliminar usuario del frontend
+        window.location.href = "/"; // 🔹 Redirigir al home
+    } catch (error) {
+        console.error("Error al cerrar sesión:", error);
+    }
 }
 
 // 🔹 Función para verificar si un usuario está logeado

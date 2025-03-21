@@ -73,4 +73,7 @@ router.delete('/delete/:productId/:filename', async (req, res) => {
     }
 });
 
+// Nueva ruta para aplicar descuentos masivos por categoría
+router.post('/apply-discount', productController.applyDiscountByCategory);
+
 module.exports = router;

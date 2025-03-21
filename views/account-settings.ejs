@@ -33,18 +33,32 @@
             <!-- 🔹 Sección: Datos Personales -->
             <h3 class="registro-subtitulo">Datos Personales</h3>
             <input type="email" id="email" class="registro-input" placeholder="Correo Electrónico" required>
+            <p id="email-error" class="error-message"></p>
+
             <input type="password" id="password" class="registro-input" placeholder="Contraseña" required>
+            <p id="password-tip" class="form-tip">Debe tener al menos 12 caracteres, una mayúscula, una minúscula, un número y un símbolo.</p>
+            <p id="password-error" class="error-message"></p>
+
             <input type="text" id="first-name" class="registro-input" placeholder="Nombre" required>
+            <p id="first-name-error" class="error-message"></p>
+
             <input type="text" id="last-name" class="registro-input" placeholder="Apellido" required>
+            <p id="last-name-error" class="error-message"></p>
+
             <label for="birth-date">Fecha de Nacimiento:</label>
             <input type="date" id="birth-date" class="registro-input" required>
+            <p id="birth-date-error" class="error-message"></p>
+
             <input type="text" id="mobile-phone" class="registro-input" placeholder="Teléfono/Móvil" required>
+            <p id="mobile-phone-error" class="error-message"></p>
 
             <hr>
 
             <!-- 🔹 Sección: Datos para el Envío -->
             <h3 class="registro-subtitulo">Datos para el Envío</h3>
             <input type="text" id="rut" class="registro-input" placeholder="RUT (Ej: 12.345.678-9)" required>
+            <p id="rut-error" class="error-message"></p>
+
             <p class="registro-info">📌 Por el momento, solo realizamos envíos dentro de la Región Metropolitana.</p>
 
             <label for="region">Región:</label>
@@ -70,9 +84,14 @@
                 <option value="San Bernardo">San Bernardo</option>
                 <option value="Santiago Centro">Santiago Centro</option>
             </select>
+            <p id="comuna-error" class="error-message"></p>
 
             <input type="text" id="street" class="registro-input" placeholder="Calle" required>
+            <p id="street-error" class="error-message"></p>
+
             <input type="text" id="street-number" class="registro-input" placeholder="Número" required>
+            <p id="street-number-error" class="error-message"></p>
+
             <input type="text" id="additional-info" class="registro-input" placeholder="Información adicional">
 
             <hr>
@@ -105,6 +124,7 @@
     <script src="/js/global.js"></script>
     <script>
         let initialUserConditions = new Set();
+        let originalPasswordHash = null;
     
         // 🔹 Poblar los datos del usuario desde la base de datos utilizando crudManager
         async function loadUserData() {
@@ -130,6 +150,7 @@
                 // 📌 Poblar los campos del formulario con los datos obtenidos
                 document.getElementById('email').value = userDetails[2] || ""; // Email
                 document.getElementById('password').value = userDetails[3]; // Contraseña
+                originalPasswordHash = userDetails[3]; // 💾 Guardar el hash original
                 document.getElementById('first-name').value = userDetails[4] || "";
                 document.getElementById('last-name').value = userDetails[5] || "";
                 document.getElementById('birth-date').value = formatDateInput(userDetails[6]);
@@ -245,6 +266,48 @@
             initialUserConditions = newUserConditions; // Actualizar estado inicial
             alert("✅ ¡Tus patologías han sido actualizadas!");
         }
+
+        function displayErrors(errors) {
+            // Limpiar errores anteriores
+            document.querySelectorAll(".error-message").forEach(msg => msg.textContent = "");
+            document.querySelectorAll(".registro-input").forEach(input => input.classList.remove("error"));
+
+            // Asegurar que el tip de la contraseña se muestre por defecto
+            const passwordTip = document.getElementById("password-tip");
+            if (passwordTip) {
+                passwordTip.style.display = "block";
+            }
+
+            for (const field in errors) {
+                const inputField = document.getElementById(field);
+                const errorMessage = document.getElementById(`${field}-error`);
+
+                if (inputField) {
+                    inputField.classList.add("error");
+                }
+
+                if (errorMessage) {
+                    errorMessage.textContent = errors[field];
+                    errorMessage.style.color = "red";
+                }
+
+                // Ocultar el tip si el error es en la contraseña
+                if (field === "password" && passwordTip) {
+                    passwordTip.style.display = "none";
+                }
+            }
+        }
+
+        // 🔹 Limpiar los mensajes de error y estilos de los campos
+        function clearFormErrors() {
+            document.querySelectorAll(".error-message").forEach(msg => msg.textContent = "");
+            document.querySelectorAll(".registro-input").forEach(input => input.classList.remove("error"));
+
+            const passwordTip = document.getElementById("password-tip");
+            if (passwordTip) {
+                passwordTip.style.display = "block";
+            }
+        }
     
         // 🔹 Guardar cambios del usuario en la base de datos
         async function saveUserChanges() {
@@ -281,6 +344,32 @@
             try {
                 console.log("📌 Datos enviados en la actualización:", updatedUserData);
 
+                // 📌 Validar antes de guardar
+                const userData = {
+                rut: updatedUserData.rut.trim(),
+                email: updatedUserData.email.trim(),
+                password: updatedUserData.password !== null ? updatedUserData.password.trim() : null,
+                first_name: updatedUserData.first_name.trim(),
+                last_name: updatedUserData.last_name.trim(),
+                birth_date: updatedUserData.birth_date,
+                city: updatedUserData.city,
+                district: updatedUserData.district,
+                street: updatedUserData.street.trim(),
+                street_number: updatedUserData.street_number.trim(),
+                mobile_phone: updatedUserData.mobile_phone.trim(),
+                additional_address_info: updatedUserData.additional_address_info.trim(),
+                active: updatedUserData.active,
+                user_role: updatedUserData.user_role
+            };
+
+            // Validar antes de guardar
+            const errors = validateUserForm(userData);
+
+            if (Object.keys(errors).length > 0) {
+                displayErrors(errors);
+                return;
+            }
+
                 // ✅ Se usa crudManager.updateUser en vez de fetch manual
                 const updateResponse = await updateUser(updatedUserData);
 
@@ -308,6 +397,7 @@
 
                 await saveUserConditions();
                 alert("✅ ¡Tu información ha sido actualizada con éxito!");
+                clearFormErrors();
             } catch (error) {
                 console.error("⚠️ Error al actualizar usuario:", error);
                 alert("⚠️ Hubo un error al actualizar los datos. Inténtalo nuevamente.");
@@ -321,5 +411,6 @@
             document.getElementById("save-changes").addEventListener("click", saveUserChanges);
         });
     </script>
+    <script src="/js/validation.js"></script>
 </body>
 </html>

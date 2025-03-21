@@ -1,6 +1,7 @@
 // src/controllers/productController.js
 
 const productModel = require('../models/productModel');
+const database = require('./../services/database');
 
 // ==============================
 // Controlador para manejo de PRODUCT (Productos)
@@ -47,5 +48,27 @@ exports.deleteProduct = async (req, res) => {
         res.json({ message: 'Producto eliminado correctamente.' });
     } catch (error) {
         res.json({ error: error.message });
+    }
+};
+
+exports.applyDiscountByCategory = async (req, res) => {
+    try {
+        const { category, discount } = req.body;
+
+        // Validar que se enviaron los datos necesarios
+        if (!category || isNaN(discount) || discount < 0 || discount > 100) {
+            return res.status(400).json({ error: "Datos inválidos. Verifique la categoría y el descuento." });
+        }
+
+        // Ejecutar el procedimiento almacenado en la base de datos
+        const sql = `CALL apply_discount_by_category(:category_id, :discount_value)`;
+        const binds = { category_id: category, discount_value: discount };
+
+        await database.executeQuery(sql, binds);
+
+        res.json({ message: "Descuento aplicado correctamente." });
+    } catch (error) {
+        console.error("Error aplicando descuento:", error);
+        res.status(500).json({ error: error.message });
     }
 };

@@ -194,3 +194,12 @@ h2, h3 {
 .btn-pay:focus {
     outline: none;
 }
+
+.remove-checkout-item {
+    background: transparent;
+    border: none;
+    color: red;
+    font-size: 18px;
+    cursor: pointer;
+    margin-left: 10px;
+}

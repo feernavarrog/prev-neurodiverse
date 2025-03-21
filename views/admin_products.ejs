@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="/css/item.css" />
     <link rel="stylesheet" href="/css/products.css" />
     <link rel="stylesheet" href="/css/comingsoon.css" />
+    <link rel="stylesheet" href="/css/products-admin.css" />
 </head>
 <body>
     <%- include('partials/first-nav') %> 
@@ -27,13 +28,33 @@
     <%- include('partials/cart') %> 
     <%- include('partials/login-modal') %>
 
-<fieldset>
-    <legend>Gestión de Productos</legend>
-    
+    <div class="admin-main">
+    <h1 class="admin-title">Gestión de Productos</h1>
+    <p class="admin-description">Administra los productos de la tienda de manera eficiente.</p>
+    <hr>
+
+    <!-- Botón para agregar un nuevo producto -->
+    <button class="btn-add-product" onclick="openProductModal()">
+        <i class="fas fa-plus"></i> Agregar Nuevo Producto
+    </button>
+
+    <!-- Contenedor de botones -->
+    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+        <!-- Botón para aplicar descuento masivo -->
+        <button class="btn btn-warning" onclick="openDiscountModal()">
+            <i class="fas fa-tags"></i> Aplicar Descuento por Categoría
+        </button>
+
+        <!-- Botón para generar informe de condiciones clínicas -->
+        <button class="btn btn-primary" onclick="openReportWindow()">
+            <i class="fas fa-chart-bar"></i> Generar Informe de Condiciones Clínicas
+        </button>
+    </div>
+
     <!-- Tabla de Productos -->
-    <table border="1">
+    <table class="admin-table">
         <thead>
-            <tr>
+            <tr class="table-header">
                 <th>ID</th>
                 <th>Código</th>
                 <th>Nombre</th>
@@ -53,31 +74,111 @@
         </tbody>
     </table>
     <button onclick="loadProducts()">Cargar Productos</button>
+    </div>
 
-    <!-- Formulario de Producto -->
-<fieldset>
-    <legend>Formulario de Producto</legend>
-    <label>ID:</label> <input type="text" id="productIdInput" disabled><br>
-    <label>Código:</label> <input type="text" id="productCodeInput"><br>
-    <label>Nombre:</label> <input type="text" id="productNameInput"><br>
-    <label>Descripción:</label> <input type="text" id="productDescriptionInput"><br>
-    <label>Precio:</label> <input type="number" id="productPriceInput"><br>
-    <label>Descuento:</label> <input type="number" id="productDiscountInput"><br>
-    <label>Stock:</label> <input type="number" id="productStockInput"><br>
-    <label>Foto:</label> <input type="file" id="productPhotoInput" accept="image/*" onchange="uploadImage()"><br>
-    <img id="productImagePreview" src="" style="max-width: 100px; display: none;"><br>
-    <label>Marca:</label> <select id="productBrandIdInput"></select><br>
-    <label>Categoría:</label> <select id="productCategoryIdInput"></select><br>
-    <label>Activo:</label> <input type="checkbox" id="productActiveInput"><br>
-    <button onclick="saveProduct()">Guardar Producto</button>
-</fieldset>
-</fieldset>
+    <!-- Modal para el formulario de producto -->
+<div id="product-modal">
+    <div class="modal-content">
+        <button class="close-button" onclick="closeProductModal()">✖</button>
+        <h2 class="admin-title">Gestión de Producto</h2>
+        <p class="admin-description">Llena los datos del producto y guárdalo.</p>
+        <hr>
 
+        <!-- Formulario de Producto dentro del modal -->
+        <form id="product-form">
+            <label>ID:</label> <input type="text" id="productIdInput" disabled><br>
+
+            <label>Código:</label> <input type="text" id="productCodeInput"><br>
+            <p id="productCodeInput-error" class="error-message"></p>
+
+            <label>Nombre:</label> <input type="text" id="productNameInput"><br>
+            <p id="productNameInput-error" class="error-message"></p>
+
+            <label>Descripción:</label> <input type="text" id="productDescriptionInput"><br>
+
+            <label>Precio:</label> <input type="number" id="productPriceInput"><br>
+            <p id="productPriceInput-error" class="error-message"></p>
+
+            <label>Descuento:</label> <input type="number" id="productDiscountInput"><br>
+            <p id="productDiscountInput-error" class="error-message"></p>
+
+            <label>Stock:</label> <input type="number" id="productStockInput"><br>
+            <p id="productStockInput-error" class="error-message"></p>
+
+            <label>Foto:</label> <input type="file" id="productPhotoInput" accept="image/*" onchange="uploadImage()"><br>
+            <p id="productPhotoInput-error" class="error-message"></p>
+            <img id="productImagePreview" src="" style="max-width: 100px; display: none;"><br>
+
+            <label>Marca:</label> <select id="productBrandIdInput"></select><br>
+            <p id="productBrandIdInput-error" class="error-message"></p>
+
+            <label>Categoría:</label> <select id="productCategoryIdInput"></select><br>
+            <p id="productCategoryIdInput-error" class="error-message"></p>
+
+            <label>Activo:</label> <input type="checkbox" id="productActiveInput"><br>
+
+            <button onclick="saveProduct()">Guardar Producto</button>
+        </form>
+    </div>
+</div>
+    
+    <!-- Modal para aplicar descuento por categoría -->
+    <div id="discount-modal" class="discount-modal-overlay">
+        <div class="modal-content">
+            <button class="close-button" onclick="closeDiscountModal()">✖</button>
+            <h2 class="admin-title">Aplicar Descuento por Categoría</h2>
+            <p class="admin-description">Selecciona una categoría e ingresa el porcentaje de descuento.</p>
+            <hr>
+
+            <!-- Formulario dentro del modal -->
+            <form id="discount-form">
+                <label>Categoría:</label>
+                <select id="discountCategorySelect"></select><br>
+                <p id="discountCategorySelect-error" class="error-message"></p>
+
+                <label>Descuento (%):</label>
+                <input type="number" id="discountValueInput" min="0" max="100"><br>
+                <p id="discountValueInput-error" class="error-message"></p>
+
+                <button type="button" onclick="applyDiscount()">Aplicar Descuento</button>
+            </form>
+        </div>
+    </div>
 
 <script src="/js/crudManager.js"></script>
+<script src="/js/reportManager.js"></script>
 <script src="/js/utils.js"></script>
 <script src="/js/global.js"></script>
+<script src="/js/validation.js"></script>
 <script>
+    // Función para abrir el modal vacío (Agregar Producto)
+    function openProductModal() {
+        document.getElementById('product-form').reset();
+        document.getElementById('productImagePreview').style.display = "none";
+        document.getElementById('product-modal').style.display = "flex";
+    }
+
+    // Función para cerrar el modal
+    function closeProductModal() {
+        document.getElementById('product-modal').style.display = "none";
+    }
+
+    function openDiscountModal() {
+        document.getElementById('discount-form').reset();
+        document.getElementById('discount-modal').style.display = "flex";
+
+        // Limpiar mensajes de error previos
+        document.querySelectorAll(".error-message").forEach(msg => msg.textContent = "");
+        document.querySelectorAll(".registro-input").forEach(input => input.classList.remove("error"));
+
+        // Recargar las categorías disponibles
+        loadBrandsAndCategories();
+    }
+
+    function closeDiscountModal() {
+        document.getElementById('discount-modal').style.display = "none";
+    }
+
     async function loadProducts() {
         const response = await fetchProducts();
         console.log("Respuesta de fetchProducts:", response);
@@ -108,20 +209,49 @@
         });
     }
 
+    // 🔹 Mostrar mensajes de error en el formulario
+    function displayErrors(errors) {
+        // Limpiar mensajes de error previos
+        document.querySelectorAll(".error-message").forEach(msg => msg.textContent = "");
+        document.querySelectorAll(".registro-input").forEach(input => input.classList.remove("error"));
+
+        for (const field in errors) {
+            const inputField = document.getElementById(field);
+            const errorMessage = document.getElementById(`${field}-error`);
+
+            if (inputField) {
+                inputField.classList.add("error");
+            }
+
+            if (errorMessage) {
+                errorMessage.textContent = errors[field];
+                errorMessage.style.color = "red";
+            }
+        }
+    }
+
     function saveProduct() {
         const product = {
             product_id: document.getElementById('productIdInput').value || null,
-            code: document.getElementById('productCodeInput').value,
-            product_name: document.getElementById('productNameInput').value,
-            product_description: document.getElementById('productDescriptionInput').value,
-            price: document.getElementById('productPriceInput').value,
-            discount: document.getElementById('productDiscountInput').value,
-            stock: document.getElementById('productStockInput').value,
+            code: document.getElementById('productCodeInput').value.trim(),
+            product_name: document.getElementById('productNameInput').value.trim(),
+            product_description: document.getElementById('productDescriptionInput').value.trim(),
+            price: document.getElementById('productPriceInput').value.trim(),
+            discount: document.getElementById('productDiscountInput').value.trim(),
+            stock: document.getElementById('productStockInput').value.trim(),
             reference_photo: document.getElementById('productImagePreview').src.split("/").pop(),
             brand_id: document.getElementById('productBrandIdInput').value,
             category_id: document.getElementById('productCategoryIdInput').value,
             active: document.getElementById('productActiveInput').checked ? 1 : 0
         };
+
+        // Validar antes de guardar
+        const errors = validateProductForm(product);
+
+        if (Object.keys(errors).length > 0) {
+            displayErrors(errors);
+            return;
+        }
         
         if (product.product_id) {
             updateProduct(product);
@@ -146,6 +276,15 @@
         document.getElementById('productBrandIdInput').value = brandId;
         document.getElementById('productCategoryIdInput').value = categoryId;
         document.getElementById('productActiveInput').checked = active === 1;
+
+        if (photo) {
+            document.getElementById('productImagePreview').src = `/product-images/${photo}`;
+            document.getElementById('productImagePreview').style.display = "block";
+        } else {
+            document.getElementById('productImagePreview').style.display = "none";
+        }
+
+        document.getElementById('product-modal').style.display = "flex";
     }
 
     function deleteProduct(productId, photo) {
@@ -167,9 +306,12 @@
         
         const brandSelect = document.getElementById('productBrandIdInput');
         const categorySelect = document.getElementById('productCategoryIdInput');
+        const discountCategorySelect = document.getElementById('discountCategorySelect'); // Nuevo selector
         
-        brandSelect.innerHTML = '';
-        categorySelect.innerHTML = '';
+        // Agregar opción vacía al inicio
+    brandSelect.innerHTML = '<option value="" selected disabled>Seleccione una marca</option>';
+    categorySelect.innerHTML = '<option value="" selected disabled>Seleccione una categoría</option>';
+    discountCategorySelect.innerHTML = '<option value="" selected disabled>Seleccione una categoría</option>';
         
         brands.rows.forEach(brand => {
             const option = document.createElement('option');
@@ -183,7 +325,17 @@
             option.value = category[0];
             option.textContent = category[1];
             categorySelect.appendChild(option);
+
+            const discountOption = option.cloneNode(true); // Clonar opción
+            discountCategorySelect.appendChild(discountOption);
         });
+
+        // Cargar datos al abrir el modal de descuento
+        function openDiscountModal() {
+            document.getElementById('discount-form').reset();
+            document.getElementById('discount-modal').style.display = "flex";
+            loadBrandsAndCategories(); // Cargar categorías al abrir el modal
+        }
     }
 
     function uploadImage() {
@@ -202,6 +354,46 @@
             document.getElementById("productPhotoInput").dataset.imageUrl = data.imageUrl;
         })
         .catch(error => console.error("Error al subir imagen:", error));
+    }
+
+    function applyDiscount() {
+        // Validar datos
+        const errors = validateDiscountForm();
+
+        if (Object.keys(errors).length > 0) {
+            displayErrors(errors); // Mostrar errores en los inputs
+            return;
+        }
+
+        // Confirmación antes de aplicar
+        if (!confirm("¿Estás seguro de que deseas aplicar este descuento a la categoría seleccionada?")) {
+            return;
+        }
+
+        // Obtener datos del formulario
+        const category = document.getElementById('discountCategorySelect').value;
+        const discount = document.getElementById('discountValueInput').value.trim();
+
+        // Enviar solicitud al backend
+        fetch('/products/apply-discount', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ category, discount })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                alert("Error: " + data.error);
+            } else {
+                alert("¡Descuento aplicado correctamente!");
+                closeDiscountModal(); // Cerrar modal
+                loadProducts(); // Actualizar tabla
+            }
+        })
+        .catch(error => {
+            console.error("Error aplicando descuento:", error);
+            alert("Ocurrió un error al aplicar el descuento.");
+        });
     }
     
     document.addEventListener('DOMContentLoaded', loadBrandsAndCategories);

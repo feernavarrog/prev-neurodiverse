@@ -71,10 +71,6 @@ document.addEventListener("DOMContentLoaded", function () {
         { id: "close-cart", event: "click", handler: typeof closeCart === "function" ? closeCart : null },
         { id: "login-btn", event: "click", handler: openLoginModal },
         { id: "close-login", event: "click", handler: closeLoginModal },
-        { id: "user-toggle", event: "click", handler: function (event) {  
-            event.preventDefault();  
-            openLoginModal();
-        }}
     ];
     
     eventMapping.forEach(({ id, event, handler }) => {

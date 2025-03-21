@@ -123,3 +123,15 @@ button {
     text-align: center;
     font-weight: bold;
 }
+
+.error-message {
+    display: block;
+    color: red;
+    font-size: 0.9em;
+    margin-top: 2px;
+    margin-bottom: 10px;
+}
+
+input.error, select.error {
+    border: 2px solid red;
+}
