@@ -18,16 +18,22 @@
             if (response.rows && response.rows.length > 0) {
                 response.rows.forEach(product => {
                     const productImage = product[7]; // Índice del campo "reference_photo" en la base de datos
+                    const productCode = product[1]; // Asumiendo que el código del producto está en la columna 1 (índice 1)
 
                     // Crear el elemento de imagen solo si el producto tiene una foto
                     if (productImage) {
+                        const linkElement = document.createElement("a");
+                        linkElement.href = `/item?code=${productCode}`;
+                        linkElement.title = "Ver producto";
+
                         const imgElement = document.createElement("img");
                         imgElement.src = `/product-images/${productImage}`; // Ruta de imagen basada en la BD
                         imgElement.alt = "Próximamente";
                         imgElement.classList.add("coming-soon-image"); // Mantener la clase CSS
                         
                         // Agregar la imagen al contenedor
-                        comingSoonList.appendChild(imgElement);
+                        linkElement.appendChild(imgElement);
+                        comingSoonList.appendChild(linkElement);
                     }
                 });
             } else {

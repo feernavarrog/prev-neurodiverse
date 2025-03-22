@@ -6,8 +6,45 @@ const database = require('../services/database');
 // Funciones para manejo de PRODUCT (Productos)
 // ==============================
 
-// Obtener todos los productos con filtro opcional
 exports.getProducts = async (filter) => {
+    let sql = `
+        SELECT 
+            p.product_id,
+            p.code,
+            p.product_name,
+            p.product_description,
+            p.price,
+            p.discount,
+            p.stock,
+            p.reference_photo,
+            p.brand_id,
+            p.category_id,
+            p.active,
+            b.brand_name,
+            c.category_name
+        FROM product p
+        JOIN brand b ON p.brand_id = b.brand_id
+        JOIN app_category c ON p.category_id = c.category_id
+    `;
+
+    const binds = [];
+
+    if (filter && filter.column && filter.value !== undefined) {
+        const operator = filter.operator || '=';
+
+        if (['>', '<', '>=', '<='].includes(operator)) {
+            sql += ` WHERE p.${filter.column} ${operator} ${filter.value}`;
+        } else {
+            sql += ` WHERE p.${filter.column} ${operator} :value`;
+            binds.push(filter.value);
+        }
+    }
+
+    return database.executeQuery(sql, binds);
+};
+
+// Obtener todos los productos con filtro opcional
+/*exports.getProducts = async (filter) => {
     let sql = 'SELECT * FROM product';
     const binds = [];
 
@@ -24,7 +61,7 @@ exports.getProducts = async (filter) => {
     }
 
     return database.executeQuery(sql, binds);
-};
+};*/
 
 // Crear un nuevo producto
 exports.createProduct = async (product) => {

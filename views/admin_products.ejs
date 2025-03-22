@@ -40,7 +40,10 @@
 
     <!-- Contenedor de botones -->
     <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+        
         <!-- Botón para aplicar descuento masivo -->
+        <button class="btn btn-primary" onclick="loadProducts()">Refrescar lista</button>
+        
         <button class="btn btn-warning" onclick="openDiscountModal()">
             <i class="fas fa-tags"></i> Aplicar Descuento por Categoría
         </button>
@@ -62,7 +65,7 @@
                 <th>Precio</th>
                 <th>Descuento</th>
                 <th>Stock</th>
-                <th>Foto</th>
+                <th>Imagen</th>
                 <th>Marca</th>
                 <th>Categoría</th>
                 <th>Activo</th>
@@ -73,7 +76,6 @@
             <!-- Los productos se insertarán aquí dinámicamente -->
         </tbody>
     </table>
-    <button onclick="loadProducts()">Cargar Productos</button>
     </div>
 
     <!-- Modal para el formulario de producto -->
@@ -105,7 +107,7 @@
             <label>Stock:</label> <input type="number" id="productStockInput"><br>
             <p id="productStockInput-error" class="error-message"></p>
 
-            <label>Foto:</label> <input type="file" id="productPhotoInput" accept="image/*" onchange="uploadImage()"><br>
+            <label>Imagen referencial:</label> <input type="file" id="productPhotoInput" accept="image/*" onchange="uploadImage()"><br>
             <p id="productPhotoInput-error" class="error-message"></p>
             <img id="productImagePreview" src="" style="max-width: 100px; display: none;"><br>
 
@@ -117,7 +119,7 @@
 
             <label>Activo:</label> <input type="checkbox" id="productActiveInput"><br>
 
-            <button onclick="saveProduct()">Guardar Producto</button>
+            <button type="button" onclick="saveProduct()">Guardar Producto</button>
         </form>
     </div>
 </div>
@@ -144,10 +146,8 @@
             </form>
         </div>
     </div>
-
 <script src="/js/crudManager.js"></script>
 <script src="/js/reportManager.js"></script>
-<script src="/js/utils.js"></script>
 <script src="/js/global.js"></script>
 <script src="/js/validation.js"></script>
 <script>
@@ -193,12 +193,12 @@
                 <td>${product[1]}</td>
                 <td>${product[2]}</td>
                 <td>${product[3]}</td>
-                <td>${product[4]}</td>
-                <td>${product[5]}</td>
-                <td>${product[6]}</td>
+                <td>${formatCLP(product[4])}</td>
+                <td>${product[5]}%</td>
+                <td>${product[6]} uni.</td>
                 <td><img src="/product-images/${product[7]}" style="max-width: 100px;"></td>
-                <td>${product[8]}</td>
-                <td>${product[9]}</td>
+                <td>${product[11]}</td>
+                <td>${product[12]}</td>
                 <td>${product[10] === 1 ? 'Sí' : 'No'}</td>
                 <td>
                     <button onclick="editProduct(${product[0]}, '${product[1]}', '${product[2]}', '${product[3]}', ${product[4]}, ${product[5]}, ${product[6]}, '${product[7]}', ${product[8]}, ${product[9]}, ${product[10]})">Editar</button>
@@ -260,6 +260,7 @@
         }
         
         alert("Producto guardado correctamente.");
+        closeProductModal();
         loadProducts();
     }
 
@@ -290,7 +291,7 @@
     function deleteProduct(productId, photo) {
         if (!confirm("¿Estás seguro de que deseas eliminar este producto?")) return;
         
-        fetch(`/products/delete/${productId}`, { method: 'DELETE' })
+        fetch(`/products/delete/${productId}/${photo}`, { method: 'DELETE' })
             .then(response => response.json())
             .then(data => {
                 alert(data.message);
@@ -396,7 +397,10 @@
         });
     }
     
-    document.addEventListener('DOMContentLoaded', loadBrandsAndCategories);
+    document.addEventListener('DOMContentLoaded', () => {
+    loadBrandsAndCategories();
+    loadProducts(); // 🔹 Cargar productos automáticamente al iniciar
+    });
 </script>
 </body>
 </html>

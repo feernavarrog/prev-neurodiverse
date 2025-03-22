@@ -35,9 +35,12 @@
             <input type="email" id="email" class="registro-input" placeholder="Correo Electrónico" required>
             <p id="email-error" class="error-message"></p>
 
-            <input type="password" id="password" class="registro-input" placeholder="Contraseña" required>
-            <p id="password-tip" class="form-tip">Debe tener al menos 12 caracteres, una mayúscula, una minúscula, un número y un símbolo.</p>
+            <input type="password" id="password" class="registro-input hidden" placeholder="Contraseña" required>
+            <p id="password-tip" class="form-tip hidden">Debe tener al menos 12 caracteres, una mayúscula, una minúscula, un número y un símbolo.</p>
             <p id="password-error" class="error-message"></p>
+
+            <!-- Botón para activar edición de contraseña -->
+            <button id="edit-password-btn" class="registro-boton" type="button">Editar contraseña</button>
 
             <input type="text" id="first-name" class="registro-input" placeholder="Nombre" required>
             <p id="first-name-error" class="error-message"></p>
@@ -71,18 +74,39 @@
                 <option value="" selected disabled>Selecciona tu comuna</option>
                 <option value="Cerrillos">Cerrillos</option>
                 <option value="Cerro Navia">Cerro Navia</option>
-                <option value="Conchalí">Conchalí</option>
+                <option value="Conchali">Conchalí</option>
                 <option value="El Bosque">El Bosque</option>
-                <option value="Estación Central">Estación Central</option>
+                <option value="Estacion Central">Estación Central</option>
                 <option value="Huechuraba">Huechuraba</option>
+                <option value="Independencia">Independencia</option>
+                <option value="La Cisterna">La Cisterna</option>
                 <option value="La Florida">La Florida</option>
+                <option value="La Granja">La Granja</option>
+                <option value="La Pintana">La Pintana</option>
+                <option value="La Reina">La Reina</option>
                 <option value="Las Condes">Las Condes</option>
-                <option value="Maipú">Maipú</option>
+                <option value="Lo Barnechea">Lo Barnechea</option>
+                <option value="Lo Espejo">Lo Espejo</option>
+                <option value="Lo Prado">Lo Prado</option>
+                <option value="Macul">Macul</option>
+                <option value="Maipu">Maipú</option>
                 <option value="Ñuñoa">Ñuñoa</option>
+                <option value="Pedro Aguirre Cerda">Pedro Aguirre Cerda</option>
+                <option value="Peñalolen">Peñalolén</option>
                 <option value="Providencia">Providencia</option>
                 <option value="Pudahuel">Pudahuel</option>
+                <option value="Puente Alto">Puente Alto</option>
+                <option value="Quilicura">Quilicura</option>
+                <option value="Quinta Normal">Quinta Normal</option>
+                <option value="Recoleta">Recoleta</option>
+                <option value="Renca">Renca</option>
                 <option value="San Bernardo">San Bernardo</option>
+                <option value="San Joaquin">San Joaquín</option>
+                <option value="San Jose de Maipo">San José de Maipo</option>
+                <option value="San Miguel">San Miguel</option>
+                <option value="San Ramon">San Ramón</option>
                 <option value="Santiago Centro">Santiago Centro</option>
+                <option value="Vitacura">Vitacura</option>
             </select>
             <p id="comuna-error" class="error-message"></p>
 
@@ -113,14 +137,12 @@
             </div>
 
             <button id="save-changes" class="registro-boton">Guardar cambios</button>
-            <button id="go-back">Volver</button>
+            <a id="go-back" href="/account" class="btn btn-primary">Volver</a>
         </div>
     </main>
     
     <%- include('partials/footer') %>
     <script src="/js/crudManager.js"></script>
-    <script src="/js/main.js"></script>
-    <script src="/js/utils.js"></script>
     <script src="/js/global.js"></script>
     <script>
         let initialUserConditions = new Set();
@@ -168,6 +190,8 @@
 
                     // 📌 Ocultar completamente el campo de contraseña
                     document.getElementById("password").style.display = "none";
+                    document.getElementById("password-tip").style.display = "none";
+                    document.getElementById("edit-password-btn").style.display = "none";
                 }
 
 
@@ -264,7 +288,6 @@
             }
     
             initialUserConditions = newUserConditions; // Actualizar estado inicial
-            alert("✅ ¡Tus patologías han sido actualizadas!");
         }
 
         function displayErrors(errors) {
@@ -308,7 +331,7 @@
                 passwordTip.style.display = "block";
             }
         }
-    
+
         // 🔹 Guardar cambios del usuario en la base de datos
         async function saveUserChanges() {
             let user = JSON.parse(sessionStorage.getItem('user')) || {};
@@ -403,6 +426,21 @@
                 alert("⚠️ Hubo un error al actualizar los datos. Inténtalo nuevamente.");
             }
         }
+
+        // Mostrar campo de contraseña cuando se presiona el botón "Editar contraseña"
+        document.getElementById("edit-password-btn").addEventListener("click", () => {
+            const passwordInput = document.getElementById("password");
+            const passwordTip = document.getElementById("password-tip");
+            const passwordBtn = document.getElementById("edit-password-btn");
+
+            // Mostrar el campo y el tip
+            passwordInput.classList.remove("hidden");
+            passwordTip.classList.remove("hidden");
+            passwordBtn.classList.add("hidden");
+
+            // Limpiar el input (importante para evitar enviar el hash si se va a cambiar)
+            passwordInput.value = "";
+        });
 
         // 🔹 Cargar la vista al iniciar
         document.addEventListener("DOMContentLoaded", async function () {

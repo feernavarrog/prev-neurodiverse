@@ -16,6 +16,14 @@ router.delete('/delete/:id', userController.deleteUser);
 // Rutas para manejo de USER_CONDITION
 // ==============================
 
+router.get('/check-session', (req, res) => {
+    if (req.session.user) {
+        res.json({ loggedIn: true, user: req.session.user });
+    } else {
+        res.status(401).json({ loggedIn: false });
+    }
+});
+
 // Obtener todas las condiciones asociadas a un usuario
 router.get('/conditions/:userId', userController.getUserConditions);
 

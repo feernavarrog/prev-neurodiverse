@@ -135,3 +135,7 @@ button {
 input.error, select.error {
     border: 2px solid red;
 }
+
+.hidden {
+    display: none !important;
+}

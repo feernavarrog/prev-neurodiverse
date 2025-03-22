@@ -19,7 +19,7 @@ function validateEmail(email) {
 
 // ✅ Verifica si la contraseña cumple los requisitos
 function validatePassword(password) {
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,}$/;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[.@$!%*?&])[A-Za-z\d.@$!%*?&]{12,}$/;
     return passwordRegex.test(password);
 }
 
@@ -115,7 +115,7 @@ function validateProductForm(product) {
     }
 
     if (!validateRequired(product.discount) || isNaN(product.discount)) {
-        errors["productDiscountInput"] = "El descuento debe ser un número.";
+        errors["productDiscountInput"] = "El descuento debe ser un número. (ingrese 0 si no tiene descuento)";
     }
 
     if (!validateRequired(product.stock) || isNaN(product.stock)) {

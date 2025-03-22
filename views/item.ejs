@@ -60,9 +60,7 @@
   <!-- Footer -->
   <%- include('partials/footer') %>
   
-  <script src="\js\main.js"></script>
   <script src="\js\crudManager.js"></script>
-  <script src="\js\utils.js"></script>
   <script src="\js\global.js"></script>
   <script>
       // Función para obtener el parámetro "code" de la URL
@@ -107,10 +105,20 @@
               document.getElementById("item-code").innerText = productCodeInDB;
   
               // 3️⃣ Manejo del botón "Agregar al carrito"
-              document.getElementById("add-to-cart").addEventListener("click", () => {
-                  addToCart(product);
-                  openCart();
-              });
+              const addToCartBtn = document.getElementById("add-to-cart");
+
+                // Verificar si el producto es de categoría 5 (próximamente)
+                if (product[9] === 5) {
+                    addToCartBtn.disabled = true;
+                    addToCartBtn.textContent = "🚫 No disponible aún";
+                    addToCartBtn.classList.add("disabled-button"); // opcional para estilo
+                } else {
+                    // Si es un producto normal, asignar el evento
+                    addToCartBtn.addEventListener("click", () => {
+                        addToCart(product);
+                        openCart();
+                    });
+                }
   
           } catch (error) {
               console.error("Error al cargar el producto:", error);

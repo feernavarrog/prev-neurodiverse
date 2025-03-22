@@ -37,7 +37,7 @@
         
         <!-- Dropdown para seleccionar estado del pedido -->
         <label for="order-status" class="form-label">Filtrar por estado:</label>
-        <select id="order-status" class="form-select" onchange="loadOrders(this.value)">
+        <select id="order-status" class="form-select" onchange="handleFilterChange(this.value)">
             <option value="all">Todos</option>
             <option value="pendiente">pendiente</option>
             <option value="enviado">enviado</option>
@@ -71,10 +71,15 @@
     
     <%- include('partials/footer') %>
     <script src="/js/crudManager.js"></script>
-    <script src="/js/utils.js"></script>
-    <script src="/js/main.js"></script>
     <script src="/js/global.js"></script>
     <script>
+        let currentOrderStatusFilter = 'all'; // Se inicia mostrando todos
+
+        function handleFilterChange(status) {
+            currentOrderStatusFilter = status;
+            loadOrders(currentOrderStatusFilter);
+        }
+
         async function loadOrders(filterStatus = 'all') {
             const response = await fetchOrders(filterStatus !== 'all' ? { column: 'status', value: filterStatus } : {});
             console.log("Respuesta de fetchOrders:", response);
@@ -113,7 +118,7 @@
                 
                 const row = `<tr>
                     <td>${formattedDate}</td>
-                    <td>${order[9]}</td>
+                    <td>${formatRUT(order[9])}</td>
                     <td>${order[5]}</td>
                     <td>${formatCLP(order[1])}</td>
                     <td>${formatCLP(order[3])}</td>
@@ -150,7 +155,7 @@
             };
             
             await updateOrder(order);
-            loadOrders();
+            loadOrders(currentOrderStatusFilter); // 👈 usa el filtro actual
         }
 
         async function cancelOrder(orderId, subtotal, shippingAddress, total, status, cardLastFour, userId, orderDate, active) {
@@ -170,7 +175,7 @@
             };
             
             await updateOrder(order);
-            loadOrders();
+            loadOrders(currentOrderStatusFilter); // 👈 usa el filtro actual
         }
       
       document.addEventListener('DOMContentLoaded', function() {
