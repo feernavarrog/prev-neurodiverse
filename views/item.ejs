@@ -19,6 +19,7 @@
   <link rel="stylesheet" href="/css/homestyle.css" />
   <link rel="stylesheet" href="/css/item.css" />
   <link rel="stylesheet" href="/css/products.css" />
+  <link rel="stylesheet" href="/css/popupstyles.css" />
 </head>
 <body>
     
@@ -34,6 +35,9 @@
     
     <!-- Login Modal -->
     <%- include('partials/login-modal') %>
+
+    <!---popups--->
+    <%- include('partials/popups') %>
     
     <div class="main-item">
       <div class="item-container">
@@ -52,14 +56,18 @@
               <button id="add-to-cart" class="add-to-cart-btn" data-id="PRODUCT_ID">🛒 Agregar</button>
           </div>
       </div>
-    
+      
+
       <!-- Descripción del producto (debajo de la imagen) -->
       <p id="item-description" class="item-description">Cargando descripción...</p>
       <p class="item-info">Código: <span id="item-code">Cargando...</span></p>
   </div>
+  
   <!-- Footer -->
   <%- include('partials/footer') %>
-  
+
+
+  <script src="/js/popup.js"></script>
   <script src="\js\crudManager.js"></script>
   <script src="\js\global.js"></script>
   <script>

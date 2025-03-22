@@ -2,10 +2,16 @@
 // Funciones para abrir y cerrar el sidebar
 function openSidebar() {
     document.getElementById("sidebar").classList.add("show-sidebar");
+    document.getElementById("overlay").classList.add("show-overlay"); // Mostrar el overlay
 }
 function closeSidebar() {
     document.getElementById("sidebar").classList.remove("show-sidebar");
+    document.getElementById("overlay").classList.remove("show-overlay"); // Ocultar el overlay
 }
+
+document.getElementById("overlay").addEventListener("click", function () {
+    closeSidebar(); // Cierra el sidebar si se hace clic en el overlay
+})
 
 // Función para abrir el modal de login
 function openLoginModal() {

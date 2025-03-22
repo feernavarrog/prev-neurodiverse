@@ -4,6 +4,9 @@ html, body {
     margin: 0;    
     padding: 0;   
     border: none; 
+    background-image: url('/img/background.png');
+    background-size: cover; /* Para que la imagen cubra toda la pantalla */
+    background-position: center; /* Para centrar la imagen */
 }
 
 
@@ -31,7 +34,8 @@ html, body {
     max-width: 100%;             
     height: auto;                
     object-fit: contain;         
-    display: block;             
+    display: block;   
+    margin-top: 100px;          
 }
 
 
@@ -40,5 +44,10 @@ html, body {
     justify-content: center;
     align-items: center; 
     height: 100vh; 
-    margin-top: -200px;
+    margin-top: 0px;
+}
+
+.image-center img {
+    width: 1600px;  /* Ajusta el tamaño según necesites */
+    height: auto;  /* Mantén la proporción original */
 }

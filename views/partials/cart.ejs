@@ -13,6 +13,7 @@
   <button id="checkout" onclick="window.location.href='/checkout'">Continuar Checkout</button>  
 </aside>
 
+<script src="/js/popup.js"></script>
 <script>
     // Función para actualizar el carrito en la vista
     function updateCart() {
@@ -73,17 +74,19 @@
           quantity: 1 // Se agrega con cantidad inicial de 1
       };
 
-      // Verificar si el producto ya está en el carrito
-      let existingProduct = cart.find(product => product.code === productData.code);
-      if (existingProduct) {
-          alert("Este producto ya está en el carrito. Puedes modificar su cantidad desde allí.");
-      } else {
-          cart.push(productData);
-          sessionStorage.setItem('cart', JSON.stringify(cart));
-          console.log("Producto agregado al carrito:", productData);
-          updateCart();
-      }
-  }
+        // Verificar si el producto ya está en el carrito
+        let existingProduct = cart.find(product => product.code === productData.code);
+            if (existingProduct) {
+                // Mostrar el popup si el producto ya está en el carrito
+                showPopup("Este producto ya está en el carrito. Puedes modificar su cantidad desde allí.");
+            } else {
+                // Si no está en el carrito, agregar el producto
+                cart.push(productData);
+                sessionStorage.setItem('cart', JSON.stringify(cart));
+                console.log("Producto agregado al carrito:", productData);
+                updateCart();
+            }
+        }
     // Función para actualizar la cantidad de un producto en el carrito
     function updateQuantity(productCode, newQuantity) {
         let cart = JSON.parse(sessionStorage.getItem('cart')) || [];
