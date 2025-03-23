@@ -17,6 +17,7 @@
     gap: 20px;
     flex-wrap: wrap;
     animation: slideUpEffect 2s ease-in-out;
+    margin-bottom: 80px;
 }
 
 /* Estilos para las imágenes */

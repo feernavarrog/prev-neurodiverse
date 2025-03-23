@@ -9,6 +9,8 @@ function closeSidebar() {
     document.getElementById("overlay").classList.remove("show-overlay"); // Ocultar el overlay
 }
 
+
+
 document.getElementById("overlay").addEventListener("click", function () {
     closeSidebar(); // Cierra el sidebar si se hace clic en el overlay
 })

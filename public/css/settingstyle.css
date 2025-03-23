@@ -6,136 +6,128 @@ body {
     padding: 0;
 }
 
-main {
-    width: 30%;
-    margin: 20px auto;
+.registro-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    max-width: 1100px;
+    margin: 50px auto;
     background-color: white;
-    padding: 20px;
-    border-radius: 10px;
+    padding: 30px;
+    border-radius: 16px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    margin-top: 50px;
 }
+
+/* Imagen más ancha y que ocupe todo el alto */
+.registro-imagen {
+    flex: 3;                   
+    max-width: 800px;            
+    height: auto;                
+    display: flex;               
+    align-items: stretch;        
+    overflow: hidden;            
+}
+
+.registro-imagen img {
+    width: 100%;                 
+    height: 1400px;               
+    object-fit: cover;           
+    border-radius: 24px;         
+}
+
+/* Ajuste en pantallas pequeñas */
+@media (max-width: 900px) {
+    .registro-container {
+        flex-direction: column;  
+    }
+
+    .registro-imagen {
+        max-width: 100%;        
+        height: auto;           
+    }
+
+    .registro-imagen img {
+        height: auto;            /* Mantiene la proporción de la imagen */
+    }
+}
+
 
 /* Título principal */
-h2 {
+.registro-titulo {
     font-size: 2rem;
-    color: #333;
-    text-align: center;
-    margin-bottom: 10px;
-}
-
-/* Subtítulo o texto introductorio */
-p {
-    font-size: 1.1rem;
-    color: #666;
+    color: #000000;
     text-align: center;
     margin-bottom: 20px;
+    margin-top: 20px;
 }
 
-/* Línea horizontal */
-hr {
-    border: 0;
-    height: 1px;
-    background-color: #e1e1e1;
-    margin: 20px 0;
+/* Subtítulo */
+.registro-subtitulo {
+    font-size: 1.5rem;
+    color: #000000;
+    margin: 20px 0 10px;
 }
 
-/* Estilo para el formulario */
-.account-settings-form input {
+/* Entradas del formulario */
+.registro-input {
     width: 100%;
     padding: 12px;
     margin-bottom: 15px;
     border: 1px solid #ccc;
     border-radius: 8px;
     font-size: 1rem;
-    background-color: #f9f9f9;
+    box-sizing: border-box;
 }
 
-.account-settings-form input:focus {
-    border-color: #006f9c;
-    background-color: #fff;
+.registro-input:focus {
+    border-color: #CDE7C7;
     outline: none;
 }
 
-.account-settings-form input[type="date"] {
-    padding: 10px;
-}
-
-/* Estilo para los checkbox */
-#conditions-list label {
-    font-size: 1rem;
-    color: #666;
-    margin-right: 20px;
-    display: inline-block;
+/* Mensajes de error */
+.error-message {
+    color: red;
+    font-size: 0.9rem;
+    margin-top: -10px;
     margin-bottom: 10px;
 }
 
-/* Estilo del botón "Guardar cambios" */
-#save-changes {
-    background-color: #006f9c;
-    color: white;
+/* Botones */
+.registro-boton {
+    background-color: #ECC3C9;
+    color: rgb(0, 0, 0);
     padding: 12px 30px;
     font-size: 1rem;
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s;
     margin-right: 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
-#save-changes:hover {
-    background-color: #005b87;
+.registro-boton:hover {
+    background-color: #CDE7C7;
 }
 
-/* Estilo del botón "Volver" */
 #go-back {
     background-color: #f44336;
-    color: white;
-    padding: 12px 30px;
-    font-size: 1rem;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
 }
 
 #go-back:hover {
     background-color: #d32f2f;
 }
 
-/* Sección de patologías */
-h3 {
-    font-size: 1.5rem;
-    color: #333;
-    margin-bottom: 15px;
-    text-align: center;
-}
+/* Adaptabilidad para pantallas pequeñas */
+@media (max-width: 900px) {
+    .registro-container {
+        flex-direction: column;
+        padding: 20px;
+    }
 
-#conditions-list {
-    margin-bottom: 20px;
-    text-align: center;
-}
-
-/* Estilo de la sección de botones */
-button {
-    display: inline-block;
-    margin-top: 20px;
-    text-align: center;
-    font-weight: bold;
-}
-
-.error-message {
-    display: block;
-    color: red;
-    font-size: 0.9em;
-    margin-top: 2px;
-    margin-bottom: 10px;
-}
-
-input.error, select.error {
-    border: 2px solid red;
-}
-
-.hidden {
-    display: none !important;
+    .registro-imagen {
+        max-width: 300px;
+    }
 }

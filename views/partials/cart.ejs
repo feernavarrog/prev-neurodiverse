@@ -1,17 +1,20 @@
-<aside id="cart">
-  <div class="sidebar-header">
-    <h3>Carrito</h3>
-    <button id="close-cart" class="btn-close">✖</button> <!-- Botón para cerrar sidebar -->
+<div id="cart-overlay">
+    <aside id="cart">
+      <div class="sidebar-header">
+        <h3>Carrito</h3>
+        <button id="close-cart" class="btn-close">✖</button>
+      </div>
+  
+      <div id="cart-items">
+        <!-- Productos cargados dinámicamente -->
+      </div>
+  
+      <p>Total: <span id="cart-total">$0</span></p>
+      <button id="checkout" onclick="window.location.href='/checkout'">Continuar Checkout</button>
+    </aside>
   </div>
-
-  <!-- Sección para cargar dinámicamente los productos en el carrito -->
-  <div id="cart-items">
-      <!-- Los productos en el carrito serán cargados dinámicamente desde sessionStorage. -->
-  </div>
-
-  <p>Total: <span id="cart-total">$0</span></p>
-  <button id="checkout" onclick="window.location.href='/checkout'">Continuar Checkout</button>  
-</aside>
+  <div id="overlay" class="overlay"></div>
+  
 
 <script src="/js/popup.js"></script>
 <script>
@@ -25,16 +28,24 @@
 
         cart.forEach(product => {
             let productElement = document.createElement('div');
+            productElement.classList.add('cart-item'); // Clase para asegurar el diseño uniforme
+
             productElement.innerHTML = `
                 <img src="${product.image}" alt="${product.name}">
-                <div>
-                    <p>${product.name}</p>
-                    <select class="quantity-selector" data-code="${product.code}">
-                        ${[1,2,3,4,5,6].map(num => `<option value="${num}" ${product.quantity == num ? 'selected' : ''}>${num}</option>`).join('')}
-                    </select>
-                    <p>${product.price}</p>
+                <div class="product-info">
+                    <p class="product-name">${product.name}</p>
+                    <div class="product-details">
+                        <select class="quantity-selector" data-code="${product.code}">
+                            ${[1, 2, 3, 4, 5, 6].map(num => `
+                                <option value="${num}" ${product.quantity == num ? 'selected' : ''}>${num}</option>
+                            `).join('')}
+                        </select>
+                        <p class="product-price">${product.price}</p>
+                    </div>
                 </div>
-                <button class="remove-item" data-code="${product.code}"><i class="fas fa-trash"></i></button>
+                <button class="remove-item" data-code="${product.code}">
+                    <i class="fas fa-trash"></i>
+                </button>
             `;
             cartContainer.appendChild(productElement);
             total += cleanAndConvertCLP(product.price) * product.quantity;
@@ -108,13 +119,23 @@
         updateCart();
     }
 
-    // Funciones para abrir y cerrar el carrito
     function openCart() {
-        document.getElementById("cart").classList.add("show-cart");
+    document.getElementById("cart").classList.add("show-cart");
+    document.getElementById("cart-overlay").classList.add("show-overlay");
+}
+
+// Cerrar el carrito y ocultar el overlay
+function closeCart() {
+    document.getElementById("cart").classList.remove("show-cart");
+    document.getElementById("cart-overlay").classList.remove("show-overlay");
+}
+
+// Cerrar el carrito al hacer clic fuera de él
+document.getElementById("cart-overlay").addEventListener("click", (event) => {
+    if (event.target === document.getElementById("cart-overlay")) {
+        closeCart();
     }
-    function closeCart() {
-        document.getElementById("cart").classList.remove("show-cart");
-    }
+});
 
     // Cargar el carrito al cargar la vista
     document.addEventListener("DOMContentLoaded", updateCart);
