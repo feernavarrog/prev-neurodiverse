@@ -136,7 +136,7 @@
             await createOrder(order);
         }
         
-        alert("Orden guardada correctamente.");
+        showPopup("Orden guardada correctamente.");
         loadOrders();
     }
 
@@ -145,11 +145,11 @@
         const productId = document.getElementById('assignProductIdInput').value;
         const quantity = document.getElementById('assignProductQuantityInput').value;
         if (!orderId || !productId) {
-            alert("Debe ingresar el ID de la orden y el ID del producto.");
+            showPopup("Debe ingresar el ID de la orden y el ID del producto.");
             return;
         }
         await addProductToOrder(orderId, productId, quantity);
-        alert("Producto asignado correctamente.");
+        showPopup("Producto asignado correctamente.");
         loadOrders();
     }
 
@@ -160,7 +160,7 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ orderId, productId })
         });
-        alert("Producto eliminado de la orden.");
+        showPopup("Producto eliminado de la orden.");
         loadOrders();
     }
 </script>

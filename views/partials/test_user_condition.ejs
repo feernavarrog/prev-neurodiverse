@@ -39,7 +39,7 @@
     async function loadUserConditions() {
         const userId = document.getElementById('userIdInputCreate').value;
         if (!userId) {
-            alert("Por favor, ingrese un ID de usuario.");
+            showPopup("Por favor, ingrese un ID de usuario.");
             return;
         }
         
@@ -65,7 +65,7 @@
     async function saveUserConditions() {
         const userId = document.getElementById('userIdInputCreate').value;
         if (!userId) {
-            alert("Por favor, ingrese un ID de usuario.");
+            showPopup("Por favor, ingrese un ID de usuario.");
             return;
         }
         
@@ -91,7 +91,7 @@
             }
         }
         
-        alert("Patologías actualizadas correctamente.");
+        showPopup("Patologías actualizadas correctamente.");
         initialUserConditions = newUserConditions; // Actualizar estado inicial
     }
 

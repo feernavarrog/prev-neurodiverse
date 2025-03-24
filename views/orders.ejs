@@ -17,6 +17,7 @@
   <link rel="stylesheet" href="/css/style.css" />
   <link rel="stylesheet" href="/css/homestyle.css" />
   <link rel="stylesheet" href="/css/orderstyle.css" />
+  <link rel="stylesheet" href="/css/popupstyles.css" />
 </head>
 <body>
     
@@ -24,6 +25,7 @@
     <%- include('partials/sidebar') %>
     <%- include('partials/cart') %>
     <%- include('partials/login-modal') %>
+    <%- include('partials/popups') %>
     
     <!-- Contenido principal -->
     <main>
@@ -49,7 +51,7 @@
     </main>
     
     <%- include('partials/footer') %>
-    
+    <script src="/js/popup.js"></script>
     <script src="/js/crudManager.js"></script>
     <script src="/js/global.js"></script>
     <script>
@@ -59,7 +61,7 @@
             let userId = user.userId;
     
             if (!userId) {
-                alert("⚠️ No se pudo identificar al usuario.");
+                showPopup("⚠️ No se pudo identificar al usuario.");
                 return;
             }
     
@@ -107,7 +109,7 @@
     
             } catch (error) {
                 console.error("⚠️ Error al cargar pedidos:", error);
-                alert("⚠️ Hubo un error al obtener los pedidos. Inténtalo nuevamente.");
+                showPopup("⚠️ Hubo un error al obtener los pedidos. Inténtalo nuevamente.");
             }
         }
     

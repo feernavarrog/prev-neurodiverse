@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="/css/registrostyle.css" />
     <link rel="stylesheet" href="/css/style.css" />
     <link rel="stylesheet" href="/css/resgistrostyle.css" />
-    
+    <link rel="stylesheet" href="/css/popupstyles.css" />
 
 </head>
 
@@ -20,7 +20,7 @@
     <%- include('partials/sidebar') %>
     <%- include('partials/cart') %>
     <%- include('partials/login-modal') %>
-
+    <%- include('partials/popups') %>
     <main class="registro-container">
         <h2 class="registro-titulo">REGISTRARSE</h2>
         
@@ -122,7 +122,7 @@
         </div>
     </main>
 
-    
+    <script src="/js/popup.js"></script>
     <script src="/js/crudManager.js"></script>
     <script src="/js/global.js"></script>
     <script src="/js/authManager.js"></script>
@@ -233,7 +233,7 @@
 
     const userResult = await fetchUsers({ column: "email", value: userData.email });
     if (!userResult.rows || userResult.rows.length === 0) {
-        alert("No se encontró el usuario registrado.");
+        showPopup("No se encontró el usuario registrado.");
         return;
     }
 
@@ -247,7 +247,7 @@
     try {
         const autoLoginData = await autoLogin(userData.email);
     } catch (error) {
-        alert(error.message);
+        showPopup(error.message);
         return;
     }
 
@@ -269,7 +269,7 @@
         googleAuth: emailFromURL ? true : undefined // 📌 Agregar googleAuth solo si el email proviene de la URL
     }));
 
-        alert("Registro exitoso. Serás redirigido a la página principal.");
+    showPopup("Registro exitoso. Serás redirigido a la página principal.");
         window.location.href = "/";
     }
 

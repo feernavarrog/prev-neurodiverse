@@ -18,18 +18,25 @@ document.getElementById("overlay").addEventListener("click", function () {
 // Función para abrir el modal de login
 function openLoginModal() {
     let modal = document.getElementById('login-modal');
-    if (modal) {
-        modal.style.display = "block"; // Mostrar el modal
+    let overlay = document.getElementById('overlay');
+
+    if (modal && overlay) {
+        modal.style.display = "block";   // Mostrar el modal
+        overlay.style.display = "block"; // Mostrar el fondo desenfocado
     }
 }
 
 // Función para cerrar el modal de login
 function closeLoginModal() {
     let modal = document.getElementById('login-modal');
-    if (modal) {
-        modal.style.display = "none"; // Ocultar el modal
+    let overlay = document.getElementById('overlay');
+
+    if (modal && overlay) {
+        modal.style.display = "none";   // Ocultar el modal
+        overlay.style.display = "none"; // Ocultar el fondo desenfocado
     }
 }
+
 
 function formatCLP(value) {
     return `$${Math.round(value).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`;

@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="/css/style.css" />
     <link rel="stylesheet" href="/css/homestyle.css" />
     <link rel="stylesheet" href="/css/checkout.css" />
+    <link rel="stylesheet" href="/css/popupstyles.css" />
 </head>
 <body>
     <%- include('partials/first-nav') %> 
@@ -18,6 +19,7 @@
     <%- include('partials/sidebar') %>
     <%- include('partials/cart') %>
     <%- include('partials/login-modal') %>
+    <%- include('partials/popups') %>
 
     <!-- Contenido principal -->
     <main>
@@ -111,7 +113,7 @@
     </main>
 
     <%- include('partials/footer') %>
-
+    <script src="/js/popup.js"></script>
     <script src="/js/global.js"></script>
     <script src="/js/crudManager.js"></script>
     <script src="/js/validation.js"></script>
@@ -238,12 +240,12 @@
             let cardLastFour = cardNumber.slice(-4);
 
             if (user.role === "admin") {
-                alert("⚠️ Debes iniciar sesión como cliente para procesar una orden.");
+                showPopup("⚠️ Debes iniciar sesión como cliente para procesar una orden.");
                 return;
             }
 
             if (!user.userId) {
-                alert("⚠️ Debes ingresar con tu cuenta para procesar una orden.");
+                showPopup("⚠️ Debes ingresar con tu cuenta para procesar una orden.");
                 return;
             }
 
@@ -268,14 +270,14 @@
                 let productData = await fetchProducts({ column: "product_id", value: product.id });
 
                 if (!productData.rows || productData.rows.length === 0) {
-                    alert(`El producto con ID ${product.id} no existe en la base de datos.`);
+                    showPopup(`El producto con ID ${product.id} no existe en la base de datos.`);
                     return; // Detiene la orden si el producto no existe
                 }
 
                 let productStock = parseInt(productData.rows[0][6] || "0", 10); // Índice 6 es stock
 
                 if (productStock <= 0) {
-                    alert(`⚠️ El producto "${product.name}" no tiene stock disponible. Por favor, quitar de la lista.`);
+                    showPopup(`⚠️ El producto "${product.name}" no tiene stock disponible. Por favor, quitar de la lista.`);
                     return; // Detiene la orden si no hay stock
                 }
             }
@@ -312,7 +314,7 @@
             }
 
             sessionStorage.removeItem('cart');
-            alert("Orden procesada correctamente.");
+            showPopup("Orden procesada correctamente.");
             window.location.href = '/';
         }
 

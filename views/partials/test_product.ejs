@@ -98,7 +98,7 @@
             createProduct(product);
         }
         
-        alert("Producto guardado correctamente.");
+        showPopup("Producto guardado correctamente.");
         loadProducts();
     }
 
@@ -123,7 +123,7 @@
         fetch(`/products/delete/${productId}`, { method: 'DELETE' })
             .then(response => response.json())
             .then(data => {
-                alert(data.message);
+                showPopup(data.message);
                 fetch(`/products/delete-image/${photo}`, { method: 'DELETE' });
                 loadProducts();
             })

@@ -14,12 +14,14 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
       rel="stylesheet"
     />
+    
     <link rel="stylesheet" href="/css/style.css" />
     <link rel="stylesheet" href="/css/homestyle.css" />
     <link rel="stylesheet" href="/css/item.css" />
     <link rel="stylesheet" href="/css/products.css" />
     <link rel="stylesheet" href="/css/comingsoon.css" />
     <link rel="stylesheet" href="/css/products-admin.css" />
+    <link rel="stylesheet" href="/css/popupstyles.css" />
 </head>
 <body>
     <%- include('partials/first-nav') %> 
@@ -27,6 +29,7 @@
     <%- include('partials/sidebar') %> 
     <%- include('partials/cart') %> 
     <%- include('partials/login-modal') %>
+    <%- include('partials/popups') %>
 
     <div class="admin-main">
     <h1 class="admin-title">Gestión de Productos</h1>
@@ -39,20 +42,23 @@
     </button>
 
     <!-- Contenedor de botones -->
-    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-        
-        <!-- Botón para aplicar descuento masivo -->
-        <button class="btn btn-primary" onclick="loadProducts()">Refrescar lista</button>
-        
-        <button class="btn btn-warning" onclick="openDiscountModal()">
+    <div>
+        <!-- Botón para refrescar la lista -->
+        <button class="custom-btn btn-refresh" onclick="loadProducts()">
+            🔄 Refrescar Lista
+        </button>
+    
+        <!-- Botón para aplicar descuentos -->
+        <button class="custom-btn btn-discount" onclick="openDiscountModal()">
             <i class="fas fa-tags"></i> Aplicar Descuento por Categoría
         </button>
-
-        <!-- Botón para generar informe de condiciones clínicas -->
-        <button class="btn btn-primary" onclick="openReportWindow()">
+    
+        <!-- Botón para generar informes -->
+        <button class="custom-btn btn-report" onclick="openReportWindow()">
             <i class="fas fa-chart-bar"></i> Generar Informe de Condiciones Clínicas
         </button>
     </div>
+    
 
     <!-- Tabla de Productos -->
     <table class="admin-table">
@@ -119,37 +125,42 @@
 
             <label>Activo:</label> <input type="checkbox" id="productActiveInput"><br>
 
-            <button type="button" onclick="saveProduct()">Guardar Producto</button>
+            <button type="button" class="btn-save-product" onclick="saveProduct()">Guardar Producto</button>
+
         </form>
     </div>
 </div>
     
     <!-- Modal para aplicar descuento por categoría -->
     <div id="discount-modal" class="discount-modal-overlay">
-        <div class="modal-content">
-            <button class="close-button" onclick="closeDiscountModal()">✖</button>
-            <h2 class="admin-title">Aplicar Descuento por Categoría</h2>
-            <p class="admin-description">Selecciona una categoría e ingresa el porcentaje de descuento.</p>
-            <hr>
-
+        <div class="discount-modal-content">
+            <button class="discount-close-button" onclick="closeDiscountModal()">✖</button>
+            
+            <h2 class="discount-modal-title">Aplicar Descuento por Categoría</h2>
+            <p class="discount-modal-description">Selecciona una categoría e ingresa el porcentaje de descuento.</p>
+    
             <!-- Formulario dentro del modal -->
             <form id="discount-form">
-                <label>Categoría:</label>
-                <select id="discountCategorySelect"></select><br>
-                <p id="discountCategorySelect-error" class="error-message"></p>
-
-                <label>Descuento (%):</label>
-                <input type="number" id="discountValueInput" min="0" max="100"><br>
-                <p id="discountValueInput-error" class="error-message"></p>
-
-                <button type="button" onclick="applyDiscount()">Aplicar Descuento</button>
+                <label for="discountCategorySelect" class="discount-label">Categoría:</label>
+                <select id="discountCategorySelect" class="discount-select"></select>
+                <p id="discountCategorySelect-error" class="discount-error-message"></p>
+    
+                <label for="discountValueInput" class="discount-label">Descuento (%):</label>
+                <input type="number" id="discountValueInput" class="discount-input" min="0" max="100">
+                <p id="discountValueInput-error" class="discount-error-message"></p>
+    
+                <button type="button" class="discount-apply-button" onclick="applyDiscount()">Aplicar Descuento</button>
             </form>
         </div>
     </div>
+    
+
+<script src="/js/popup.js"></script>
 <script src="/js/crudManager.js"></script>
 <script src="/js/reportManager.js"></script>
 <script src="/js/global.js"></script>
 <script src="/js/validation.js"></script>
+
 <script>
     // Función para abrir el modal vacío (Agregar Producto)
     function openProductModal() {
@@ -201,9 +212,18 @@
                 <td>${product[12]}</td>
                 <td>${product[10] === 1 ? 'Sí' : 'No'}</td>
                 <td>
-                    <button onclick="editProduct(${product[0]}, '${product[1]}', '${product[2]}', '${product[3]}', ${product[4]}, ${product[5]}, ${product[6]}, '${product[7]}', ${product[8]}, ${product[9]}, ${product[10]})">Editar</button>
-                    <button onclick="deleteProduct(${product[0]}, '${product[7]}')">Eliminar</button>
+                    <button class="btn-edit" 
+                        onclick="editProduct(${product[0]}, '${product[1]}', '${product[2]}', '${product[3]}', ${product[4]}, ${product[5]}, ${product[6]}, '${product[7]}', ${product[8]}, ${product[9]}, ${product[10]})">
+                        ✏️ Editar
+                    </button>
+
+                    <button class="btn-delete" 
+                        onclick="deleteProduct(${product[0]}, '${product[7]}')">
+                        🗑️ Eliminar
+                    </button>
                 </td>
+
+
             </tr>`;
             tableBody.innerHTML += row;
         });
@@ -248,21 +268,25 @@
         // Validar antes de guardar
         const errors = validateProductForm(product);
 
-        if (Object.keys(errors).length > 0) {
-            displayErrors(errors);
-            return;
-        }
+            if (Object.keys(errors).length > 0) {
+                displayErrors(errors);
+                return;
+            }
+
+            if (product.product_id) {
+                updateProduct(product);
+            } else {
+                createProduct(product);
+            }
+
         
-        if (product.product_id) {
-            updateProduct(product);
-        } else {
-            createProduct(product);
-        }
-        
-        alert("Producto guardado correctamente.");
+        showPopup("Producto guardado correctamente.");
+
+        // Cierra el modal y actualiza la lista
         closeProductModal();
         loadProducts();
-    }
+
+            }
 
     function editProduct(id, code, name, description, price, discount, stock, photo, brandId, categoryId, active) {
         document.getElementById('productIdInput').value = id;
@@ -288,18 +312,40 @@
         document.getElementById('product-modal').style.display = "flex";
     }
 
-    function deleteProduct(productId, photo) {
-        if (!confirm("¿Estás seguro de que deseas eliminar este producto?")) return;
-        
-        fetch(`/products/delete/${productId}/${photo}`, { method: 'DELETE' })
-            .then(response => response.json())
-            .then(data => {
-                alert(data.message);
-                fetch(`/products/delete-image/${photo}`, { method: 'DELETE' });
-                loadProducts();
-            })
-            .catch(error => console.error("Error eliminando el producto:", error));
-    }
+// Función para eliminar un producto con tu popup personalizado
+function deleteProduct(productId, photo) {
+    // Mostrar tu popup con el mensaje y los botones
+    showPopup(`
+        <p>¿Estás seguro de que deseas eliminar este producto?</p>
+        <div class="popup-actions">
+            <button class="popup-btn popup-confirm" onclick="confirmDelete('${productId}', '${photo}')">Confirmar</button>
+            <button class="popup-btn popup-cancel" onclick="closePopup()">Cancelar</button>
+        </div>
+    `);
+}
+
+        // Función para confirmar y realizar la eliminación
+        function confirmDelete(productId, photo) {
+            closePopup(); // Cierra el popup
+
+            // Ejecuta la solicitud DELETE para eliminar el producto
+            fetch(`/products/delete/${productId}/${photo}`, { method: 'DELETE' })
+                .then(response => response.json())
+                .then(data => {
+                    // Muestra el mensaje de éxito con tu popup
+                    showPopup(`<p>${data.message}</p>`);
+                    
+                    // Elimina la imagen asociada
+                    fetch(`/products/delete-image/${photo}`, { method: 'DELETE' });
+
+                    // Recargar la lista de productos
+                    loadProducts();
+                })
+                .catch(error => {
+                    console.error("Error eliminando el producto:", error);
+                    showPopup(`<p>❌ Error al eliminar el producto.</p>`);
+                });
+        }
 
     async function loadBrandsAndCategories() {
         const brands = await fetchBrands();
@@ -357,45 +403,56 @@
         .catch(error => console.error("Error al subir imagen:", error));
     }
 
-    function applyDiscount() {
-        // Validar datos
-        const errors = validateDiscountForm();
+            // Función para aplicar el descuento por categoría
+            function applyDiscount() {
+                // Validar los datos del formulario
+                const errors = validateDiscountForm();
 
-        if (Object.keys(errors).length > 0) {
-            displayErrors(errors); // Mostrar errores en los inputs
-            return;
-        }
+                if (Object.keys(errors).length > 0) {
+                    displayErrors(errors); // Mostrar errores en los campos del formulario
+                    return;
+                }
 
-        // Confirmación antes de aplicar
-        if (!confirm("¿Estás seguro de que deseas aplicar este descuento a la categoría seleccionada?")) {
-            return;
-        }
+                // Obtener los valores del formulario
+                const category = document.getElementById('discountCategorySelect').value;
+                const discount = document.getElementById('discountValueInput').value.trim();
 
-        // Obtener datos del formulario
-        const category = document.getElementById('discountCategorySelect').value;
-        const discount = document.getElementById('discountValueInput').value.trim();
-
-        // Enviar solicitud al backend
-        fetch('/products/apply-discount', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ category, discount })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.error) {
-                alert("Error: " + data.error);
-            } else {
-                alert("¡Descuento aplicado correctamente!");
-                closeDiscountModal(); // Cerrar modal
-                loadProducts(); // Actualizar tabla
+                // Mostrar el popup de confirmación con los detalles del descuento
+                showPopup(`
+                    <p>¿Deseas aplicar un <strong>${discount}%</strong> de descuento a la categoría <strong>${category}</strong>?</p>
+                    <div class="popup-actions">
+                        <button class="popup-btn popup-confirm" onclick="confirmApplyDiscount('${category}', '${discount}')">Confirmar</button>
+                        <button class="popup-btn popup-cancel" onclick="closePopup()">Cancelar</button>
+                    </div>
+                `);
             }
-        })
-        .catch(error => {
-            console.error("Error aplicando descuento:", error);
-            alert("Ocurrió un error al aplicar el descuento.");
-        });
-    }
+
+            // Función para confirmar y enviar el descuento al backend
+            function confirmApplyDiscount(category, discount) {
+                closePopup(); // Cerrar el popup de confirmación
+
+                // Enviar solicitud al backend
+                fetch('/products/apply-discount', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ category, discount })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        showPopup(`<p>❌ Error: ${data.error}</p>`);
+                    } else {
+                        showPopup(`<p>✅ ¡Descuento aplicado correctamente!</p>`);
+                        closeDiscountModal(); // Cerrar el modal de descuento
+                        loadProducts(); // Actualizar la tabla de productos
+                    }
+                })
+                .catch(error => {
+                    console.error("Error aplicando descuento:", error);
+                    showPopup("<p>❌ Ocurrió un error al aplicar el descuento.</p>");
+                });
+            }
+
     
     document.addEventListener('DOMContentLoaded', () => {
     loadBrandsAndCategories();

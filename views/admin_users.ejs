@@ -19,6 +19,8 @@
   <link rel="stylesheet" href="/css/homestyle.css" />
   <link rel="stylesheet" href="/css/orderstyle.css" /> 
   <link rel="stylesheet" href="/css/admin_users.css" />
+  <link rel="stylesheet" href="/css/popupstyles.css" />
+  
 </head>
 <body>
     
@@ -26,6 +28,7 @@
     <%- include('partials/sidebar') %>
     <%- include('partials/cart') %>
     <%- include('partials/login-modal') %>
+    <%- include('partials/popups') %>
     
     <main>
         <div class="admin-header">
@@ -50,7 +53,7 @@
     </main>
     
     <%- include('partials/footer') %>
-    
+    <script src="/js/popup.js"></script>
     <script src="/js/crudManager.js"></script>
     <script src="/js/global.js"></script>
     <script>
@@ -111,7 +114,7 @@
             // 📌 Llamar a la actualización con los datos completos
             const response = await updateUser(updatedUser);
       
-              alert("✅ Usuario desactivado correctamente");
+            showPopup("✅ Usuario desactivado correctamente");
               loadAdminUsers();
           } catch (error) {
               console.error("⚠️ Error al desactivar usuario:", error);
@@ -125,7 +128,7 @@
                     headers: { 'Content-Type': 'application/json' }
                 });
     
-                alert("✅ Usuario eliminado correctamente");
+                showPopup("✅ Usuario eliminado correctamente");
                 loadAdminUsers();
             } catch (error) {
                 console.error("⚠️ Error al eliminar usuario:", error);

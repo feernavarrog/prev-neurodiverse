@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="/css/homestyle.css" />
   <link rel="stylesheet" href="/css/style.css" />
   <link rel="stylesheet" href="/css/settingstyle.css" />
+  <link rel="stylesheet" href="/css/popupstyles.css" />
 </head>
 
 <body>
@@ -23,6 +24,7 @@
     <%- include('partials/sidebar') %>
     <%- include('partials/cart') %>
     <%- include('partials/login-modal') %>
+    <%- include('partials/popups') %>
     <h2 class="registro-titulo">Configuracion de Cuenta</h2>
     <!-- Contenido principal -->
     <main class="registro-container">
@@ -149,8 +151,10 @@
     </main>
     
     <%- include('partials/footer') %>
+    <script src="/js/popup.js"></script>
     <script src="/js/crudManager.js"></script>
     <script src="/js/global.js"></script>
+    
     <script>
         let initialUserConditions = new Set();
         let originalPasswordHash = null;
@@ -161,7 +165,7 @@
             let userId = user.userId;
 
             if (!userId) {
-                alert("⚠️ No se pudo identificar al usuario. Intenta iniciar sesión nuevamente.");
+                showPopup("⚠️ No se pudo identificar al usuario. Intenta iniciar sesión nuevamente.");
                 window.location.href = "/";
                 return;
             }
@@ -204,7 +208,7 @@
 
             } catch (error) {
                 console.error("⚠️ Error al cargar los datos del usuario:", error);
-                alert("⚠️ Hubo un error al obtener los datos del usuario. Inténtalo nuevamente.");
+                showPopup("⚠️ Hubo un error al obtener los datos del usuario. Inténtalo nuevamente.");
             }
         }
     
@@ -237,7 +241,7 @@
             const userId = user.userId;
     
             if (!userId) {
-                alert("⚠️ Por favor, inicia sesión.");
+                showPopup("⚠️ Por favor, inicia sesión.");
                 return;
             }
     
@@ -268,7 +272,7 @@
             const userId = user.userId;
     
             if (!userId) {
-                alert("⚠️ No se pudo identificar al usuario.");
+                showPopup("⚠️ No se pudo identificar al usuario.");
                 return;
             }
     
@@ -347,7 +351,7 @@
             let userRole = user.role;
 
             if (!userId) {
-                alert("⚠️ No se pudo identificar al usuario. Intenta iniciar sesión nuevamente.");
+                showPopup("⚠️ No se pudo identificar al usuario. Intenta iniciar sesión nuevamente.");
                 return;
             }
 
@@ -426,11 +430,11 @@
                 sessionStorage.setItem("user", JSON.stringify({ ...user, ...userSessionData }));
 
                 await saveUserConditions();
-                alert("✅ ¡Tu información ha sido actualizada con éxito!");
+                showPopup("✅ ¡Tu información ha sido actualizada con éxito!");
                 clearFormErrors();
             } catch (error) {
                 console.error("⚠️ Error al actualizar usuario:", error);
-                alert("⚠️ Hubo un error al actualizar los datos. Inténtalo nuevamente.");
+                showPopup("⚠️ Hubo un error al actualizar los datos. Inténtalo nuevamente.");
             }
         }
 

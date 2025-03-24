@@ -11,6 +11,6 @@ function openReportWindow() {
     );
 
     if (!reportWindow) {
-        alert('Por favor, permite las ventanas emergentes en tu navegador.');
+        showPopup('Por favor, permite las ventanas emergentes en tu navegador.');
     }
 }
