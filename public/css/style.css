@@ -7,6 +7,7 @@ html, body {
     width: 100%; 
     overflow-x: hidden; 
     flex-wrap: wrap;
+    
 }
 
 /* Contenedores principales de la página */
@@ -626,10 +627,18 @@ section {
 /* Barra con texto desplazándose */
 .custom-moving-navbar {
     background-color: #ffe97a;  
-    padding: 8px 0;
+    padding: 8px 0;            /* Mantiene el espacio interno */
     position: relative;
     overflow: hidden;  
+    width: 100vw;              /* Usa el 100% del ancho de la ventana */
+    left: 0;                   /* Asegúrate de que comience desde el borde izquierdo */
+    box-sizing: border-box;    /* Incluye el padding en el cálculo del ancho */
+    margin: 0;                 /* Elimina cualquier margen exterior */
+    border-top: none;          /* Asegura que no haya un borde superior */
+    top: 0;                    /* Asegura que no haya desplazamiento vertical */
 }
+
+
 
 
 

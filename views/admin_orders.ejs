@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="/css/style.css" />
     <link rel="stylesheet" href="/css/homestyle.css" />
     <link rel="stylesheet" href="/css/admin_orders.css" />
+    <link rel="stylesheet" href="/css/popupstyles.css" />
 </head>
 <body>
     
@@ -26,6 +27,7 @@
     <%- include('partials/sidebar') %>
     <%- include('partials/cart') %>
     <%- include('partials/login-modal') %>
+    <%- include('partials/popups') %>
     
     <!-- Contenido principal -->
     <main>
@@ -72,6 +74,7 @@
     <%- include('partials/footer') %>
     <script src="/js/crudManager.js"></script>
     <script src="/js/global.js"></script>
+    <script src="/js/popup.js"></script>
     <script>
         let currentOrderStatusFilter = 'all'; // Se inicia mostrando todos
 
@@ -158,10 +161,15 @@
             loadOrders(currentOrderStatusFilter); // 👈 usa el filtro actual
         }
 
-        async function cancelOrder(orderId, subtotal, shippingAddress, total, status, cardLastFour, userId, orderDate, active) {
-            if (!confirm("¿Estás seguro de que deseas cancelar esta orden?")) return;
+       // Función para cancelar una orden
+async function cancelOrder(orderId, subtotal, shippingAddress, total, status, cardLastFour, userId, orderDate, active) {
+    // Mostrar el popup de confirmación
+    showPopup({
+        message: `¿Estás seguro de que deseas cancelar la orden #${orderId}?`,
+        onConfirm: async () => {
             console.log(`Cancelando orden ${orderId}`);
             
+            // Crear el objeto de la orden
             const order = {
                 order_id: orderId,
                 subtotal,
@@ -174,9 +182,49 @@
                 active
             };
             
+            // Actualizar la orden en el servidor
             await updateOrder(order);
+            
+            // Recargar las órdenes con el filtro actual
             loadOrders(currentOrderStatusFilter); // 👈 usa el filtro actual
+        },
+        onCancel: () => {
+            console.log("Cancelación abortada");
         }
+    });
+}
+
+// Función para mostrar el popup con un mensaje dinámico y los botones de confirmación
+function showPopup({ message, onConfirm, onCancel }) {
+    // Asignamos el mensaje dinámico al contenido del popup
+    document.getElementById('popupMessageContent').innerHTML = `<p>${message}</p>`;
+
+    // Crear los botones de acción para confirmar o cancelar
+    document.getElementById('popupButtons').innerHTML = `
+        <button id="confirmBtn">Sí, cancelar</button>
+        <button id="cancelBtn">No, volver</button>
+    `;
+
+    // Asignar los eventos a los botones
+    document.getElementById('confirmBtn').onclick = () => {
+        onConfirm();  // Llamar a la función de confirmación
+        closePopup(); // Cerrar el popup
+    };
+
+    document.getElementById('cancelBtn').onclick = () => {
+        onCancel();  // Llamar a la función de cancelación
+        closePopup(); // Cerrar el popup
+    };
+
+    // Mostrar el popup
+    document.getElementById('globalPopup').style.display = 'block';
+}
+
+// Función para cerrar el popup
+function closePopup() {
+    document.getElementById('globalPopup').style.display = 'none';
+}
+
       
       document.addEventListener('DOMContentLoaded', function() {
       loadOrders();

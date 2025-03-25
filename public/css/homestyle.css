@@ -4,9 +4,9 @@ html, body {
     margin: 0;    
     padding: 0;   
     border: none; 
-    
     background-size: cover; 
     background-position: center; 
+    background-color: #ffffff;
 }
 
 
@@ -35,7 +35,7 @@ html, body {
     height: auto;                
     object-fit: contain;         
     display: block;   
-    margin-top: 100px;          
+    margin-top: -30px;          
 }
 
 
@@ -44,7 +44,8 @@ html, body {
     justify-content: center;
     align-items: center; 
     height: 100vh; 
-    margin-top: 0px;
+    margin-top: -205px;
+    margin-bottom: 300px;
 }
 
 .image-center img {
