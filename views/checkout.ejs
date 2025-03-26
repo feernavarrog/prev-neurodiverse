@@ -178,8 +178,16 @@
             document.getElementById('additional-info').value = user.additionalInfo || "";
         }
 
-        // Función para abrir el popup de Webpay
         function openWebpayPopup() {
+    // Obtener los elementos del overlay y el contenedor de Webpay
+    let overlay = document.getElementById('overlay');
+    let webpayContainer = document.getElementById('webpay-container');
+
+    // Mostrar overlay y contenedor de Webpay si existen
+    if (overlay && webpayContainer) {
+        overlay.style.display = "block";  
+        webpayContainer.style.display = "flex";  
+    }
 
             // Validar datos del formulario de checkout
             let checkOutFields = {
@@ -204,10 +212,16 @@
             }
         }
 
-        // Función para cerrar el popup de Webpay
-        function closeWebpayPopup() {
-            document.getElementById('webpay-container').style.display = 'none';
-        }
+        document.getElementById('close-webpay').addEventListener('click', function() {
+    let overlay = document.getElementById('overlay');
+    let webpayContainer = document.getElementById('webpay-container');
+    
+    if (overlay && webpayContainer) {
+        overlay.style.display = "none";  // Ocultar el fondo difuso
+        webpayContainer.style.display = "none";  // Ocultar el contenedor de Webpay
+    }
+})
+
 
         // 🔹 Mostrar mensajes de error en el formulario
         function displayErrors(errors) {

@@ -33,6 +33,24 @@ html, body, .main-products {
 
 
 /*----------------------------NAV--------------------*/
+.logo {
+    max-height: 50px; /* Ajusta el tamaño del logo */
+    margin-right: 1200px;
+}
+
+.menu-toggle-btn {
+    border: none;
+    background: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    margin-left: 20px;
+}
+
+.icon-user, .icon-cart {
+    font-size: 1.5rem;
+    margin-left: 20px;
+    color: #000000;
+}
 /* Barra de navegación */
 .navbar {
     padding: 1px;
@@ -43,6 +61,7 @@ html, body, .main-products {
     width: 100%;
     margin: 0;
     box-sizing: border-box;
+    
 }
 
 .image-center {
@@ -56,13 +75,7 @@ nav > a {
     align-items: center;
 }
 
-/* Logo */
-.logo {
-    display: block;
-    height: 60px;
-    width: auto;
-    margin-right: 1200px;
-}
+
 
 /* Contenedor para los iconos de usuario y carrito */
 .nav-right {
@@ -73,12 +86,7 @@ nav > a {
     margin-right: 100px;
 }
 
-/* Estilos de los iconos */
-.icon-user, .icon-cart {
-    font-size: 30px;
-    color: #000000;
-    transition: transform 0.3s ease, color 0.3s ease, opacity 0.3s ease;
-}
+
 
 /* Efecto hover para los iconos */
 .icon-user:hover, .icon-cart:hover {
@@ -87,15 +95,6 @@ nav > a {
     opacity: 0.7;
 }
 
-/* Botón del menú */
-.menu-toggle-btn {
-    background-color: transparent;
-    border: none;
-    color: #000000;
-    cursor: pointer;
-    transition: transform 0.3s ease, color 0.3s ease;
-    margin-left: 30px;
-}
 
 /* Estilos cuando se pasa el ratón por encima del botón de menú */
 .menu-toggle-btn:hover {
@@ -546,9 +545,9 @@ section {
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(8px); /* Efecto desenfocado */
-    z-index: 998; /* Debajo del modal */
-    display: none; /* Oculto por defecto */
+    backdrop-filter: blur(8px); 
+    z-index: 998; 
+    display: none; 
 }
 
 /* Ajustar el modal para estar sobre el overlay */
