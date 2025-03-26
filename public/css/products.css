@@ -1,5 +1,5 @@
 .main-products {
-    width: 90%;  
+    width: 80%;  
     max-width: 1400px;  
     padding: 60px 30px;  
     background: rgba(255, 255, 255, 0);
@@ -142,14 +142,14 @@
     text-decoration: none;
 }
 .banner-category {
-    width: 100%; /* Ocupa todo el ancho del contenedor */
-    max-width: 1200px; /* Limita el tamaño máximo */
-    height: auto; /* Mantiene la proporción de la imagen */
-    border-radius: 20px; /* Bordes redondeados */
-    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1); /* Sombra ligera */
-    display: block; /* Evita espacio extra */
-    margin: 20px auto; /* Centra el banner */
-    object-fit: cover; /* Ajusta el contenido */
-    transition: transform 0.3s ease; /* Animación suave */
+    width: 100%; 
+    max-width: 1200px; 
+    height: auto; 
+    border-radius: 20px; 
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1); 
+    display: block; 
+    margin: 20px auto; 
+    object-fit: cover; 
+    transition: transform 0.3s ease; 
 }
 

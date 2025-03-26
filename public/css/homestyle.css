@@ -18,7 +18,7 @@ html, body {
     align-items: center;         
     gap: 20px;                   
     flex-wrap: wrap;             
-    width: 70%;                  
+    width: 90%;                  
     margin: -250px auto 0;       
 }
 
@@ -35,7 +35,7 @@ html, body {
     height: auto;                
     object-fit: contain;         
     display: block;   
-    margin-top: -30px;          
+    margin-top: -40px;          
 }
 
 
