@@ -250,43 +250,58 @@
         }
     }
 
-    function saveProduct() {
-        const product = {
-            product_id: document.getElementById('productIdInput').value || null,
-            code: document.getElementById('productCodeInput').value.trim(),
-            product_name: document.getElementById('productNameInput').value.trim(),
-            product_description: document.getElementById('productDescriptionInput').value.trim(),
-            price: document.getElementById('productPriceInput').value.trim(),
-            discount: document.getElementById('productDiscountInput').value.trim(),
-            stock: document.getElementById('productStockInput').value.trim(),
-            reference_photo: document.getElementById('productImagePreview').src.split("/").pop(),
-            brand_id: document.getElementById('productBrandIdInput').value,
-            category_id: document.getElementById('productCategoryIdInput').value,
-            active: document.getElementById('productActiveInput').checked ? 1 : 0
-        };
+    async function saveProduct() {
+    const product = {
+        product_id: document.getElementById('productIdInput').value || null,
+        code: document.getElementById('productCodeInput').value.trim(),
+        product_name: document.getElementById('productNameInput').value.trim(),
+        product_description: document.getElementById('productDescriptionInput').value.trim(),
+        price: document.getElementById('productPriceInput').value.trim(),
+        discount: document.getElementById('productDiscountInput').value.trim(),
+        stock: document.getElementById('productStockInput').value.trim(),
+        reference_photo: document.getElementById('productImagePreview').src.split("/").pop(),
+        brand_id: document.getElementById('productBrandIdInput').value,
+        category_id: document.getElementById('productCategoryIdInput').value,
+        active: document.getElementById('productActiveInput').checked ? 1 : 0
+    };
 
-        // Validar antes de guardar
-        const errors = validateProductForm(product);
+    const errors = validateProductForm(product);
+    if (Object.keys(errors).length > 0) {
+        displayErrors(errors);
+        return;
+    }
 
-            if (Object.keys(errors).length > 0) {
-                displayErrors(errors);
-                return;
-            }
+    try {
+        let response;
+        if (product.product_id) {
+            response = await updateProduct(product);
+        } else {
+            response = await createProduct(product);
+        }
 
-            if (product.product_id) {
-                updateProduct(product);
+        // Si vino con error
+        if (response.error) {
+            if (response.error.includes('ya existe')) {
+                closeProductModal();
+                loadProducts(); // O puedes mostrarlo en un <div> fijo
+                showPopup(response.error);
             } else {
-                createProduct(product);
+                closeProductModal();
+                loadProducts(); 
+                showPopup('Error inesperado: ' + response.error);
             }
+            return;
+        }
 
-        
-        showPopup("Producto guardado correctamente.");
-
-        // Cierra el modal y actualiza la lista
+        showPopup('Producto guardado correctamente.');
         closeProductModal();
         loadProducts();
 
-            }
+    } catch (err) {
+        console.error('Error en saveProduct:', err);
+        showPopup('Error inesperado en el sistema.');
+    }
+}
 
     function editProduct(id, code, name, description, price, discount, stock, photo, brandId, categoryId, active) {
         document.getElementById('productIdInput').value = id;

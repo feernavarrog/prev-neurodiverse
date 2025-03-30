@@ -131,3 +131,8 @@ body {
         max-width: 300px;
     }
 }
+
+/* oculto */
+.hidden {
+    display: none;
+}

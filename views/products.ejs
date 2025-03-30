@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="/css/homestyle.css" />
     <link rel="stylesheet" href="/css/item.css" />
     <link rel="stylesheet" href="/css/products.css" />
+    <link rel="stylesheet" href="/css/popupstyles.css" />
     
 </head>
 <body>
@@ -22,6 +23,7 @@
     <%- include('partials/sidebar') %>
     <%- include('partials/cart') %>
     <%- include('partials/login-modal') %>
+    <%- include('partials/popups') %>
 
     <!-- Contenedor de productos dinámicos -->
 
@@ -39,6 +41,7 @@
     <%- include('partials/first-nav') %>
     <%- include('partials/footer') %>
     
+    <script src="/js/popup.js"></script>
     <script src="\js\crudManager.js"></script>
     <script src="\js\global.js"></script>
     <script>
@@ -116,7 +119,14 @@
                         let discountTag = "";
                         if (productDiscount > 0) {
                             finalPrice = productPrice * (1 - productDiscount / 100);
-                            discountTag = `<p class="product-discount">-${productDiscount}%</p>`;
+                            discountTag = `
+                                            <p class="product-discount" style="color: red; margin: 0;">
+                                                🏷️ -${productDiscount}% descuento
+                                            </p>
+                                            <p class="product-old-price" style="text-decoration: line-through; color: gray; font-size: 0.9em;">
+                                                Precio anterior: ${formatCLP(productPrice)}
+                                            </p>
+                                        `;
                         }
     
                         // Obtener el stock del producto (columna 7 → índice [6])

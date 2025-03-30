@@ -57,12 +57,15 @@
     <script>
         async function loadAdminUsers() {
             try {
-                const usersResponse = await fetchUsers();
+                const usersResponse = await fetchUsers({ column: 'user_role', value: 'customer' });
                 const users = usersResponse.rows || [];
                 let tableBody = document.querySelector("#dynamic-admin-users-table tbody");
                 tableBody.innerHTML = "";
 
                 users.forEach(user => {
+                    const isActive = user[13] === 1;
+                    const toggleText = isActive ? "Desactivar" : "Activar";
+
                     let row = `
                         <tr>
                             <td class="admin-user-status-${user[13]}">${user[4]} ${user[5]}</td>
@@ -70,7 +73,7 @@
                             <td class="admin-user-status-${user[13]}">${user[1]}</td>
                             <td class="admin-user-status-${user[13]}">
                                 
-                                <button class="admin-user-btn-deactivate" onclick="deactivateUser(${user[0]})">Desactivar</button>
+                                <button class="admin-user-btn-deactivate" onclick="deactivateUser(${user[0]}, ${isActive})">${toggleText}</button>
                                 <button class="admin-user-btn-delete" onclick="deleteUser(${user[0]})">Eliminar</button>
                             </td>
                         </tr>
@@ -82,7 +85,9 @@
             }
         }
 
-        async function deactivateUser(userId) {
+        async function deactivateUser(userId, isCurrentlyActive) {
+            const newStatus = isCurrentlyActive ? 0 : 1;
+
             try {
                 const userResponse = await fetchUsers({ column: "user_id", value: userId });
                 if (!userResponse.rows || userResponse.rows.length === 0) {
@@ -111,10 +116,46 @@
 
                 await updateUser(updatedUser);
 
-                showPopup("✅ Usuario desactivado correctamente");
+                showPopup("✅ Estado cambiado correctamente");
                 loadAdminUsers();
             } catch (error) {
-                console.error("⚠️ Error al desactivar usuario:", error);
+                console.error("⚠️ Error al cambiar estado:", error);
+            }
+        }
+
+        async function activateUser(userId) {
+            try {
+                const userResponse = await fetchUsers({ column: "user_id", value: userId });
+                if (!userResponse.rows || userResponse.rows.length === 0) {
+                    throw new Error("Usuario no encontrado");
+                }
+
+                let userData = userResponse.rows[0];
+
+                const updatedUser = {
+                    user_id: userData[0],
+                    rut: userData[1],
+                    email: userData[2],
+                    password: userData[3],
+                    first_name: userData[4],
+                    last_name: userData[5],
+                    birth_date: formatDateInput(userData[6]),
+                    city: userData[7],
+                    district: userData[8],
+                    street: userData[9],
+                    street_number: userData[10],
+                    mobile_phone: userData[11],
+                    additional_address_info: userData[12],
+                    active: 1,
+                    user_role: userData[14]
+                };
+
+                await updateUser(updatedUser);
+
+                showPopup("✅ Usuario activado nuevamente");
+                loadAdminUsers();
+            } catch (error) {
+                console.error("⚠️ Error al activar usuario:", error);
             }
         }
 

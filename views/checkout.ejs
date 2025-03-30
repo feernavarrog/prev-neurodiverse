@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="/css/homestyle.css" />
     <link rel="stylesheet" href="/css/checkout.css" />
     <link rel="stylesheet" href="/css/popupstyles.css" />
+    <link rel="stylesheet" href="/css/resgistrostyle.css" />
 </head>
 <body>
     <%- include('partials/first-nav') %> 
@@ -57,7 +58,45 @@
             </div>
             
             <div class="mb-1">
-            <input type="text" id="city" placeholder="Comuna" required>
+                <select id="city" class="registro-input" required>
+                    <option value="" selected disabled>Selecciona tu comuna</option>
+                    <option value="Cerrillos">Cerrillos</option>
+                    <option value="Cerro Navia">Cerro Navia</option>
+                    <option value="Conchali">Conchalí</option>
+                    <option value="El Bosque">El Bosque</option>
+                    <option value="Estacion Central">Estación Central</option>
+                    <option value="Huechuraba">Huechuraba</option>
+                    <option value="Independencia">Independencia</option>
+                    <option value="La Cisterna">La Cisterna</option>
+                    <option value="La Florida">La Florida</option>
+                    <option value="La Granja">La Granja</option>
+                    <option value="La Pintana">La Pintana</option>
+                    <option value="La Reina">La Reina</option>
+                    <option value="Las Condes">Las Condes</option>
+                    <option value="Lo Barnechea">Lo Barnechea</option>
+                    <option value="Lo Espejo">Lo Espejo</option>
+                    <option value="Lo Prado">Lo Prado</option>
+                    <option value="Macul">Macul</option>
+                    <option value="Maipu">Maipú</option>
+                    <option value="Ñuñoa">Ñuñoa</option>
+                    <option value="Pedro Aguirre Cerda">Pedro Aguirre Cerda</option>
+                    <option value="Peñalolen">Peñalolén</option>
+                    <option value="Providencia">Providencia</option>
+                    <option value="Pudahuel">Pudahuel</option>
+                    <option value="Puente Alto">Puente Alto</option>
+                    <option value="Quilicura">Quilicura</option>
+                    <option value="Quinta Normal">Quinta Normal</option>
+                    <option value="Recoleta">Recoleta</option>
+                    <option value="Renca">Renca</option>
+                    <option value="San Bernardo">San Bernardo</option>
+                    <option value="San Joaquin">San Joaquín</option>
+                    <option value="San Jose de Maipo">San José de Maipo</option>
+                    <option value="San Miguel">San Miguel</option>
+                    <option value="San Ramon">San Ramón</option>
+                    <option value="Santiago Centro">Santiago Centro</option>
+                    <option value="Vitacura">Vitacura</option>
+                </select>
+            <!---<input type="text" id="city" placeholder="Comuna" required>--->
             <p id="city-error" class="error-message"></p>
             </div>
 
@@ -171,7 +210,7 @@
             document.getElementById('first-name').value = user.firstName || "";
             document.getElementById('last-name').value = user.lastName || "";
             document.getElementById('email').value = user.email || "";
-            document.getElementById('city').value = user.city || "";
+            document.getElementById('city').value = user.district || "";
             document.getElementById('street').value = user.street || "";
             document.getElementById('street-number').value = user.streetNumber || "";
             document.getElementById('mobile-phone').value = user.mobilePhone || "";
@@ -184,10 +223,10 @@
     let webpayContainer = document.getElementById('webpay-container');
 
     // Mostrar overlay y contenedor de Webpay si existen
-    if (overlay && webpayContainer) {
+    /*if (overlay && webpayContainer) {
         overlay.style.display = "block";  
         webpayContainer.style.display = "flex";  
-    }
+    }*/
 
             // Validar datos del formulario de checkout
             let checkOutFields = {
@@ -203,12 +242,20 @@
 
             // Validar los datos del checkout antes de procesar la orden
             const errors = validateCheckoutForm(checkOutFields);
+            const cart = JSON.parse(sessionStorage.getItem('cart')) || [];
+
+            // Validar que haya productos en el checkout
+            if (cart.length === 0) {
+                showPopup("⚠️ No hay productos en el carrito.");
+                return;
+            }
 
             if (Object.keys(errors).length > 0) {
                 displayErrors(errors);
                 return;
             }else{
-                document.getElementById('webpay-container').style.display = 'flex';
+                overlay.style.display = "block";  
+                webpayContainer.style.display = "flex"; 
             }
         }
 

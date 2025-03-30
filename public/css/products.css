@@ -153,3 +153,15 @@
     transition: transform 0.3s ease; 
 }
 
+.product-discount {
+    color: red;
+    font-weight: bold;
+    margin-bottom: 0;
+}
+
+.product-old-price {
+    text-decoration: line-through;
+    color: gray;
+    font-size: 0.9em;
+    margin-top: 2px;
+}

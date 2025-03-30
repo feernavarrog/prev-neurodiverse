@@ -102,14 +102,20 @@
               const productName = product[2]; // Índice del nombre
               const productDescription = product[3]; // Índice de la descripción
               const productPrice = product[4]; // Índice del precio
+              const productDiscount = product[5]; // Índice del descuento
               const productImage = product[7]; // Índice de la imagen
               const productCodeInDB = product[1]; // Código real del producto en la BBDD
+
+              let finalPrice = productPrice; // Precio final
+              if (productDiscount > 0) {
+                finalPrice = productPrice * (1 - productDiscount / 100); // Aplicar descuento
+              }
   
               // 2️⃣ Insertar la información en la vista
               document.getElementById("add-to-cart").setAttribute("data-id", products[0][0]);
               document.getElementById("item-image").src = `/product-images/${productImage}`;
               document.getElementById("item-name").innerText = productName;
-              document.getElementById("item-price").innerText = `${formatCLP(productPrice)}`;
+              document.getElementById("item-price").innerText = `${formatCLP(finalPrice)}`;
               document.getElementById("item-description").innerText = productDescription;
               document.getElementById("item-code").innerText = productCodeInDB;
   

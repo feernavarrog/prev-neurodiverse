@@ -1,6 +1,18 @@
 // 📌 public/js/validation.js
 //let originalPasswordHash = null; // Esta se sincroniza con la del perfil
 
+// ✅ Validación asincrónica para verificar si el email ya está registrado
+async function validateEmailExists(email) {
+    const response = await fetchUsers({ column: "email", value: email });
+    return response.rows && response.rows.length > 0;
+}
+
+// ✅ Validación asincrónica para verificar si el RUT ya está registrado
+async function validateRutExists(rut) {
+    const response = await fetchUsers({ column: "rut", value: rut });
+    return response.rows && response.rows.length > 0;
+}
+
 // ✅ Verifica si un campo está vacío
 function validateRequired(value) {
     return value !== null && value !== undefined && value.trim() !== "";
@@ -19,7 +31,7 @@ function validateEmail(email) {
 
 // ✅ Verifica si la contraseña cumple los requisitos
 function validatePassword(password) {
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[.@$!%*?&])[A-Za-z\d.@$!%*?&]{12,}$/;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[.@$!%*?&#])[A-Za-z\d.@$!%*?&#]{12,}$/;
     return passwordRegex.test(password);
 }
 
@@ -99,6 +111,25 @@ function validateUserForm(user) {
     return errors;
 }
 
+async function validateUserFormAsync(user, isUpdate = false) {
+    const errors = validateUserForm(user); // Primero aplica validaciones sincrónicas básicas
+
+    // Validar email duplicado solo si no estamos en modo edición o si cambió el email
+    if (!isUpdate || (isUpdate && user.original_email !== user.email)) {
+        if (await validateEmailExists(user.email)) {
+            errors["email"] = "Este correo ya está registrado.";
+        }
+    }
+
+    if (!isUpdate || (isUpdate && user.original_rut !== user.rut)) {
+        if (await validateRutExists(user.rut)) {
+            errors["rut"] = "Este RUT ya está registrado.";
+        }
+    }
+
+    return errors;
+}
+
 function validateProductForm(product) {
     let errors = {};
 
@@ -170,8 +201,12 @@ function validateCheckoutForm(user) {
         errors["email"] = "El correo electrónico es inválido.";
     }
 
-    if (!validateRequired(user.city)) {
+    /*if (!validateRequired(user.city)) {
         errors["city"] = "Debe ingresar una comuna.";
+    }*/
+
+    if (!validateSelection(user.city)) {
+        errors["city"] = "Debe seleccionar una comuna.";
     }
 
     if (!validateRequired(user.street)) {

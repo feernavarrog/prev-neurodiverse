@@ -19,6 +19,8 @@
     <link rel="stylesheet" href="/css/item.css" />
     <link rel="stylesheet" href="/css/products.css" />
     <link rel="stylesheet" href="/css/comingsoon.css" />
+    <link rel="stylesheet" href="/css/popupstyles.css" />
+
   </head>
   <body>
     <%- include('partials/first-nav') %>
@@ -26,6 +28,7 @@
     <%- include('partials/sidebar') %> 
     <%- include('partials/cart') %> 
     <%- include('partials/login-modal') %>
+    <%- include('partials/popups') %>
 
     <div class="image-center">
       <img
@@ -37,7 +40,7 @@
   </div>
   
   <div class="banner-container">
-    <a href="/productos-destacados" class="banner-link">
+    <a href="#" class="banner-link">
         <img
             id="banner-1"
             src="\img\banner1.png"
@@ -61,6 +64,7 @@
     <%- include('partials/first-nav') %>
     <%- include('partials/footer') %>
 
+    <script src="/js/popup.js"></script>
     <script src="/js/global.js"></script>
     <script src="/js/crudManager.js"></script>
     

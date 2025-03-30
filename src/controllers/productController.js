@@ -25,7 +25,10 @@ exports.createProduct = async (req, res) => {
         await productModel.createProduct(product);
         res.json({ message: 'Producto creado correctamente.' });
     } catch (error) {
-        res.json({ error: error.message });
+        if (error.message.includes('ORA-00001')) {
+            return res.status(400).json({ error: 'El código del producto ya existe.' });
+        }
+        res.status(500).json({ error: error.message });
     }
 };
 
@@ -36,7 +39,10 @@ exports.updateProduct = async (req, res) => {
         await productModel.updateProduct(product);
         res.json({ message: 'Producto actualizado correctamente.' });
     } catch (error) {
-        res.json({ error: error.message });
+        if (error.message.includes('ORA-00001')) {
+            return res.status(400).json({ error: 'El código del producto ya existe.' });
+        }
+        res.status(500).json({ error: error.message });
     }
 };
 

@@ -21,6 +21,18 @@ exports.createUser = async (req, res) => {
     try {
         const user = { ...req.body };
 
+        // 🔍 Verificar si el usuario ya exist
+        const existingUser = await userModel.getUsers({ column: "email", value: user.email });
+        if (existingUser.rows && existingUser.rows.length > 0) {
+            return res.status(400).json({ error: "El usuario ya existe." });
+        }
+
+        // 🔍 Verificar si el rut ya existe
+        const existingRut = await userModel.getUsers({ column: "rut", value: user.rut });
+        if (existingRut.rows && existingRut.rows.length > 0) {
+            return res.status(400).json({ error: "El rut ya existe." });
+        }
+
         // 🔐 Si tiene contraseña (no es null), cifrarla antes de enviarla al modelo
         if (user.password) {
             const saltRounds = 10;
@@ -42,6 +54,25 @@ exports.updateUser = async (req, res) => {
         /*if (user.password && !user.password.startsWith('$2b$')) {
             user.password = await bcrypt.hash(user.password, 10);
         }*/
+
+        // verificar si el email ya ha sido utilizado
+        const existingUser = await userModel.getUsers({ column: "email", value: user.email });
+        if (existingUser.rows && existingUser.rows.length > 0) {
+            console.log("user.email:", user.email);
+            // Si el email ya existe y no es el mismo que el actual, devolver error
+            if (existingUser.rows[0][2] !== user.email) {
+                return res.status(400).json({ error: "El email ya existe." });
+            }
+        }   
+
+        // verificar si el rut ya ha sido utilizado
+        const existingRut = await userModel.getUsers({ column: "rut", value: user.rut });
+        if (existingRut.rows && existingRut.rows.length > 0) {
+            // Si el rut ya existe y no es el mismo que el actual, devolver error
+            if (existingRut.rows[0][1] !== user.rut) {
+                return res.status(400).json({ error: "El rut ya existe." });
+            }
+        }
 
         // 🔍 Obtener la contraseña actual desde la base de datos
         const result = await userModel.getUsers({ column: "user_id", value: user.user_id });

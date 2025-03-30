@@ -49,7 +49,7 @@
             <p id="password-error" class="error-message"></p>
 
             <!-- Botón para activar edición de contraseña -->
-            <button id="edit-password-btn" class="registro-boton" type="button">Editar contraseña</button>
+            <button id="edit-password-btn" class="registro-boton" type="button">Editar contraseña 🔑</button>
 
             <input type="text" id="first-name" class="registro-input" placeholder="Nombre" required>
             <p id="first-name-error" class="error-message"></p>
@@ -397,7 +397,20 @@
             };
 
             // Validar antes de guardar
-            const errors = validateUserForm(userData);
+            const inputErrors = validateUserForm(userData);
+
+            if (Object.keys(inputErrors).length > 0) {
+                displayErrors(inputErrors);
+                return;
+            }
+
+            const validationData = {
+                ...userData,
+                original_email: user.email,
+                original_rut: user.rut
+            };
+
+            const errors = await validateUserFormAsync(validationData, true);
 
             if (Object.keys(errors).length > 0) {
                 displayErrors(errors);
@@ -406,6 +419,12 @@
 
                 // ✅ Se usa crudManager.updateUser en vez de fetch manual
                 const updateResponse = await updateUser(updatedUserData);
+
+                // si la respuesta es un error 400, mostrar errores
+                if (updateResponse.status === 400) {
+                    showPopup(updateResponse.error);
+                    return;
+                }
 
                 console.log("📌 Respuesta del servidor al actualizar usuario:", updateResponse);
 
@@ -430,6 +449,7 @@
                 sessionStorage.setItem("user", JSON.stringify({ ...user, ...userSessionData }));
 
                 await saveUserConditions();
+
                 showPopup("✅ ¡Tu información ha sido actualizada con éxito!");
                 clearFormErrors();
             } catch (error) {

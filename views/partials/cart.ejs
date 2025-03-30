@@ -10,13 +10,11 @@
       </div>
   
       <p>Total: <span id="cart-total">$0</span></p>
-      <button id="checkout" onclick="window.location.href='/checkout'">Continuar Checkout</button>
+      <button id="checkout" onclick="goToCheckout()">Continuar Checkout</button>
     </aside>
   </div>
   <div id="overlay" class="overlay"></div>
   
-
-<script src="/js/popup.js"></script>
 <script>
     // Función para actualizar el carrito en la vista
     function updateCart() {
@@ -128,6 +126,28 @@
 function closeCart() {
     document.getElementById("cart").classList.remove("show-cart");
     document.getElementById("cart-overlay").classList.remove("show-overlay");
+}
+
+// ir al checkout
+function goToCheckout() {
+    // Obtener el rol del usuario desde sessionStorage
+    let user = JSON.parse(sessionStorage.getItem('user')) || {};
+    let cart = JSON.parse(sessionStorage.getItem('cart')) || [];
+
+    // Validaciones para el checkout
+    if (user.role === "admin") { // Verificar si el usuario es admin
+        showPopup("⚠️ Debes iniciar sesión como cliente para procesar una orden.");
+        return;
+    } else if (cart.length === 0) { // Verificar si el carrito está vacío
+        showPopup("El carrito está vacío. Agrega productos antes de continuar.");
+        return;
+    } else if (!user || !user.userId) { // Verificar si el usuario está autenticado
+        showPopup("⚠️ Debes ingresar con tu cuenta para procesar una orden.");
+        return;
+    } else {
+        // redirigir al checkout
+        window.location.href = "/checkout";
+    }
 }
 
 // Cerrar el carrito al hacer clic fuera de él
