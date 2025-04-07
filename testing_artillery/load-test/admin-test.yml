@@ -1,0 +1,120 @@
+#? ARTILLERY - HERRAMIENTA DE PRUEBAS DE CARGA (Simula varops usuarios virtuales que hacen peticiones para probar el rendimiento de la aplicación)
+
+
+#? Como usar el test logeado >>>>>>>>            npm run test:admin
+
+# ESTE TEST ES CON LA SESION DE CARLA INICIADA HACIENDO VARIAS SOLICITUDES
+#! No cargamos mas usuarios porque tenemos que tener esa cantidad y hacer login para cada uno de ellos, , este test en este momento no sirve
+
+config:
+  target: "http://localhost:3000" # Cambia esto si tu servidor está en otra URL
+
+scenarios:
+  # Escenario 1: Inicio de sesión y captura de sesión de Carla ✅
+  - name: "Login and capture session"
+    flow:
+      - post:
+          url: "/users/auth/login" # Endpoint para el login
+          json:
+            email: "carla@neurodiverse.cl"
+            password: "Neurodiverse2025"
+          capture:
+            - header: "set-cookie" # Captura la cookie de sesión
+              as: sessionCookie
+
+  # Escenario 2: Acciones autenticadas ✅
+  - name: "Authenticated user actions"
+    flow:
+      # Acceso a la página principal de la cuenta
+      - get:
+          url: "/account"
+          headers:
+            Cookie: "{{ sessionCookie }}"
+          tags:
+            name: "account"
+      - think: 1 # Espera 1 segundo antes de la siguiente operación
+    
+    # Acceso al panel de administración ✅
+      - get:
+          url: "/admin-panel"
+          headers:
+            Cookie: "{{ sessionCookie }}"
+          tags:
+            name: "admin-panel"
+      - think: 1
+
+     # Acceso a la administración de usuarios ✅
+      - get:
+          url: "/admin/users"
+          headers:
+            Cookie: "{{ sessionCookie }}"
+          tags:
+            name: "admin-users"
+      - think: 1
+
+      # Acceso a la página de productos ✅
+      - get:
+          url: "/products"
+          headers:
+            Cookie: "{{ sessionCookie }}"
+          tags:
+            name: "products"
+      - think: 1
+
+
+      # Acceso a la página de un producto específico ✅
+      - get:
+          url: "/item"
+          headers:
+            Cookie: "{{ sessionCookie }}"
+          tags:
+            name: "item"
+      - think: 1
+
+      # Acceso a la página de checkout ✅
+      - get:
+          url: "/checkout"
+          headers:
+            Cookie: "{{ sessionCookie }}"
+          tags:
+            name: "checkout"
+      - think: 1
+
+      # Acceso a la administración de órdenes (arroja codigo 302 de redireccion) 🐞✅
+      - get:
+          url: "/admin/orders"
+          headers:
+            Cookie: "{{ sessionCookie }}"
+          tags:
+            name: "admin-orders"
+      - think: 1     
+
+      # Acceso a la administración de productos (arroja error 302 de redireccion) 🐞✅
+      - get:
+          url: "/admin/products"
+          headers:
+            Cookie: "{{ sessionCookie }}"
+          tags:
+            name: "admin-products"
+      - think: 1
+
+      # Acceso a la página de configuración de la cuenta (arroja error 302 de redireccion) ✅
+      - get:
+          url: "/account-settings"
+          headers:
+            Cookie: "{{ sessionCookie }}"
+          tags:
+            name: "account-settings"
+      - think: 1
+
+      # Acceso a la página de órdenes del usuario (arroja error 302 de redireccion) ✅
+      - get:
+          url: "/orders"
+          headers:
+            Cookie: "{{ sessionCookie }}"
+          tags:
+            name: "orders"
+      - think: 1
+
+
+#? Como usar el test logeado >>>>>>>>            npm run test:admin
