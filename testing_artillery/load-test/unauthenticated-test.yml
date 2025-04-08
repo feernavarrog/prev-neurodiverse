@@ -4,7 +4,7 @@
 
 #ESTO ES UN TEST GENERAL DE CARGA SIN LOGEARSE (RUTAS ACEPTADAS SIN LOGIN)
 #? ⏱️El test dura aprox. 6 minutos y medio desde que se ejecuta, hay que esperar. 
-#? 📄El resultado se ve en consola.
+#? 📄El resultado se ve en consola y tambien quedan guardados en results-unauthenticated.json, en esta misma carpeta
 
 #1.-CONFIGURACION DE TARGET (servidor local) Y PROCESOR (archivo processor.js que no se esta usando)
 config:
@@ -16,28 +16,27 @@ config:
   phases: #se va a realizar en 4 fases
     
     # ✅ Fase 1: 60 segundos, carga ligera 10 usuarios virtuales por segundo
-    - duration: 20 # ⏱️ Duración de la fase (en segundos)
+    - duration: 10 # ⏱️ Duración de la fase (en segundos)
       arrivalRate: 10 # Número de usuarios virtuales enviados al punto final (x segundo)
       name: "Warming up" # se llama asi por convencion a la fase inicial donde se envia una cantidad menor de solicitudes (antes de que comience la carga mas fuerte) 
     #Ejemplo: manda durante 5 segundos 10 usuarios virtuales por segundo, en total 50 usuarios virtuales (10*5=50) y luego pasa a la siguiente fase
 
     # ✅ Fase 2: 60 segundos, carga media 50 usuarios virtuales por segundo
-    - duration: 60 
+    - duration: 20 
       arrivalRate: 10 # Parte con 10 usuario p/segundo
       rampTo: 50 # Aumenta gradualmente el número de usuarios virtuales hasta llegar a 50
       name: "Ramping up" # se llama asi por convencion a la fase donde se aumenta gradualmente el número de usuarios virtuales hasta llegar a 50, para simular una carga creciente
 
     # ✅ Fase 3: 300 segundos, carga máxima 100 usuarios virtuales por segundo
-    - duration: 300
+    - duration: 50
       arrivalRate: 50 
       name: "Sustained max load" # se llama asi por convencion a la fase donde se mantiene la carga máxima
 
     # 🐞 Fase 4: Spike load (carga repentina) 100 usuarios virtuales por segundo
-    - duration: 30
-      arrivalRate:: 100 
+    - duration: 15
+      arrivalRate: 100 
       name: "Spike load" # se llama asi por convencion a la fase donde se aumenta la carga de forma repentina, para simular un aumento brusco 
-
-
+  
 #OPERACONES QUE VA A REALIZAR CADA USUARIOS VIRTUAL EN ESOS TIEMPOS
 
 #*PRUEBA GENERAL DE CARGA SIN LOGEARSE
@@ -46,39 +45,54 @@ scenarios:
 
   - name: "General test" # Nombre del escenario de prueba
     flow: # Flujo de operaciones que se realizarán en el escenario de prueba
+      
+      #- log: "▶️ Inicio de la prueba: Página de inicio"
 
       #1.- El usuario virtual realiza una solicitud GET a la página de inicio ✅
       - get:
           url: "/"
-          tags: #Para ponerle un nombre a la operación, separar los resultados por URL e identificar mas facil donde hay un 404 o algo
+          tags: # Para ponerle un nombre a la operación, separar los resultados por URL e identificar más fácil donde hay un 404 o algo
             name: "home"
       - think: 1 # Tiempo de espera en segundos antes de la siguiente operación
-
-      #2.- página de precios ✅
+      
+      #- log: "🐞 Probando la página de categoría de productos sin ID"
+      
+      #2.1- Página de precios ✅
       - get:
           url: "/products"
           tags:
             name: "products"
       - think: 2
 
-      #3.- página de un producto ✅
+      #- log: "🐞 Probando la página de categoría de productos con una ID"
+
+      #2.2- Página de precios ✅
+      - get:
+          url: "/products?category=2"
+          tags:
+            name: "products"
+      - think: 2
+      
+      #- log: "🐞 Probando la página de un producto sin pasar la ID"
+
+      #3.1- Página de un producto sin pasar el ID del producto ✅
       - get:
           url: "/item"  
           tags:
             name: "item"
       - think: 2
+      
+      #- log: "🐞 Probando la página de un producto con su ID incluida"
 
-      #4.- página de checkout ✅
+      #3.2- Página de un producto con el ID del producto ✅
       - get:
-          url: "/checkout" 
+          url: "/item?code=PROD002" 
           tags:
-            name: "checkout"
+            name: "Audífonos con cancelación de ruido"
       - think: 2
 
-      - get:
-          url: "/item"
-          tags:
-            name: "item"
+      #- log: "⏸️ Fin de la prueba general"
+
 
 
 #? Hacer correr artillery >>>>>>>          npm run test:unauthenticated

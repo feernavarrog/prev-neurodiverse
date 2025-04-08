@@ -4,9 +4,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "test:unauthenticated": "cd ./testing_artillery/load-test && artillery run unauthenticated-test.yml",
-    "test:admin": "cd ./testing_artillery/load-test && artillery run admin-test.yml",
-    "test:visitor": "cd ./testing_artillery/load-test && artillery run visitor-test.yml"
+    "test:unauthenticated": "cd ./testing_artillery/load-test && artillery run unauthenticated-test.yml --output results-unauthenticated.json",
+    "test:admin": "cd ./testing_artillery/load-test && artillery run admin-test.yml --output results-admin.json",
+    "test:visitor": "cd ./testing_artillery/load-test && artillery run visitor-test.yml --output results-visitor.json"
   },
   "keywords": [],
   "author": "",
